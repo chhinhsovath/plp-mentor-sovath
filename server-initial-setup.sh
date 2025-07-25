@@ -153,7 +153,7 @@ DB_PASSWORD=P@ssw0rd
 DB_SSL=false
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=http://157.10.73.52
+FRONTEND_URL=https://mentoring.openplp.com
 MAX_FILE_SIZE=10485760
 UPLOAD_DIR=./uploads
 LOG_LEVEL=info
@@ -229,6 +229,6 @@ echo "🔐 IMPORTANT: Update the JWT_SECRET in backend/.env!"
 echo ""
 echo "Next steps:"
 echo "1. Run the first deployment: ./auto-deploy.sh"
-echo "2. Access the site at: http://157.10.73.52/mentoring"
+echo "2. Access the site at: https://mentoring.openplp.com"
 echo ""
 echo "=============================================="

@@ -1,6 +1,6 @@
 # Step-by-Step Deployment Guide
 
-Follow these steps to deploy your application to http://157.10.73.52/mentoring
+Follow these steps to deploy your application to https://mentoring.openplp.com
 
 ## Step 1: Initial Server Setup (Run Once)
 
@@ -42,10 +42,10 @@ Check if everything is working:
 
 ```bash
 # Test backend health
-curl http://157.10.73.52:3001/api/v1/health
+curl https://mentoring.openplp.com/api/v1/health
 
 # Test frontend
-open http://157.10.73.52/mentoring
+open https://mentoring.openplp.com
 ```
 
 ## If You Need to Run Commands Manually

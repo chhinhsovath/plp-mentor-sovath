@@ -74,7 +74,7 @@ echo "✅ Setup complete!"
 echo "📝 Next steps:"
 echo "1. Edit /opt/plp-backend/.env with your database credentials"
 echo "2. Configure Nginx to serve frontend and proxy API requests"
-echo "3. Access your app at http://157.10.73.52"
+echo "3. Access your app at https://mentoring.openplp.com"
 EOF
 
 chmod +x deploy-package/setup.sh

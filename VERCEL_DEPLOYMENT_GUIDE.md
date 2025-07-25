@@ -2,7 +2,7 @@
 
 ## Current Setup
 - Frontend: Vercel (HTTPS) - `https://mentoring.openplp.com`
-- Backend: Your server (HTTP) - `http://157.10.73.52:3001`
+- Backend: Your server (HTTP) - `https://mentoring.openplp.com/api`
 
 ## Problem
 HTTPS pages cannot make HTTP API requests due to browser security (Mixed Content).
@@ -13,7 +13,7 @@ HTTPS pages cannot make HTTP API requests due to browser security (Mixed Content
 
 #### `vercel.json`
 This file configures Vercel to proxy API requests to your backend:
-- `/api/*` requests → `http://157.10.73.52:3001/api/*`
+- `/api/*` requests → `https://mentoring.openplp.com/api/api/*`
 
 #### `.env.production`
 Updated to use relative API path:
@@ -55,7 +55,7 @@ If it doesn't work:
 curl https://mentoring.openplp.com/api/v1/health
 
 # Direct to your server
-curl http://157.10.73.52:3001/api/v1/health
+curl https://mentoring.openplp.com/api/v1/health
 ```
 
 #### Alternative Solutions:

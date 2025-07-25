@@ -36,7 +36,7 @@ JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRES_IN=7d
 
 # Frontend URL for CORS
-FRONTEND_URL=http://157.10.73.52
+FRONTEND_URL=https://mentoring.openplp.com
 
 # File Upload
 MAX_FILE_SIZE=10485760
@@ -50,8 +50,8 @@ EOF
 echo "📦 Building frontend..."
 cd frontend
 cat > .env.production << EOF
-# Production API URL for your server
-VITE_API_URL=http://$SERVER_IP:3000/api/v1
+# Production API URL - MUST use HTTPS
+VITE_API_URL=https://mentoring.openplp.com/api/v1
 VITE_APP_NAME=PLP Mentoring Platform
 VITE_APP_VERSION=1.0.0
 EOF

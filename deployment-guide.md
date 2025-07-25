@@ -106,7 +106,7 @@ cd frontend
 echo "VITE_API_URL=/api/v1" > .env.production
 
 # If backend is on different server:
-# echo "VITE_API_URL=http://157.10.73.52:3001/api/v1" > .env.production
+# echo "VITE_API_URL=https://mentoring.openplp.com/api/v1" > .env.production
 
 # Build the frontend
 npm install

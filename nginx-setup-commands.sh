@@ -47,4 +47,4 @@ sudo nginx -t && sudo systemctl reload nginx
 
 echo "✅ Nginx configured!"
 echo "📁 Upload frontend files to: /var/www/html/plp-mentoring/"
-echo "🌐 Access site at: http://157.10.73.52"
+echo "🌐 Access site at: https://mentoring.openplp.com"

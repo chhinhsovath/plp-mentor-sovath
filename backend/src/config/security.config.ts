@@ -35,11 +35,7 @@ export class SecurityConfig {
           'https://mentoring.openplp.com',
           'https://www.mentoring.openplp.com',
           'https://plp-mentor-sovath.vercel.app',
-          'https://plp-mentor-sovath-*.vercel.app',
-          'http://157.10.73.52',
-          'http://157.10.73.52:80',
-          'http://157.10.73.52:3000',
-          'http://157.10.73.52:5173'
+          'https://plp-mentor-sovath-*.vercel.app'
         ] 
       : [
           frontendUrl, 

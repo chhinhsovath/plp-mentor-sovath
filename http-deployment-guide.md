@@ -1,7 +1,7 @@
 # HTTP Deployment Guide (For IP-based Server without SSL)
 
 ## Important Note
-Since `https://mentoring.openplp.com` uses HTTPS, it CANNOT make requests to your HTTP backend at `http://157.10.73.52:3001`. You have two options:
+Since `https://mentoring.openplp.com` uses HTTPS, it CANNOT make requests to your HTTP backend at `https://mentoring.openplp.com/api`. You have two options:
 
 ## Option 1: Access Your App via HTTP IP Address (Recommended for your setup)
 
@@ -73,7 +73,7 @@ NODE_ENV=production
 PORT=3001
 DATABASE_URL=your_postgresql_connection_string
 JWT_SECRET=your_secure_secret_key
-FRONTEND_URL=http://157.10.73.52
+FRONTEND_URL=https://mentoring.openplp.com
 
 # Build and start backend
 npm run build
@@ -88,8 +88,8 @@ Edit `backend/src/config/security.config.ts`:
 ```typescript
 const allowedOrigins = nodeEnv === 'production' 
   ? [
-      'http://157.10.73.52',
-      'http://157.10.73.52:80',
+      'https://mentoring.openplp.com',
+      'https://mentoring.openplp.com:80',
       frontendUrl
     ] 
   : [
@@ -101,7 +101,7 @@ const allowedOrigins = nodeEnv === 'production'
 
 ### Step 5: Access Your Application
 
-✅ **Access via**: `http://157.10.73.52`
+✅ **Access via**: `https://mentoring.openplp.com`
 ❌ **NOT**: `https://mentoring.openplp.com` (This won't work with HTTP backend)
 
 ## Option 2: Use a Different Frontend URL
@@ -120,7 +120,7 @@ For immediate testing, run the frontend locally:
 cd frontend
 
 # Create .env.local for testing
-echo "VITE_API_URL=http://157.10.73.52:3001/api/v1" > .env.local
+echo "VITE_API_URL=https://mentoring.openplp.com/api/v1" > .env.local
 
 # Run development server
 npm run dev
@@ -164,7 +164,7 @@ pm2 save
 # Deploy frontend
 echo "📦 Building frontend..."
 cd ../frontend
-echo "VITE_API_URL=http://157.10.73.52:3001/api/v1" > .env.production
+echo "VITE_API_URL=https://mentoring.openplp.com/api/v1" > .env.production
 npm install
 npm run build
 
@@ -179,7 +179,7 @@ sudo chown -R www-data:www-data $FRONTEND_DIR
 sudo systemctl reload nginx
 
 echo "✅ Deployment complete!"
-echo "🌐 Access your app at: http://157.10.73.52"
+echo "🌐 Access your app at: https://mentoring.openplp.com"
 ```
 
 Make it executable:
@@ -191,17 +191,17 @@ chmod +x deploy.sh
 
 1. **Check Backend**:
 ```bash
-curl http://157.10.73.52:3001/api/v1/health
+curl https://mentoring.openplp.com/api/v1/health
 ```
 
 2. **Check Frontend**:
 ```bash
-curl http://157.10.73.52
+curl https://mentoring.openplp.com
 ```
 
 3. **Test Login**:
 ```bash
-curl -X POST http://157.10.73.52:3001/api/v1/auth/login \
+curl -X POST https://mentoring.openplp.com/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"chhinhs","password":"password"}'
 ```

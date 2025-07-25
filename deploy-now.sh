@@ -5,7 +5,7 @@
 
 echo "🚀 PLP Mentoring Platform - Quick Deploy"
 echo "========================================"
-echo "This will deploy to: http://157.10.73.52/mentoring"
+echo "This will deploy to: https://mentoring.openplp.com"
 echo ""
 
 # Check if auto-deploy.sh exists

@@ -3,7 +3,7 @@
 # Quick deployment script now that backend is working
 
 echo "🚀 Quick Deploy - Frontend Only"
-echo "Backend already running at: http://157.10.73.52:3001"
+echo "Backend already running at: https://mentoring.openplp.com/api"
 
 # Build frontend
 echo "📦 Building frontend..."
@@ -34,6 +34,6 @@ EOF
 
 echo ""
 echo "✅ Deployment complete!"
-echo "🌐 Access your app at: http://157.10.73.52"
+echo "🌐 Access your app at: https://mentoring.openplp.com"
 echo ""
 echo "⚠️  Remember: Use HTTP, not HTTPS!"

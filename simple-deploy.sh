@@ -26,4 +26,4 @@ sudo cp -r dist/* /var/www/html/mentoring/
 sudo chown -R www-data:www-data /var/www/html/mentoring
 
 echo "✅ Deployment Complete!"
-echo "🌐 Access at: http://157.10.73.52/mentoring"
+echo "🌐 Access at: https://mentoring.openplp.com"

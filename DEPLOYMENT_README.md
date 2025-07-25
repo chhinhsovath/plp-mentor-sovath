@@ -106,9 +106,9 @@ sudo chown -R www-data:www-data /var/www/html/mentoring
 
 ## Access URLs
 
-- **Frontend**: http://157.10.73.52/mentoring
-- **Backend API**: http://157.10.73.52:3001/api/v1
-- **Health Check**: http://157.10.73.52:3001/api/v1/health
+- **Frontend**: https://mentoring.openplp.com
+- **Backend API**: https://mentoring.openplp.com/api/v1
+- **Health Check**: https://mentoring.openplp.com/api/v1/health
 
 ## Default Login Credentials
 - Username: `chhinhs`

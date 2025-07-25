@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Auto-deployment script for PLP Mentoring Platform
-# Deploys to: http://157.10.73.52/mentoring
-# Backend API: http://157.10.73.52:3001/api/v1
+# Deploys to: https://mentoring.openplp.com
+# Backend API: https://mentoring.openplp.com/api/v1
 
 # Configuration
 SERVER_IP="157.10.73.52"
@@ -103,7 +103,7 @@ DB_PASSWORD=$DB_PASSWORD
 DB_SSL=false
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_EXPIRES_IN=7d
-FRONTEND_URL=http://157.10.73.52
+FRONTEND_URL=https://mentoring.openplp.com
 MAX_FILE_SIZE=10485760
 UPLOAD_DIR=./uploads
 LOG_LEVEL=info
@@ -127,8 +127,8 @@ cd $FRONTEND_DIR
 
 # Create production environment file
 cat > .env.production << EOF
-# Production API URL for same-server deployment
-VITE_API_URL=http://157.10.73.52:3001/api/v1
+# Production API URL - MUST use HTTPS
+VITE_API_URL=https://mentoring.openplp.com/api/v1
 VITE_APP_NAME=PLP Mentoring Platform
 VITE_APP_VERSION=1.0.0
 VITE_BASE_URL=/mentoring/
@@ -196,7 +196,7 @@ echo "🧪 Testing deployment..."
 curl -s http://localhost:3001/api/v1/health | jq . || echo "Backend health check"
 echo ""
 echo "✅ Deployment complete!"
-echo "🌐 Access the application at: http://157.10.73.52/mentoring"
+echo "🌐 Access the application at: https://mentoring.openplp.com"
 DEPLOY_SCRIPT
 
 check_status "Created deployment script"
@@ -296,9 +296,9 @@ echo ""
 echo "=============================================="
 print_status "🎉 Deployment Complete!"
 echo ""
-echo "📍 Frontend: http://$SERVER_IP/mentoring"
-echo "🔌 Backend API: http://$SERVER_IP:3001/api/v1"
-echo "📊 Health Check: http://$SERVER_IP:3001/api/v1/health"
+echo "📍 Frontend: https://mentoring.openplp.com"
+echo "🔌 Backend API: https://mentoring.openplp.com/api/v1"
+echo "📊 Health Check: https://mentoring.openplp.com/api/v1/health"
 echo ""
 echo "📝 Default Login:"
 echo "   Username: chhinhs"
