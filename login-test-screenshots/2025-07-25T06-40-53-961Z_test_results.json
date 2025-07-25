@@ -1,0 +1,26 @@
+[
+  {
+    "username": "chhinhs",
+    "password": "password",
+    "description": "Admin account",
+    "success": false,
+    "error": "page.waitForTimeout is not a function",
+    "timestamp": "2025-07-25T06:40:19.981Z"
+  },
+  {
+    "username": "teacher",
+    "password": "teacher123",
+    "description": "Teacher account",
+    "success": false,
+    "error": "page.waitForTimeout is not a function",
+    "timestamp": "2025-07-25T06:40:36.302Z"
+  },
+  {
+    "username": "invalid",
+    "password": "wrong",
+    "description": "Invalid credentials",
+    "success": false,
+    "error": "page.waitForTimeout is not a function",
+    "timestamp": "2025-07-25T06:40:51.946Z"
+  }
+]
