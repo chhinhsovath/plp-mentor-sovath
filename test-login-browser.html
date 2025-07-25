@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLP Login Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .success {
+            color: green;
+            background-color: #e8f5e9;
+        }
+        .error {
+            color: red;
+            background-color: #ffebee;
+        }
+        .info {
+            color: blue;
+            background-color: #e3f2fd;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #1890ff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #40a9ff;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>PLP Mentoring Login Test</h1>
+        
+        <div class="test-section">
+            <h2>Test Configuration</h2>
+            <p><strong>Site URL:</strong> https://mentoring.openplp.com</p>
+            <p><strong>API URL:</strong> <span id="apiUrl"></span></p>
+            <p><strong>Browser:</strong> <span id="browserInfo"></span></p>
+        </div>
+
+        <div class="test-section">
+            <h2>Manual Login Test</h2>
+            <div>
+                <input type="text" id="username" placeholder="Username" value="chhinhs" style="padding: 8px; margin: 5px;">
+                <input type="password" id="password" placeholder="Password" value="password" style="padding: 8px; margin: 5px;">
+                <button onclick="testLogin()">Test Login</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Automated Tests</h2>
+            <button onclick="testServerConnectivity()">Test Server Connectivity</button>
+            <button onclick="testCORS()">Test CORS Configuration</button>
+            <button onclick="testAllCredentials()">Test All Credentials</button>
+            <button onclick="clearLogs()">Clear Logs</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Results</h2>
+            <div id="results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Console Output</h2>
+            <div id="console" style="max-height: 400px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = 'https://mentoring.openplp.com/api/v1';
+        const testCredentials = [
+            { username: 'chhinhs', password: 'password' },
+            { username: 'teacher', password: 'teacher123' },
+            { username: 'admin', password: 'admin123' }
+        ];
+
+        // Initialize
+        document.getElementById('apiUrl').textContent = API_BASE;
+        document.getElementById('browserInfo').textContent = navigator.userAgent;
+
+        // Logging functions
+        function log(message, type = 'info') {
+            const console = document.getElementById('console');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            console.appendChild(entry);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('console').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+
+        // Test functions
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            log(`Testing login for user: ${username}`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password }),
+                    credentials: 'include'
+                });
+
+                const responseText = await response.text();
+                let responseData;
+                
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (e) {
+                    log(`Response is not JSON: ${responseText}`, 'error');
+                    responseData = { error: 'Invalid JSON response', raw: responseText };
+                }
+
+                log(`Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                log(`Response: ${JSON.stringify(responseData, null, 2)}`, response.ok ? 'success' : 'error');
+
+                // Display detailed error information
+                if (!response.ok) {
+                    const errorDetails = document.createElement('div');
+                    errorDetails.className = 'error';
+                    errorDetails.innerHTML = `
+                        <h3>Login Failed</h3>
+                        <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                        <p><strong>Error Message:</strong> ${responseData.message || responseData.error || 'No error message provided'}</p>
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    `;
+                    document.getElementById('results').appendChild(errorDetails);
+                } else {
+                    const successDetails = document.createElement('div');
+                    successDetails.className = 'success';
+                    successDetails.innerHTML = `
+                        <h3>Login Successful!</h3>
+                        <p><strong>User:</strong> ${responseData.data?.user?.username || username}</p>
+                        <p><strong>Token:</strong> ${responseData.data?.access_token ? 'Received' : 'Not received'}</p>
+                    `;
+                    document.getElementById('results').appendChild(successDetails);
+                }
+
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+                
+                const errorDetails = document.createElement('div');
+                errorDetails.className = 'error';
+                errorDetails.innerHTML = `
+                    <h3>Network Error</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>This could be due to:</p>
+                    <ul>
+                        <li>CORS blocking the request</li>
+                        <li>Server is down or unreachable</li>
+                        <li>Network connectivity issues</li>
+                    </ul>
+                `;
+                document.getElementById('results').appendChild(errorDetails);
+            }
+        }
+
+        async function testServerConnectivity() {
+            log('Testing server connectivity...', 'info');
+            
+            try {
+                // Test basic connectivity
+                const response = await fetch(API_BASE, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                log(`Server response: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                // Test auth endpoint
+                const authResponse = await fetch(`${API_BASE}/auth`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                log(`Auth endpoint: ${authResponse.status} ${authResponse.statusText}`, authResponse.ok ? 'success' : 'info');
+                
+            } catch (error) {
+                log(`Connectivity test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCORS() {
+            log('Testing CORS configuration...', 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'content-type'
+                    }
+                });
+                
+                log(`CORS preflight: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('access-control-allow-origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('access-control-allow-methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('access-control-allow-headers')
+                };
+                
+                log(`CORS headers: ${JSON.stringify(corsHeaders, null, 2)}`, 'info');
+                
+            } catch (error) {
+                log(`CORS test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAllCredentials() {
+            log('Testing all credentials...', 'info');
+            
+            for (const creds of testCredentials) {
+                document.getElementById('username').value = creds.username;
+                document.getElementById('password').value = creds.password;
+                await testLogin();
+                
+                // Wait between tests
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        // Also capture console errors
+        window.addEventListener('error', (event) => {
+            log(`JavaScript Error: ${event.message} at ${event.filename}:${event.lineno}`, 'error');
+        });
+
+        // Initial log
+        log('Test page loaded. Ready to test login functionality.', 'success');
+    </script>
+</body>
+</html>
