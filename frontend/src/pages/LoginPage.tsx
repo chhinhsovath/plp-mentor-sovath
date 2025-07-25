@@ -37,6 +37,14 @@ const LoginPage = () => {
     }
   }, [isAuthenticated, authLoading, navigate, location])
 
+  // Fill demo credentials function
+  const fillDemoCredentials = (username: string, password: string) => {
+    form.setFieldsValue({
+      username,
+      password
+    })
+  }
+
   const onFinish = async (values: LoginCredentials) => {
     setError('')
     setLoading(true)
@@ -123,6 +131,10 @@ const LoginPage = () => {
               layout="vertical"
               size="large"
               requiredMark={false}
+              initialValues={{
+                username: 'chhinhs',
+                password: 'password'
+              }}
             >
               <Form.Item
                 name="username"
@@ -189,17 +201,35 @@ const LoginPage = () => {
             </Divider>
 
             <div style={{ textAlign: 'center' }}>
-              <Space direction="vertical">
+              <Space direction="vertical" size="small">
                 <Text type="secondary" style={{ fontSize: '14px' }}>
                   {t('auth.demoCredentials')}
                 </Text>
-                <Space>
-                  <Text strong>{t('auth.demo.adminLabel')}</Text>
-                  <Text code>chhinhs/password</Text>
-                </Space>
-                <Space>
-                  <Text strong>{t('auth.demo.teacherLabel')}</Text>
-                  <Text code>teacher / teacher123</Text>
+                
+                <Space direction="vertical" size="small">
+                  <Space>
+                    <Text strong>{t('auth.demo.adminLabel')}</Text>
+                    <Text code>chhinhs/password</Text>
+                    <Button 
+                      type="link" 
+                      size="small" 
+                      onClick={() => fillDemoCredentials('chhinhs', 'password')}
+                    >
+                      Fill
+                    </Button>
+                  </Space>
+                  
+                  <Space>
+                    <Text strong>{t('auth.demo.teacherLabel')}</Text>
+                    <Text code>teacher/teacher123</Text>
+                    <Button 
+                      type="link" 
+                      size="small" 
+                      onClick={() => fillDemoCredentials('teacher', 'teacher123')}
+                    >
+                      Fill
+                    </Button>
+                  </Space>
                 </Space>
               </Space>
             </div>
