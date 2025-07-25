@@ -9,19 +9,13 @@ import {
   Table,
   Alert,
   Skeleton,
-  Tooltip,
   Space,
-  Divider,
   Empty,
   Segmented,
 } from 'antd';
 import {
   SwapOutlined,
-  ShopOutlined,
-  UserOutlined,
-  TeamOutlined,
   RiseOutlined,
-  InfoCircleOutlined,
   DownloadOutlined,
   BarChartOutlined,
   RadarChartOutlined,
@@ -36,8 +30,6 @@ interface ComparisonViewProps {
   data?: any[];
   loading?: boolean;
   error?: string;
-  onCompare?: (items: string[]) => void;
-  maxComparisons?: number;
   showExport?: boolean;
   defaultView?: 'chart' | 'table' | 'radar';
 }
@@ -46,11 +38,9 @@ const ComparisonView = ({
   data = [],
   loading = false,
   error,
-  onCompare,
-  maxComparisons = 5,
   showExport = true,
   defaultView = 'chart',
-}) => {
+}: ComparisonViewProps) => {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState(defaultView);
 
@@ -116,13 +106,13 @@ const ComparisonView = ({
         {data.length > 0 ? (
           <div>
             {viewMode === 'chart' && (
-              <ChartWidget title="Comparison Chart" height={400}>
+              <ChartWidget title="Comparison Chart" height={400} type="bar" data={data} loading={loading}>
                 <Empty description="Chart visualization coming soon" />
               </ChartWidget>
             )}
             
             {viewMode === 'radar' && (
-              <ChartWidget title="Radar Chart" height={400}>
+              <ChartWidget title="Radar Chart" height={400} type="area" data={data} loading={loading}>
                 <Empty description="Radar chart visualization coming soon" />
               </ChartWidget>
             )}

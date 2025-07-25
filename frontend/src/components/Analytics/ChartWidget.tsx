@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Typography, Empty } from 'antd'
 import { AreaChartOutlined } from '@ant-design/icons'
 
-const { Title, Text } = Typography
+const { Text } = Typography
 
 interface ChartWidgetProps {
   title?: string
