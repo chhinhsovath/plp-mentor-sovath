@@ -32,8 +32,8 @@ export class SecurityConfig {
     const allowedOrigins = nodeEnv === 'production' 
       ? [
           frontendUrl,
-          'https://mentoring.openpip.com',
-          'https://www.mentoring.openpip.com'
+          'https://mentoring.openplp.com',
+          'https://www.mentoring.openplp.com'
         ] 
       : [
           frontendUrl, 
