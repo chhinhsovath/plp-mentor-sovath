@@ -47,7 +47,7 @@ import ROICalculator from './pages/ROICalculator'
 import ComparativeAnalytics from './pages/ComparativeAnalytics'
 import PresentationDashboard from './pages/PresentationDashboard'
 import SchoolsPage from './pages/SchoolsPage'
-import './utils/test-login'
+// import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
 // const ADMIN_ROLES = ['administrator', 'Administrator']
