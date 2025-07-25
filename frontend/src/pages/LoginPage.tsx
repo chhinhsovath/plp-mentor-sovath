@@ -195,7 +195,7 @@ const LoginPage = () => {
                 </Text>
                 <Space>
                   <Text strong>{t('auth.demo.adminLabel')}</Text>
-                  <Text code>admin / admin123</Text>
+                  <Text code>chhinhs/password</Text>
                 </Space>
                 <Space>
                   <Text strong>{t('auth.demo.teacherLabel')}</Text>
