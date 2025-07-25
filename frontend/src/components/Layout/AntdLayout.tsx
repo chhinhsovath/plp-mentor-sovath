@@ -455,34 +455,93 @@ const AntdLayout: React.FC = () => {
 
   // Get current selected key by checking the path
   const getSelectedKey = () => {
-    const findKey = (items: MenuItem[]): string => {
+    // Special handling for home page
+    if (location.pathname === '/') {
+      return 'dashboard'
+    }
+    
+    const findKey = (items: MenuItem[]): string | null => {
       for (const item of items) {
-        if (item.path === location.pathname) return item.key
+        // Skip if user doesn't have access
+        if (!hasAccess(item)) continue
+        
+        if (item.path && item.path === location.pathname) {
+          return item.key
+        }
+        
         if (item.children) {
           const childKey = findKey(item.children)
           if (childKey) return childKey
         }
       }
-      return 'dashboard'
+      return null
     }
-    return findKey(menuItems)
+    
+    const key = findKey(menuItems)
+    return key || 'dashboard'
   }
 
   const selectedKey = getSelectedKey()
 
+  // Get parent keys for opening submenus
+  const getDefaultOpenKeys = () => {
+    const findParentKey = (items: MenuItem[], targetPath: string, parentKey?: string): string | null => {
+      for (const item of items) {
+        if (item.path === targetPath && parentKey) {
+          return parentKey
+        }
+        if (item.children) {
+          const result = findParentKey(item.children, targetPath, item.key)
+          if (result) return result
+        }
+      }
+      return null
+    }
+    
+    const parentKey = findParentKey(menuItems, location.pathname)
+    return parentKey ? [parentKey] : []
+  }
+
+  // Update open keys when location changes
+  useEffect(() => {
+    if (!collapsed && !isMobile) {
+      const defaultKeys = getDefaultOpenKeys()
+      if (defaultKeys.length > 0) {
+        setOpenKeys(prev => {
+          const newKeys = [...new Set([...prev, ...defaultKeys])]
+          localStorage.setItem('sidebarOpenKeys', JSON.stringify(newKeys))
+          return newKeys
+        })
+      }
+    }
+  }, [location.pathname, collapsed, isMobile])
+
   // Get current page title
   const getPageTitle = () => {
-    const findTitle = (items: MenuItem[]): string => {
+    // Special handling for home page
+    if (location.pathname === '/') {
+      return t('navigation.dashboard') || 'ផ្ទាំងគ្រប់គ្រង'
+    }
+    
+    const findTitle = (items: MenuItem[]): string | null => {
       for (const item of items) {
-        if (item.path === location.pathname) return item.label
+        // Skip if user doesn't have access
+        if (!hasAccess(item)) continue
+        
+        if (item.path && item.path === location.pathname) {
+          return item.label
+        }
+        
         if (item.children) {
           const childTitle = findTitle(item.children)
           if (childTitle) return childTitle
         }
       }
-      return t('navigation.dashboard')
+      return null
     }
-    return findTitle(menuItems)
+    
+    const title = findTitle(menuItems)
+    return title || t('navigation.dashboard') || 'ផ្ទាំងគ្រប់គ្រង'
   }
 
   const siderContent = (
