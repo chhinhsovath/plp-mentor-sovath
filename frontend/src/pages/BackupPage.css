@@ -1,0 +1,298 @@
+.backup-page {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 24px;
+}
+
+.backup-page .page-header-card {
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.backup-page .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.backup-page .ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.backup-page .ant-statistic-content {
+  font-size: 24px !important;
+}
+
+.backup-page .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.backup-page .ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+.backup-page .ant-table-tbody > tr:hover > td {
+  background-color: #e6f7ff !important;
+}
+
+.backup-page .backup-status-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.backup-page .backup-type-icon {
+  font-size: 16px;
+}
+
+.backup-page .backup-size {
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.backup-page .backup-name {
+  color: #1890ff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.backup-page .backup-name:hover {
+  color: #40a9ff;
+  text-decoration: underline;
+}
+
+.backup-page .backup-description {
+  color: #666;
+  font-size: 12px;
+  margin-top: 2px;
+  display: block;
+}
+
+.backup-page .filter-card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.backup-page .stats-card {
+  text-align: center;
+  padding: 20px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.backup-page .backup-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.backup-page .backup-progress {
+  margin: 8px 0;
+}
+
+.backup-page .metadata-section {
+  margin-top: 24px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+.backup-page .metadata-item {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 4px;
+  border-left: 4px solid #1890ff;
+}
+
+.backup-page .backup-file-path {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: #f6f8fa;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.backup-page .empty-state {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.backup-page .empty-state-icon {
+  font-size: 64px;
+  color: #d9d9d9;
+  margin-bottom: 16px;
+}
+
+.backup-page .drawer-section {
+  margin-bottom: 24px;
+}
+
+.backup-page .drawer-section:last-child {
+  margin-bottom: 0;
+}
+
+.backup-page .backup-details-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.backup-page .backup-details-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #1890ff;
+}
+
+.backup-page .backup-alert {
+  margin-bottom: 16px;
+}
+
+.backup-page .backup-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .backup-page {
+    padding: 16px;
+  }
+  
+  .backup-page .ant-statistic-content {
+    font-size: 20px !important;
+  }
+  
+  .backup-page .page-header-card .ant-space {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px !important;
+  }
+  
+  .backup-page .page-header-card .ant-space > * {
+    width: 100%;
+  }
+  
+  .backup-page .filter-card {
+    padding: 12px;
+  }
+  
+  .backup-page .ant-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .backup-page .stats-card {
+    height: 100px;
+    padding: 16px;
+  }
+  
+  .backup-page .backup-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .backup-page .ant-drawer {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .backup-page {
+    padding: 12px;
+  }
+  
+  .backup-page .ant-statistic-content {
+    font-size: 18px !important;
+  }
+  
+  .backup-page .ant-statistic-title {
+    font-size: 12px;
+  }
+  
+  .backup-page .backup-details-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .backup-page .backup-details-icon {
+    margin: 0 auto;
+  }
+}
+
+/* Dark mode support */
+[data-theme='dark'] .backup-page {
+  background-color: #141414;
+}
+
+[data-theme='dark'] .backup-page .filter-card {
+  background: #1f1f1f;
+}
+
+[data-theme='dark'] .backup-page .metadata-section {
+  background: #1f1f1f;
+}
+
+[data-theme='dark'] .backup-page .metadata-item {
+  background: #262626;
+}
+
+[data-theme='dark'] .backup-page .backup-file-path {
+  background: #262626;
+  color: #d9d9d9;
+}
+
+/* Loading states */
+.backup-page .backup-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.backup-page .backup-loading .ant-spin {
+  margin-right: 12px;
+}
+
+/* Status indicators */
+.backup-page .status-pending {
+  color: #d9d9d9;
+}
+
+.backup-page .status-in-progress {
+  color: #1890ff;
+}
+
+.backup-page .status-completed {
+  color: #52c41a;
+}
+
+.backup-page .status-failed {
+  color: #ff4d4f;
+}
+
+.backup-page .status-restored {
+  color: #722ed1;
+}
+
+.backup-page .status-expired {
+  color: #faad14;
+}

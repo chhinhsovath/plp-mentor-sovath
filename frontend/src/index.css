@@ -1,0 +1,74 @@
+/* Global styles for Khmer language support */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Hanuman', 'Noto Sans Khmer', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Khmer text rendering improvements */
+.khmer-text {
+  font-family: 'Hanuman', 'Noto Sans Khmer', sans-serif;
+  line-height: 1.8;
+  word-spacing: 0.1em;
+}
+
+/* Moul font for Khmer headings */
+h1, h2, h3,
+.ant-typography h1,
+.ant-typography h2, 
+.ant-typography h3,
+.ant-typography-h1,
+.ant-typography-h2,
+.ant-typography-h3,
+h1.ant-typography,
+h2.ant-typography,
+h3.ant-typography {
+  font-family: 'Moul', 'Hanuman', sans-serif !important;
+  line-height: 1.4;
+  font-weight: normal !important; /* Moul is a display font, doesn't need bold */
+}
+
+/* Ensure all other Ant Design text uses Hanuman */
+.ant-typography,
+.ant-form-item-label,
+.ant-input,
+.ant-select,
+.ant-btn,
+.ant-menu-item,
+.ant-table {
+  font-family: 'Hanuman', 'Noto Sans Khmer', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Ensure proper text rendering for Khmer */
+input, textarea, select {
+  font-family: 'Hanuman', 'Noto Sans Khmer', sans-serif;
+}
+
+/* Dark mode styles */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background-color: #141414;
+  color: #f5f5f5;
+}
+
+/* Print styles */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

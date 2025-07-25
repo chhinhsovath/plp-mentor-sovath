@@ -1,0 +1,414 @@
+.security-page {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.security-page .ant-card {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.security-page .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.security-page .ant-statistic-content {
+  font-size: 24px !important;
+}
+
+.security-page .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.security-page .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.security-page .ant-tabs-tab-active {
+  color: #1890ff !important;
+}
+
+.security-page .ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+.security-page .ant-table-tbody > tr:hover > td {
+  background-color: #e6f7ff !important;
+}
+
+.security-page .security-alert {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.15);
+  border-left: 4px solid #ff4d4f;
+}
+
+.security-page .security-alert.warning {
+  box-shadow: 0 2px 8px rgba(250, 173, 20, 0.15);
+  border-left-color: #faad14;
+}
+
+.security-page .security-alert.success {
+  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.15);
+  border-left-color: #52c41a;
+}
+
+.security-page .severity-critical {
+  background: linear-gradient(90deg, #fff2f0 0%, #ffffff 100%);
+  border-left: 4px solid #ff4d4f;
+}
+
+.security-page .severity-high {
+  background: linear-gradient(90deg, #fff7e6 0%, #ffffff 100%);
+  border-left: 4px solid #fa8c16;
+}
+
+.security-page .severity-medium {
+  background: linear-gradient(90deg, #feffe6 0%, #ffffff 100%);
+  border-left: 4px solid #fadb14;
+}
+
+.security-page .severity-low {
+  background: linear-gradient(90deg, #f6ffed 0%, #ffffff 100%);
+  border-left: 4px solid #52c41a;
+}
+
+.security-page .event-type-tag {
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.security-page .session-item {
+  padding: 12px;
+  border-radius: 6px;
+  background: #fafafa;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.security-page .session-item:hover {
+  background: #e6f7ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.security-page .session-user {
+  font-weight: 600;
+  color: #1890ff;
+  margin-bottom: 4px;
+}
+
+.security-page .session-details {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.security-page .scan-card {
+  text-align: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  border: 1px solid #e6f7ff;
+}
+
+.security-page .scan-card.vulnerability {
+  background: linear-gradient(135deg, #fff2f0 0%, #ffffff 100%);
+  border-color: #ffccc7;
+}
+
+.security-page .scan-card.penetration {
+  background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
+  border-color: #d9f7be;
+}
+
+.security-page .scan-card.compliance {
+  background: linear-gradient(135deg, #f0f5ff 0%, #ffffff 100%);
+  border-color: #d6e4ff;
+}
+
+.security-page .scan-progress {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.security-page .scan-icon {
+  font-size: 48px;
+  color: #1890ff;
+  margin-bottom: 16px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.security-page .settings-section {
+  margin-bottom: 24px;
+}
+
+.security-page .settings-section .ant-card-head {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.security-page .settings-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.security-page .settings-item:last-child {
+  border-bottom: none;
+}
+
+.security-page .settings-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.security-page .ip-address {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: #f6f8fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  border: 1px solid #e1e4e8;
+}
+
+.security-page .status-active {
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.security-page .alert-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.security-page .alert-item {
+  border-left: 3px solid #faad14;
+  background: #fffbe6;
+  margin-bottom: 8px;
+  border-radius: 0 4px 4px 0;
+}
+
+.security-page .alert-item.critical {
+  border-left-color: #ff4d4f;
+  background: #fff2f0;
+}
+
+.security-page .alert-item.high {
+  border-left-color: #fa8c16;
+  background: #fff7e6;
+}
+
+.security-page .alert-item.medium {
+  border-left-color: #fadb14;
+  background: #feffe6;
+}
+
+.security-page .alert-item.low {
+  border-left-color: #52c41a;
+  background: #f6ffed;
+}
+
+.security-page .compliance-score {
+  text-align: center;
+  padding: 20px;
+}
+
+.security-page .compliance-score .ant-progress-circle {
+  margin-bottom: 16px;
+}
+
+.security-page .metric-card {
+  text-align: center;
+  padding: 20px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+.security-page .metric-card.critical {
+  background: linear-gradient(135deg, #fff2f0 0%, #ffffff 100%);
+  border-color: #ff4d4f;
+}
+
+.security-page .metric-card.success {
+  background: linear-gradient(135deg, #f6ffed 0%, #ffffff 100%);
+  border-color: #52c41a;
+}
+
+.security-page .metric-card.warning {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffffff 100%);
+  border-color: #faad14;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .security-page {
+    padding: 16px;
+  }
+  
+  .security-page .ant-statistic-content {
+    font-size: 20px !important;
+  }
+  
+  .security-page .page-header-card .ant-space {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px !important;
+  }
+  
+  .security-page .page-header-card .ant-space > * {
+    width: 100%;
+  }
+  
+  .security-page .ant-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .security-page .session-details {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .security-page .settings-toggle {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  .security-page .scan-card {
+    padding: 16px;
+  }
+  
+  .security-page .metric-card {
+    height: 120px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .security-page {
+    padding: 12px;
+  }
+  
+  .security-page .ant-statistic-content {
+    font-size: 18px !important;
+  }
+  
+  .security-page .ant-statistic-title {
+    font-size: 12px;
+  }
+  
+  .security-page .ant-tabs-tab {
+    font-size: 14px;
+  }
+  
+  .security-page .scan-progress {
+    padding: 20px 10px;
+  }
+  
+  .security-page .scan-icon {
+    font-size: 36px;
+  }
+}
+
+/* Dark mode support */
+[data-theme='dark'] .security-page {
+  background-color: #141414;
+}
+
+[data-theme='dark'] .security-page .settings-section .ant-card-head {
+  background: #1f1f1f;
+}
+
+[data-theme='dark'] .security-page .session-item {
+  background: #1f1f1f;
+}
+
+[data-theme='dark'] .security-page .session-item:hover {
+  background: #262626;
+}
+
+[data-theme='dark'] .security-page .ip-address {
+  background: #262626;
+  border-color: #434343;
+  color: #d9d9d9;
+}
+
+[data-theme='dark'] .security-page .scan-card {
+  background: #1f1f1f;
+  border-color: #434343;
+}
+
+[data-theme='dark'] .security-page .metric-card {
+  background: #1f1f1f;
+}
+
+/* Animation for real-time updates */
+.security-page .real-time-update {
+  animation: highlight 3s ease-in-out;
+}
+
+@keyframes highlight {
+  0% { background-color: #fff7e6; }
+  100% { background-color: transparent; }
+}
+
+.security-page .security-badge {
+  position: relative;
+}
+
+.security-page .security-badge::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #ff4d4f;
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}

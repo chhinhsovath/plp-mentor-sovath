@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  postgres-test:
+    image: postgres:14
+    container_name: mentoring-postgres-test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mentoring_test
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  redis-test:
+    image: redis:7-alpine
+    container_name: mentoring-redis-test
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: mentoring-backend-test
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=postgres-test
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=mentoring_test
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - JWT_SECRET=test-jwt-secret-for-testing-only
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - test-network
+    command: npm run test:e2e
+
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: mentoring-frontend-test
+    environment:
+      - NODE_ENV=test
+      - VITE_API_URL=http://backend-test:3000/api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - test-network
+    command: npm run test
+
+volumes:
+  postgres_test_data:
+
+networks:
+  test-network:
+    driver: bridge

@@ -1,0 +1,739 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly run on Sundays at midnight UTC
+
+env:
+  NODE_VERSION: '18'
+  POSTGRES_VERSION: '14'
+  CACHE_KEY_PREFIX: 'v1'
+
+jobs:
+  # Backend Tests
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mentoring_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:6
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v3
+        id: backend-deps-cache
+        with:
+          path: backend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-backend-deps-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-backend-deps-
+
+      - name: Install backend dependencies
+        if: steps.backend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run backend linting
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: Run backend unit tests
+        working-directory: ./backend
+        run: npm run test:cov
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Run backend integration tests
+        working-directory: ./backend
+        run: npm run test:e2e
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Upload backend coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+          
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-test-results
+          path: |
+            backend/coverage/
+            backend/test-results/
+          retention-days: 14
+
+  # Frontend Tests
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        id: frontend-deps-cache
+        with:
+          path: frontend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-
+
+      - name: Install frontend dependencies
+        if: steps.frontend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend linting
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run frontend unit tests
+        working-directory: ./frontend
+        run: npm run test:coverage
+        
+      - name: Run component tests
+        working-directory: ./frontend
+        run: npm run test -- --testPathPattern=components
+
+      - name: Upload frontend coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./frontend/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+          
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-test-results
+          path: |
+            frontend/coverage/
+          retention-days: 14
+
+  # Accessibility Tests
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        id: frontend-deps-cache
+        with:
+          path: frontend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-
+
+      - name: Install frontend dependencies
+        if: steps.frontend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run basic accessibility tests
+        working-directory: ./frontend
+        run: npm run test -- --testPathPattern=accessibility
+
+      - name: Run enhanced accessibility tests
+        working-directory: ./frontend
+        run: npm run test -- --testPathPattern=accessibility-enhanced
+        
+      - name: Generate accessibility report
+        working-directory: ./frontend
+        run: |
+          mkdir -p accessibility-report
+          npm run test -- --testPathPattern=accessibility --json --outputFile=accessibility-report/results.json
+          echo "# Accessibility Test Results" > accessibility-report/summary.md
+          echo "Tests run on $(date)" >> accessibility-report/summary.md
+          echo "## Summary" >> accessibility-report/summary.md
+          grep -o '"numPassedTests":[0-9]*' accessibility-report/results.json | cut -d':' -f2 | xargs -I{} echo "- Passed: {}" >> accessibility-report/summary.md
+          grep -o '"numFailedTests":[0-9]*' accessibility-report/results.json | cut -d':' -f2 | xargs -I{} echo "- Failed: {}" >> accessibility-report/summary.md
+          grep -o '"numTotalTests":[0-9]*' accessibility-report/results.json | cut -d':' -f2 | xargs -I{} echo "- Total: {}" >> accessibility-report/summary.md
+          
+      - name: Archive accessibility results
+        uses: actions/upload-artifact@v3
+        with:
+          name: accessibility-test-results
+          path: |
+            frontend/accessibility-report/
+          retention-days: 14
+
+  # Security Tests
+  security-tests:
+    name: Security Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mentoring_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run security audit
+        working-directory: ./backend
+        run: npm audit --audit-level=moderate
+
+      - name: Run security tests
+        working-directory: ./backend
+        run: npm run test:e2e -- --testPathPattern=security
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: test
+
+  # Performance Tests
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mentoring_performance_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:6
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v3
+        id: backend-deps-cache
+        with:
+          path: backend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-backend-deps-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-backend-deps-
+
+      - name: Install backend dependencies
+        if: steps.backend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Run performance tests
+        working-directory: ./backend
+        run: npm run test:e2e -- --testPathPattern=performance --maxWorkers=1
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_performance_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          
+      - name: Generate performance report
+        working-directory: ./backend
+        run: |
+          mkdir -p performance-report
+          echo "# Performance Test Results" > performance-report/summary.md
+          echo "Tests run on $(date)" >> performance-report/summary.md
+          echo "## System Information" >> performance-report/summary.md
+          echo "- Node.js: $(node --version)" >> performance-report/summary.md
+          echo "- CPU: $(grep 'model name' /proc/cpuinfo | head -1 | cut -d':' -f2 | xargs)" >> performance-report/summary.md
+          echo "- Memory: $(grep MemTotal /proc/meminfo | awk '{print $2/1024/1024 " GB"}')" >> performance-report/summary.md
+          echo "## Test Results" >> performance-report/summary.md
+          echo "See detailed test output in the job logs." >> performance-report/summary.md
+          
+      - name: Archive performance results
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-test-results
+          path: |
+            backend/performance-report/
+          retention-days: 14
+
+  # End-to-End Tests
+  e2e-tests:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mentoring_e2e_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:6
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v3
+        id: backend-deps-cache
+        with:
+          path: backend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-backend-deps-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-backend-deps-
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        id: frontend-deps-cache
+        with:
+          path: frontend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-
+
+      - name: Install backend dependencies
+        if: steps.backend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        if: steps.frontend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Start backend server
+        working-directory: ./backend
+        run: |
+          npm run build
+          npm run start:prod &
+          sleep 10
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_e2e_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: production
+          PORT: 3000
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+
+      - name: Run complete workflow tests
+        working-directory: ./backend
+        run: npm run test:e2e -- --testPathPattern=complete-observation-workflow
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: mentoring_e2e_test
+          JWT_SECRET: test-jwt-secret
+          NODE_ENV: test
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          
+      - name: Run Cypress E2E tests
+        uses: cypress-io/github-action@v5
+        with:
+          working-directory: frontend
+          start: npm run preview
+          wait-on: 'http://localhost:4173'
+          wait-on-timeout: 120
+          browser: chrome
+          record: false
+          
+      - name: Archive E2E test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-results
+          path: |
+            frontend/cypress/videos/
+            frontend/cypress/screenshots/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # Code Quality Checks
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v3
+        id: backend-deps-cache
+        with:
+          path: backend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-backend-deps-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-backend-deps-
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        id: frontend-deps-cache
+        with:
+          path: frontend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-
+
+      - name: Install backend dependencies
+        if: steps.backend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        if: steps.frontend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: npm ci
+        
+      - name: Run ESLint
+        run: |
+          cd backend && npm run lint
+          cd ../frontend && npm run lint
+          
+      - name: Check TypeScript types
+        run: |
+          cd backend && npx tsc --noEmit
+          cd ../frontend && npx tsc --noEmit
+
+      - name: Run SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
+      - name: Run dependency vulnerability scan
+        run: |
+          cd backend && npm audit --audit-level=high
+          cd ../frontend && npm audit --audit-level=high
+
+  # Build and Deploy (only on main branch)
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, accessibility-tests, security-tests, e2e-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Cache backend dependencies
+        uses: actions/cache@v3
+        id: backend-deps-cache
+        with:
+          path: backend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-backend-deps-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-backend-deps-
+
+      - name: Cache frontend dependencies
+        uses: actions/cache@v3
+        id: frontend-deps-cache
+        with:
+          path: frontend/node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ env.CACHE_KEY_PREFIX }}-frontend-deps-
+
+      - name: Install backend dependencies
+        if: steps.backend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Install frontend dependencies
+        if: steps.frontend-deps-cache.outputs.cache-hit != 'true'
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build backend
+        working-directory: ./backend
+        run: npm run build
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Build Docker images
+        run: |
+          docker build -t mentoring-platform-backend:latest -f backend/Dockerfile.dev ./backend
+          docker build -t mentoring-platform-frontend:latest -f frontend/Dockerfile.dev ./frontend
+
+      - name: Run security scan on Docker images
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $HOME/Library/Caches:/root/.cache/ \
+            aquasec/trivy:latest image --severity HIGH,CRITICAL mentoring-platform-backend:latest
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $HOME/Library/Caches:/root/.cache/ \
+            aquasec/trivy:latest image --severity HIGH,CRITICAL mentoring-platform-frontend:latest
+            
+      - name: Tag Docker images
+        run: |
+          docker tag mentoring-platform-backend:latest mentoring-platform-backend:${{ github.sha }}
+          docker tag mentoring-platform-frontend:latest mentoring-platform-frontend:${{ github.sha }}
+          
+      - name: Generate deployment package
+        run: |
+          mkdir -p deployment
+          cp docker-compose.yml deployment/
+          echo "BACKEND_IMAGE=mentoring-platform-backend:${{ github.sha }}" > deployment/.env
+          echo "FRONTEND_IMAGE=mentoring-platform-frontend:${{ github.sha }}" >> deployment/.env
+          echo "POSTGRES_VERSION=${{ env.POSTGRES_VERSION }}" >> deployment/.env
+          echo "BUILD_ID=${{ github.sha }}" >> deployment/.env
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> deployment/.env
+          
+      - name: Archive deployment package
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-package
+          path: deployment/
+          retention-days: 30
+
+  # Test Report Generation
+  test-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, accessibility-tests, security-tests, performance-tests, e2e-tests]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+          
+      - name: Generate test report
+        run: |
+          mkdir -p test-report
+          echo "# Test Results Summary" > test-report/summary.md
+          echo "Generated on $(date)" >> test-report/summary.md
+          echo "## Test Status" >> test-report/summary.md
+          echo "- Backend Tests: ${{ needs.backend-tests.result }}" >> test-report/summary.md
+          echo "- Frontend Tests: ${{ needs.frontend-tests.result }}" >> test-report/summary.md
+          echo "- Accessibility Tests: ${{ needs.accessibility-tests.result }}" >> test-report/summary.md
+          echo "- Security Tests: ${{ needs.security-tests.result }}" >> test-report/summary.md
+          echo "- Performance Tests: ${{ needs.performance-tests.result }}" >> test-report/summary.md
+          echo "- E2E Tests: ${{ needs.e2e-tests.result }}" >> test-report/summary.md
+          
+          echo "## Coverage Summary" >> test-report/summary.md
+          if [ -d "artifacts/backend-test-results/coverage" ]; then
+            echo "### Backend Coverage" >> test-report/summary.md
+            grep -r "All files" artifacts/backend-test-results/coverage/lcov-report/index.html | \
+              sed -E 's/.*<span class="strong">([0-9.]+)%<\/span>.*/- Statements: \1%/' >> test-report/summary.md
+          fi
+          
+          if [ -d "artifacts/frontend-test-results/coverage" ]; then
+            echo "### Frontend Coverage" >> test-report/summary.md
+            grep -r "All files" artifacts/frontend-test-results/coverage/lcov-report/index.html | \
+              sed -E 's/.*<span class="strong">([0-9.]+)%<\/span>.*/- Statements: \1%/' >> test-report/summary.md
+          fi
+          
+          echo "## Accessibility Report" >> test-report/summary.md
+          if [ -f "artifacts/accessibility-test-results/summary.md" ]; then
+            cat artifacts/accessibility-test-results/summary.md >> test-report/summary.md
+          else
+            echo "No accessibility report found." >> test-report/summary.md
+          fi
+          
+          echo "## Performance Report" >> test-report/summary.md
+          if [ -f "artifacts/performance-test-results/summary.md" ]; then
+            cat artifacts/performance-test-results/summary.md >> test-report/summary.md
+          else
+            echo "No performance report found." >> test-report/summary.md
+          fi
+          
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: test-report/
+          retention-days: 30
+          
+      - name: Notify on success
+        if: ${{ needs.backend-tests.result == 'success' && needs.frontend-tests.result == 'success' && needs.accessibility-tests.result == 'success' && needs.security-tests.result == 'success' && needs.performance-tests.result == 'success' && needs.e2e-tests.result == 'success' }}
+        run: |
+          echo "✅ All tests passed successfully!"
+          echo "Backend Tests: ${{ needs.backend-tests.result }}"
+          echo "Frontend Tests: ${{ needs.frontend-tests.result }}"
+          echo "Accessibility Tests: ${{ needs.accessibility-tests.result }}"
+          echo "Security Tests: ${{ needs.security-tests.result }}"
+          echo "Performance Tests: ${{ needs.performance-tests.result }}"
+          echo "E2E Tests: ${{ needs.e2e-tests.result }}"
+
+      - name: Notify on failure
+        if: ${{ needs.backend-tests.result == 'failure' || needs.frontend-tests.result == 'failure' || needs.accessibility-tests.result == 'failure' || needs.security-tests.result == 'failure' || needs.performance-tests.result == 'failure' || needs.e2e-tests.result == 'failure' }}
+        run: |
+          echo "❌ Some tests failed!"
+          echo "Backend Tests: ${{ needs.backend-tests.result }}"
+          echo "Frontend Tests: ${{ needs.frontend-tests.result }}"
+          echo "Accessibility Tests: ${{ needs.accessibility-tests.result }}"
+          echo "Security Tests: ${{ needs.security-tests.result }}"
+          echo "Performance Tests: ${{ needs.performance-tests.result }}"
+          echo "E2E Tests: ${{ needs.e2e-tests.result }}"
+          exit 1

@@ -1,0 +1,246 @@
+.performance-page {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 24px;
+}
+
+.performance-page .page-header-card {
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.performance-page .ant-statistic-content {
+  font-size: 24px !important;
+}
+
+.performance-page .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.performance-page .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.performance-page .ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.performance-page .ant-tabs-tab {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.performance-page .ant-tabs-tab-active {
+  color: #1890ff !important;
+}
+
+.performance-page .ant-progress-line {
+  margin: 0;
+}
+
+.performance-page .ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+.performance-page .ant-table-tbody > tr:hover > td {
+  background-color: #e6f7ff !important;
+}
+
+.performance-page .ant-alert {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.performance-page .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.performance-page .ant-btn-primary {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.3);
+}
+
+.performance-page .ant-btn-primary:hover,
+.performance-page .ant-btn-primary:focus {
+  background: linear-gradient(135deg, #40a9ff 0%, #69c0ff 100%);
+  box-shadow: 0 4px 8px rgba(24, 144, 255, 0.4);
+}
+
+.performance-page .ant-select-selector {
+  border-radius: 6px !important;
+}
+
+.performance-page .ant-input {
+  border-radius: 6px;
+}
+
+.performance-page .ant-input-search-button {
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.performance-page .chart-container {
+  padding: 16px 0;
+  min-height: 300px;
+}
+
+.performance-page .chart-container .g2-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid #e8e8e8 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 6px !important;
+  font-size: 12px;
+}
+
+.performance-page .enhanced-tooltip {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e8e8e8;
+  max-width: 250px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.performance-page .metric-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.performance-page .trend-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.performance-page .trend-up {
+  color: #52c41a;
+}
+
+.performance-page .trend-down {
+  color: #ff4d4f;
+}
+
+.performance-page .filter-bar {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.performance-page .insight-card {
+  border-left: 4px solid #1890ff;
+  background: linear-gradient(90deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+.performance-page .recommendation-card {
+  border-left: 4px solid #52c41a;
+  background: linear-gradient(90deg, #f6ffed 0%, #ffffff 100%);
+}
+
+.performance-page .warning-card {
+  border-left: 4px solid #faad14;
+  background: linear-gradient(90deg, #fffbe6 0%, #ffffff 100%);
+}
+
+@media (max-width: 768px) {
+  .performance-page {
+    padding: 16px;
+  }
+  
+  .performance-page .ant-statistic-content {
+    font-size: 20px !important;
+  }
+  
+  .performance-page .page-header-card .ant-space {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px !important;
+  }
+  
+  .performance-page .page-header-card .ant-space > * {
+    width: 100%;
+  }
+  
+  .performance-page .filter-bar {
+    padding: 12px;
+  }
+  
+  .performance-page .ant-card {
+    margin-bottom: 12px;
+  }
+  
+  .performance-page .ant-table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .performance-page .ant-progress {
+    min-width: 80px;
+  }
+  
+  .performance-page .ant-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .performance-page .ant-btn-group .ant-btn {
+    width: 100%;
+  }
+  
+  .performance-page .ant-tabs-content {
+    padding: 8px 0;
+  }
+  
+  .performance-page .chart-container {
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .performance-page {
+    padding: 12px;
+  }
+  
+  .performance-page .page-header-card {
+    padding: 16px;
+  }
+  
+  .performance-page .ant-statistic-content {
+    font-size: 18px !important;
+  }
+  
+  .performance-page .ant-statistic-title {
+    font-size: 12px;
+  }
+  
+  .performance-page .ant-search {
+    width: 100% !important;
+    margin-bottom: 12px;
+  }
+  
+  .performance-page .chart-container {
+    height: 200px !important;
+  }
+  
+  .performance-page .metric-card {
+    padding: 12px;
+    min-height: 100px;
+  }
+  
+  .performance-page .ant-progress {
+    min-width: 60px;
+  }
+}

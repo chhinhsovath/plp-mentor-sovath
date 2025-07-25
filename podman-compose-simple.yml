@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Mock Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.mock
+    container_name: mentoring-backend-mock
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - mentoring-network
+
+  # Frontend (React + Vite) - No volumes
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: mentoring-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000/api/v1
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - mentoring-network
+
+networks:
+  mentoring-network:
+    driver: bridge

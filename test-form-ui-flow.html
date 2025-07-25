@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Form UI Flow</title>
+</head>
+<body>
+  <h1>Test Form Creation Flow</h1>
+  
+  <h2>Steps:</h2>
+  <ol>
+    <li>Open browser console (F12)</li>
+    <li>Go to <a href="http://localhost:5173/forms/new" target="_blank">Create New Form</a></li>
+    <li>Enter form name: "Test KH-G1-Level1"</li>
+    <li>Click "Apply Template" button</li>
+    <li>Select "KH-G1-Level1" template</li>
+    <li>Check all activities you want to include</li>
+    <li>Click "Apply Template" in dialog</li>
+    <li>Check console for logs about sections and fields</li>
+    <li>Click "Save" button</li>
+    <li>Check console for saving logs</li>
+  </ol>
+  
+  <h2>What to look for in console:</h2>
+  <pre>
+    - "Applying template with sections: ..."
+    - "Total fields: ..."
+    - "Saving form: ..."
+    - "Form sections count: ..."
+  </pre>
+  
+  <h2>Expected vs Actual:</h2>
+  <p>Expected: Multiple sections with multiple fields each</p>
+  <p>Actual: Form saves with only one field</p>
+</body>
+</html>

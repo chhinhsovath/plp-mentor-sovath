@@ -1,0 +1,21 @@
+FROM node:18-alpine
+
+# Install build dependencies for bcrypt
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies and rebuild native modules
+RUN npm ci && npm rebuild bcrypt
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start development server
+CMD ["npm", "run", "start:dev"]

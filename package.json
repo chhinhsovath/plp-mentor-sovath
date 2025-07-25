@@ -1,0 +1,55 @@
+{
+  "name": "nationwide-mentoring-platform",
+  "version": "1.0.0",
+  "description": "Nationwide Mentoring Platform for MoEYS Cambodia",
+  "scripts": {
+    "dev": "./start-dev.sh",
+    "start:dev": "./start-dev.sh",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format || echo 'Frontend format script not available'",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "test:e2e": "cd backend && npm run test:e2e",
+    "db:setup": "cd backend && npm run db:setup",
+    "db:seed": "cd backend && npm run db:seed",
+    "db:migrate": "cd backend && npm run migration:run",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "test:login": "node test-login-puppeteer.js",
+    "test:api": "node test-login.js",
+    "check:db": "cd backend && node check-database-schema.js",
+    "seed:users": "cd backend && node seed-users-simple.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "puppeteer": "^24.14.0"
+  },
+  "lint-staged": {
+    "backend/**/*.{js,ts}": [
+      "cd backend && npm run lint",
+      "cd backend && npm run format"
+    ],
+    "frontend/**/*.{js,ts,tsx}": [
+      "cd frontend && npm run lint"
+    ]
+  }
+}

@@ -1,0 +1,584 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Box,
+  Typography,
+  Avatar,
+  IconButton,
+  Tooltip,
+  useTheme,
+  useMediaQuery,
+  SwipeableDrawer,
+} from '@mui/material';
+import {
+  Dashboard as DashboardIcon,
+  Visibility as ObservationIcon,
+  Assessment as ReportsIcon,
+  People as UsersIcon,
+  Settings as SettingsIcon,
+  ExitToApp as LogoutIcon,
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Analytics as AnalyticsIcon,
+  Description as FormsIcon,
+  Assignment as MissionsIcon,
+  School as SchoolsIcon,
+  AdminPanelSettings as AdminIcon,
+  Security as SecurityIcon,
+  Backup as BackupIcon,
+  Speed as PerformanceIcon,
+} from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
+import { usePermissions } from '../../hooks/usePermissions';
+import { PERMISSIONS } from '../../utils/permissions';
+
+interface NavigationProps {
+  open: boolean;
+  onClose: () => void;
+  onToggle: () => void;
+  onWidthChange?: (width: number) => void;
+}
+
+interface NavigationItem {
+  key: string;
+  label: string;
+  icon: React.ReactNode;
+  path: string;
+  requiredRoles?: string[];
+  requiredPermissions?: string[];
+  minimumRole?: string;
+}
+
+const Navigation: React.FC<NavigationProps> = ({ open, onClose, onToggle, onWidthChange }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, logout } = useAuth();
+  const permissions = usePermissions();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  
+  // Helper function to get role name safely
+  const getRoleName = () => {
+    if (!user) return '';
+    
+    // If role is a string
+    if (typeof user.role === 'string') {
+      return user.role.toLowerCase();
+    }
+    
+    // If role is an object with name property
+    if (user.role && typeof user.role === 'object' && user.role.name) {
+      return user.role.name.toLowerCase();
+    }
+    
+    // Default to administrator if username is chhinhhs
+    if (user.username === 'chhinhhs') {
+      return 'administrator';
+    }
+    
+    return 'user';
+  };
+  
+  // Initialize collapsed state from localStorage (only for desktop)
+  const [collapsed, setCollapsed] = useState(() => {
+    if (isMobile) return false; // Never collapse on mobile
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    return savedState === 'true';
+  });
+
+  // Responsive drawer widths
+  const getDrawerWidth = () => {
+    if (isMobile) return '85vw'; // 85% of viewport width on mobile
+    if (isTablet) return collapsed ? 64 : 240; // Slightly narrower on tablets
+    return collapsed ? 64 : 280; // Full width on desktop
+  };
+  
+  const drawerWidth = getDrawerWidth();
+
+  useEffect(() => {
+    if (onWidthChange && !isMobile) {
+      const numericWidth = typeof drawerWidth === 'string' ? 280 : drawerWidth;
+      onWidthChange(numericWidth);
+    }
+  }, [drawerWidth, onWidthChange, isMobile]);
+
+  // Debug user data
+  useEffect(() => {
+    if (user) {
+      console.log('Current user data:', user);
+      console.log('User role:', user.role);
+      console.log('Role type:', typeof user.role);
+      console.log('Role name:', user.role?.name);
+    }
+  }, [user]);
+
+  const navigationItems: NavigationItem[] = [
+    {
+      key: 'dashboard',
+      label: t('navigation.dashboard'),
+      icon: <DashboardIcon />,
+      path: '/',
+    },
+    {
+      key: 'observations',
+      label: t('navigation.observations'),
+      icon: <ObservationIcon />,
+      path: '/observations',
+      requiredPermissions: [PERMISSIONS.VIEW_OBSERVATION],
+    },
+    {
+      key: 'missions',
+      label: t('navigation.missions'),
+      icon: <MissionsIcon />,
+      path: '/missions',
+      requiredPermissions: [PERMISSIONS.APPROVE_MISSIONS],
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'reports',
+      label: t('navigation.reports'),
+      icon: <ReportsIcon />,
+      path: '/reports',
+      requiredPermissions: [PERMISSIONS.VIEW_REPORTS],
+      minimumRole: 'director',
+    },
+    {
+      key: 'analytics',
+      label: t('navigation.analytics'),
+      icon: <AnalyticsIcon />,
+      path: '/analytics',
+      requiredPermissions: [PERMISSIONS.VIEW_ANALYTICS],
+      minimumRole: 'cluster',
+    },
+    {
+      key: 'users',
+      label: t('navigation.users'),
+      icon: <UsersIcon />,
+      path: '/users',
+      requiredPermissions: [PERMISSIONS.VIEW_USERS],
+      minimumRole: 'department',
+    },
+    {
+      key: 'forms',
+      label: t('navigation.forms'),
+      icon: <FormsIcon />,
+      path: '/forms',
+      requiredPermissions: [PERMISSIONS.MANAGE_FORMS],
+      minimumRole: 'department',
+    },
+    {
+      key: 'schools',
+      label: t('navigation.schools'),
+      icon: <SchoolsIcon />,
+      path: '/schools',
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'system',
+      label: t('navigation.system'),
+      icon: <AdminIcon />,
+      path: '/system',
+      requiredPermissions: [PERMISSIONS.MANAGE_SETTINGS],
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'security',
+      label: t('navigation.security'),
+      icon: <SecurityIcon />,
+      path: '/security',
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'backup',
+      label: t('navigation.backup'),
+      icon: <BackupIcon />,
+      path: '/backup',
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'performance',
+      label: t('navigation.performance'),
+      icon: <PerformanceIcon />,
+      path: '/performance',
+      minimumRole: 'administrator',
+    },
+    {
+      key: 'settings',
+      label: t('navigation.settings'),
+      icon: <SettingsIcon />,
+      path: '/settings',
+    },
+  ];
+
+  const hasAccess = (item: NavigationItem): boolean => {
+    if (!user) return false;
+
+    // Check minimum role requirement
+    if (item.minimumRole && !permissions.hasMinimumRole(item.minimumRole)) {
+      return false;
+    }
+
+    // Check permission-based access
+    if (item.requiredPermissions && item.requiredPermissions.length > 0) {
+      if (!permissions.hasAllPermissions(item.requiredPermissions)) {
+        return false;
+      }
+    }
+
+    // Check role-based access (legacy support)
+    if (item.requiredRoles && item.requiredRoles.length > 0) {
+      const userRole = user.role.name.toLowerCase();
+      const hasRole = item.requiredRoles.some(role => role.toLowerCase() === userRole);
+      if (!hasRole) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force navigation even if logout fails
+      navigate('/login');
+    }
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (isMobile) {
+      onClose(); // Only close on mobile
+    }
+  };
+
+
+
+  const drawerContent = (
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      {/* Toggle Button - Desktop only */}
+      {!isMobile && (
+        <Box sx={{ 
+          p: 1, 
+          display: 'flex', 
+          justifyContent: collapsed ? 'center' : 'flex-end',
+          borderBottom: 1,
+          borderColor: 'divider'
+        }}>
+          <IconButton 
+            onClick={() => {
+              const newCollapsed = !collapsed;
+              setCollapsed(newCollapsed);
+              localStorage.setItem('sidebarCollapsed', newCollapsed.toString());
+            }} 
+            size={isTablet ? 'small' : 'medium'}
+            sx={{ 
+              '&:hover': { 
+                backgroundColor: 'action.hover' 
+              } 
+            }}
+          >
+            {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </Box>
+      )}
+      
+      {/* Close Button - Mobile only W3Schools Style */}
+      {isMobile && (
+        <Box sx={{ 
+          p: 0,
+          backgroundColor: '#04AA6D',
+          color: 'white',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+        }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            p: 2,
+          }}>
+            <Typography variant="h5" component="div" sx={{ fontWeight: 500 }}>
+              Menu
+            </Typography>
+            <IconButton 
+              onClick={onClose} 
+              size="large"
+              sx={{ 
+                color: 'white',
+                '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+              }}
+            >
+              <ChevronLeftIcon sx={{ fontSize: '2rem' }} />
+            </IconButton>
+          </Box>
+        </Box>
+      )}
+      
+      {/* User Profile Section - W3Schools Style */}
+      <Box sx={{ 
+        p: isMobile ? 2 : (collapsed ? 1 : 2), 
+        borderBottom: isMobile ? 0 : 1, 
+        borderColor: 'divider',
+        backgroundColor: isMobile ? 'white' : 'transparent',
+        mb: isMobile ? 2 : 0,
+        mx: isMobile ? 2 : 0,
+        mt: isMobile ? 2 : 0,
+        borderRadius: isMobile ? 1 : 0,
+        boxShadow: isMobile ? '0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)' : 'none'
+      }}>
+        <Box 
+          display="flex" 
+          alignItems="center" 
+          gap={collapsed && !isMobile ? 0 : 2} 
+          justifyContent={collapsed && !isMobile ? 'center' : 'flex-start'}
+        >
+          <Avatar sx={{ 
+            bgcolor: 'primary.main', 
+            width: isMobile ? 48 : (collapsed ? 32 : 40), 
+            height: isMobile ? 48 : (collapsed ? 32 : 40),
+            fontSize: isMobile ? '1.25rem' : '1rem'
+          }}>
+            {user?.fullName?.charAt(0).toUpperCase()}
+          </Avatar>
+          {(!collapsed || isMobile) && (
+            <Box flex={1}>
+              <Typography 
+                variant={isMobile ? "subtitle1" : "subtitle2"} 
+                noWrap
+                sx={{ fontWeight: isMobile ? 500 : 400 }}
+              >
+                {user?.fullName}
+              </Typography>
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                noWrap
+                sx={{ fontSize: isMobile ? '0.875rem' : '0.75rem' }}
+              >
+                {t(`roles.${getRoleName()}`)}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Box>
+
+      {/* Navigation Items - W3Schools Style */}
+      <List sx={{ 
+        px: isMobile ? 0 : 0,
+        py: isMobile ? 0 : 1,
+      }}>
+        {navigationItems
+          .filter(hasAccess)
+          .map((item) => {
+            const button = (
+              <ListItemButton
+                selected={location.pathname === item.path}
+                onClick={() => handleNavigation(item.path)}
+                sx={{
+                  minHeight: isMobile ? 60 : 48,
+                  justifyContent: collapsed && !isMobile ? 'center' : 'initial',
+                  px: isMobile ? 3 : (collapsed ? 1 : 2.5),
+                  py: isMobile ? 2 : 1,
+                  mx: isMobile ? 2 : 0,
+                  mb: isMobile ? 1 : 0,
+                  borderRadius: isMobile ? 1 : 0,
+                  backgroundColor: isMobile && location.pathname === item.path ? '#04AA6D' : 'transparent',
+                  color: isMobile && location.pathname === item.path ? 'white' : 'inherit',
+                  '&:hover': {
+                    backgroundColor: isMobile ? (location.pathname === item.path ? '#04AA6D' : '#ddd') : 'action.hover',
+                    color: isMobile && location.pathname === item.path ? 'white' : 'inherit',
+                  },
+                  '&:active': {
+                    backgroundColor: isMobile ? '#04AA6D' : 'action.selected'
+                  },
+                  transition: 'all 0.2s',
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: collapsed && !isMobile ? 0 : 3,
+                    justifyContent: 'center',
+                    color: location.pathname === item.path ? 'primary.main' : 'inherit',
+                    '& svg': {
+                      fontSize: isMobile ? '1.75rem' : '1.25rem'
+                    }
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                {(!collapsed || isMobile) && (
+                  <ListItemText 
+                    primary={item.label} 
+                    sx={{
+                      '& .MuiListItemText-primary': {
+                        fontSize: isMobile ? '1.125rem' : '0.875rem',
+                        fontWeight: isMobile ? 400 : (location.pathname === item.path ? 500 : 400),
+                        letterSpacing: isMobile ? '0.5px' : 0
+                      }
+                    }}
+                  />
+                )}
+              </ListItemButton>
+            );
+
+            return (
+              <ListItem key={item.key} disablePadding>
+                {collapsed && !isMobile ? (
+                  <Tooltip title={item.label} placement="right" arrow>
+                    {button}
+                  </Tooltip>
+                ) : (
+                  button
+                )}
+              </ListItem>
+            );
+          })}
+      </List>
+
+      <Divider sx={{ mx: isMobile ? 2 : 0, my: 2 }} />
+
+      {/* Logout - W3Schools Style */}
+      <List sx={{ mt: 'auto' }}>
+        <ListItem disablePadding>
+          {collapsed && !isMobile ? (
+            <Tooltip title={t('auth.logout')} placement="right">
+              <ListItemButton
+                onClick={handleLogout}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: 'center',
+                  px: 1,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <LogoutIcon />
+                </ListItemIcon>
+              </ListItemButton>
+            </Tooltip>
+          ) : (
+            <ListItemButton
+              onClick={handleLogout}
+              sx={{
+                minHeight: isMobile ? 60 : 48,
+                px: isMobile ? 3 : 2.5,
+                py: isMobile ? 2 : 1,
+                mx: isMobile ? 2 : 0,
+                mb: isMobile ? 1 : 0,
+                borderRadius: isMobile ? 1 : 0,
+                backgroundColor: isMobile ? '#dc3545' : 'transparent',
+                color: isMobile ? 'white' : 'inherit',
+                '&:hover': {
+                  backgroundColor: isMobile ? '#c82333' : 'action.hover',
+                  color: isMobile ? 'white' : 'inherit',
+                },
+                transition: 'all 0.2s',
+              }}
+            >
+              <ListItemIcon sx={{ 
+                minWidth: 0, 
+                mr: 3,
+                color: isMobile ? 'white' : 'inherit',
+                '& svg': {
+                  fontSize: isMobile ? '1.75rem' : '1.25rem'
+                }
+              }}>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary={t('auth.logout')} 
+                sx={{
+                  '& .MuiListItemText-primary': {
+                    fontSize: isMobile ? '1.125rem' : '0.875rem',
+                    fontWeight: isMobile ? 400 : 400,
+                    letterSpacing: isMobile ? '0.5px' : 0,
+                    color: isMobile ? 'white' : 'inherit'
+                  }
+                }}
+              />
+            </ListItemButton>
+          )}
+        </ListItem>
+      </List>
+    </Box>
+  );
+
+  return (
+    <>
+      {/* Mobile Drawer - W3Schools Style */}
+      <SwipeableDrawer
+        variant="temporary"
+        open={open}
+        onClose={onClose}
+        onOpen={onToggle}
+        anchor={isMobile ? 'left' : 'left'}
+        disableBackdropTransition={!isMobile}
+        disableDiscovery={!isMobile}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: 'block', sm: 'none' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: '100%',
+            maxWidth: '100%',
+            height: '100%',
+            transition: theme.transitions.create(['transform'], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            overflowX: 'hidden',
+            backgroundColor: '#f1f1f1',
+            boxShadow: 'none',
+          },
+          '& .MuiBackdrop-root': {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }
+        }}
+      >
+        {drawerContent}
+      </SwipeableDrawer>
+
+      {/* Desktop Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', sm: 'block' },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerWidth,
+            transition: 'width 0.3s',
+            overflowX: 'hidden'
+          },
+        }}
+        open
+      >
+        {drawerContent}
+      </Drawer>
+    </>
+  );
+};
+
+export default Navigation;

@@ -1,0 +1,222 @@
+{
+  "id": "KH-G1-Level1",
+  "title": "តារាងការវាយតម្លៃកម្រិត ១ របស់កុមារបង្កើតភាសាខ្មែរ កម្រិតទី ១",
+  "description": "Khmer Grade 1 Level 1 Assessment Form",
+  "language": "km",
+  "grade": 1,
+  "level": 1,
+  "subject": "khmer",
+  "headerFields": {
+    "studentName": {
+      "label": "ឈ្មោះសិស្ស",
+      "type": "text",
+      "required": true,
+      "placeholder": "បំពេញឈ្មោះសិស្ស"
+    },
+    "class": {
+      "label": "ថ្នាក់",
+      "type": "text",
+      "required": true,
+      "placeholder": "ថ្នាក់ទី"
+    },
+    "school": {
+      "label": "សាលា",
+      "type": "text",
+      "required": true,
+      "placeholder": "ឈ្មោះសាលា"
+    },
+    "date": {
+      "label": "កាលបរិច្ឆេទ",
+      "type": "date",
+      "required": true
+    },
+    "assessorName": {
+      "label": "ឈ្មោះអ្នកវាយតម្លៃ",
+      "type": "text",
+      "required": true,
+      "placeholder": "ឈ្មោះគ្រូ"
+    }
+  },
+  "assessmentCriteria": [
+    {
+      "id": "criteria_1",
+      "title": "១. លេខកូដសម្រាប់កំណត់ឬកម្រងអក្សរ",
+      "description": "ក្រុមជំនាញគ្រឹះសម្រាប់ការសិក្សាការអាន ការសរសេរ",
+      "type": "rating",
+      "levels": 5
+    },
+    {
+      "id": "criteria_2",
+      "title": "២. បច្ចេកវិទ្យាការអាន",
+      "description": "ជំនាញក្នុងការអានពាក្យ និងការអាន",
+      "type": "rating",
+      "levels": 5
+    },
+    {
+      "id": "criteria_3",
+      "title": "៣. អនុមានការបានការ",
+      "description": "ការយល់ដឹងពីអត្ថន័យ",
+      "type": "rating",
+      "levels": 5
+    },
+    {
+      "id": "criteria_4",
+      "title": "៤. ឱ្យសំណងការធានាកូបូលី",
+      "description": "ចង្អុលបង្ហាញការយល់ដឹងនិងការសម្រេច",
+      "type": "rating",
+      "levels": 5
+    },
+    {
+      "id": "criteria_5",
+      "title": "៥. ទំនាក់ទំនង និតិកម្ម ការសរសេរបឋម យុត្តិយុក្តិ",
+      "description": "ការប្រើប្រាស់ភាសាដើម្បីទំនាក់ទំនង",
+      "type": "rating",
+      "levels": 5
+    }
+  ],
+  "assessmentItems": [
+    {
+      "id": "item_1",
+      "category": "ការអំអានហ្រ្វូ",
+      "description": "Assessment of basic reading skills",
+      "assessableAcross": [
+        "criteria_1",
+        "criteria_2",
+        "criteria_3",
+        "criteria_4",
+        "criteria_5"
+      ]
+    },
+    {
+      "id": "item_2",
+      "category": "សកម្មភាព ១ៈ ការសូលសម្លងកម្រងបី",
+      "description": "Activity 1: Sound recognition activities",
+      "assessableAcross": [
+        "criteria_1",
+        "criteria_2",
+        "criteria_3"
+      ]
+    },
+    {
+      "id": "item_3",
+      "category": "សកម្មភាព ២ៈ ការសូលប្រតិសម្រងបី",
+      "description": "Activity 2: Advanced sound activities",
+      "assessableAcross": [
+        "criteria_1",
+        "criteria_2",
+        "criteria_3"
+      ]
+    },
+    {
+      "id": "item_4",
+      "category": "សកម្មភាព ៣ៈ ការអានទៅជុំ",
+      "description": "Activity 3: Group reading",
+      "assessableAcross": [
+        "criteria_2",
+        "criteria_3",
+        "criteria_4"
+      ]
+    },
+    {
+      "id": "item_5",
+      "category": "សកម្មភាព ៤ៈ ការអានទៅកាន់",
+      "description": "Activity 4: Individual reading",
+      "assessableAcross": [
+        "criteria_2",
+        "criteria_3",
+        "criteria_4"
+      ]
+    },
+    {
+      "id": "item_6",
+      "category": "សកម្មភាព ៥ៈ ការទោស",
+      "description": "Activity 5: Assessment task",
+      "assessableAcross": [
+        "criteria_1",
+        "criteria_2",
+        "criteria_3",
+        "criteria_4",
+        "criteria_5"
+      ]
+    },
+    {
+      "id": "item_7",
+      "category": "សកម្មភាព ៦ៈ ការអានបូដុប់ (ទីងនាទីកម្លាំងហ្រូ)",
+      "description": "Activity 6: Reading comprehension with context",
+      "assessableAcross": [
+        "criteria_3",
+        "criteria_4",
+        "criteria_5"
+      ]
+    },
+    {
+      "id": "item_8",
+      "category": "សកម្មភាព ៧ៈ ការអានទិបគទុន",
+      "description": "Activity 7: Advanced reading tasks",
+      "assessableAcross": [
+        "criteria_3",
+        "criteria_4",
+        "criteria_5"
+      ]
+    },
+    {
+      "id": "item_9",
+      "category": "សកម្មភាព ៨ៈ ការអករៅអៀប",
+      "description": "Activity 8: Writing activities",
+      "assessableAcross": [
+        "criteria_4",
+        "criteria_5"
+      ]
+    },
+    {
+      "id": "item_10",
+      "category": "សរុប",
+      "description": "Total assessment",
+      "assessableAcross": [
+        "criteria_1",
+        "criteria_2",
+        "criteria_3",
+        "criteria_4",
+        "criteria_5"
+      ]
+    }
+  ],
+  "ratingScale": {
+    "1": {
+      "label": "ក្រុមថ្នាក់ខ្វះខាត",
+      "description": "Needs significant support",
+      "color": "#ff4444"
+    },
+    "2": {
+      "label": "បច្ចេកវិទ្យាកម្រងបីក្រុម",
+      "description": "Beginning level",
+      "color": "#ff8800"
+    },
+    "3": {
+      "label": "អនុមានការបាន",
+      "description": "Developing level",
+      "color": "#ffbb00"
+    },
+    "4": {
+      "label": "ឱ្យសំណងការធានា",
+      "description": "Proficient level",
+      "color": "#88cc00"
+    },
+    "5": {
+      "label": "ទំនាក់ទំនង និតិកម្ម ការ",
+      "description": "Advanced level",
+      "color": "#44aa44"
+    }
+  },
+  "instructions": {
+    "km": "សូមវាយតម្លៃសិស្សនីមួយៗតាមលក្ខណៈវិនិច្ឆ័យនីមួយៗ។ ប្រើប្រាស់ពិន្ទុពី ១ ដល់ ៥ ដោយ ១ = ត្រូវការជំនួយច្រើន និង ៥ = ល្អប្រសើរ",
+    "en": "Please assess each student according to each criterion. Use scores from 1 to 5, where 1 = needs much help and 5 = excellent"
+  },
+  "metadata": {
+    "createdBy": "PLP Mentor System",
+    "version": "1.0",
+    "lastModified": "2025-07-21T11:15:58.645Z",
+    "formType": "assessment",
+    "templateSource": "KH-G1-Level1-Original"
+  }
+}

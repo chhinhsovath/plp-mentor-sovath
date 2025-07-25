@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-07-21T16:32:28.576Z",
+  "environment": {
+    "apiUrl": "http://localhost:3000/api/v1",
+    "nodeVersion": "v22.16.0"
+  },
+  "results": [
+    {
+      "template": "KH-G1-Level1",
+      "tests": {
+        "create": {
+          "status": "PASSED",
+          "formId": "form-1753115548597",
+          "fieldsCreated": 22,
+          "expectedFields": 22
+        },
+        "read": {
+          "status": "PASSED",
+          "fieldsRetrieved": 22,
+          "allFieldsPresent": true,
+          "missingFields": []
+        },
+        "update": {
+          "status": "PASSED",
+          "updatedName": "Test KH-G1-Level1 Form (Updated)"
+        },
+        "list": {
+          "status": "PASSED",
+          "totalForms": 2,
+          "formFound": true
+        },
+        "publish": {
+          "status": "PASSED"
+        },
+        "archive": {
+          "status": "PASSED"
+        },
+        "delete": {
+          "status": "PASSED"
+        }
+      }
+    },
+    {
+      "template": "KH-G1-Level2",
+      "tests": {
+        "create": {
+          "status": "PASSED",
+          "formId": "form-1753115548658",
+          "fieldsCreated": 12,
+          "expectedFields": 12
+        },
+        "read": {
+          "status": "PASSED",
+          "fieldsRetrieved": 12,
+          "allFieldsPresent": true,
+          "missingFields": []
+        },
+        "update": {
+          "status": "PASSED",
+          "updatedName": "Test KH-G1-Level2 Form (Updated)"
+        },
+        "list": {
+          "status": "PASSED",
+          "totalForms": 3,
+          "formFound": true
+        },
+        "publish": {
+          "status": "PASSED"
+        },
+        "archive": {
+          "status": "PASSED"
+        },
+        "delete": {
+          "status": "PASSED"
+        }
+      }
+    },
+    {
+      "template": "KH-G1-Level3",
+      "tests": {
+        "create": {
+          "status": "PASSED",
+          "formId": "form-1753115548680",
+          "fieldsCreated": 11,
+          "expectedFields": 11
+        },
+        "read": {
+          "status": "PASSED",
+          "fieldsRetrieved": 11,
+          "allFieldsPresent": true,
+          "missingFields": []
+        },
+        "update": {
+          "status": "PASSED",
+          "updatedName": "Test KH-G1-Level3 Form (Updated)"
+        },
+        "list": {
+          "status": "PASSED",
+          "totalForms": 4,
+          "formFound": true
+        },
+        "publish": {
+          "status": "PASSED"
+        },
+        "archive": {
+          "status": "PASSED"
+        },
+        "delete": {
+          "status": "PASSED"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies including database drivers
+RUN npm install express@4.21.2 cors@2.8.5 pg@8.11.3 bcrypt@5.1.1 jsonwebtoken@9.0.2
+
+# Copy the simple server
+COPY simple-server.js ./
+
+# Expose port
+EXPOSE 3000
+
+# Start the server
+CMD ["node", "simple-server.js"]

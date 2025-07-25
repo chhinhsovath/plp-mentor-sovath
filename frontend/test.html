@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+</head>
+<body>
+    <h1>Testing Frontend Connection</h1>
+    <div id="status">Checking...</div>
+    <div id="api-status">API Status: Checking...</div>
+    
+    <script>
+        // Test if JavaScript is working
+        document.getElementById('status').textContent = 'JavaScript is working!';
+        
+        // Test API connection
+        fetch('http://localhost:3000/api/v1/health')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('api-status').textContent = 'API Status: ' + JSON.stringify(data);
+            })
+            .catch(error => {
+                document.getElementById('api-status').textContent = 'API Error: ' + error.message;
+            });
+            
+        // Test Vite dev server
+        fetch('http://localhost:5173/src/main.tsx')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('status').textContent += ' Vite is serving files!';
+                } else {
+                    document.getElementById('status').textContent += ' Vite error: ' + response.status;
+                }
+            })
+            .catch(error => {
+                document.getElementById('status').textContent += ' Vite error: ' + error.message;
+            });
+    </script>
+</body>
+</html>
