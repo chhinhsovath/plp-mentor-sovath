@@ -29,10 +29,30 @@ export class SecurityConfig {
     const frontendUrl = this.configService.get('FRONTEND_URL') || 'http://localhost:5173';
     const nodeEnv = this.configService.get('NODE_ENV');
     
+    const allowedOrigins = nodeEnv === 'production' 
+      ? [
+          frontendUrl,
+          'https://mentoring.openpip.com',
+          'https://www.mentoring.openpip.com'
+        ] 
+      : [
+          frontendUrl, 
+          'http://localhost:3000', 
+          'http://localhost:5173', 
+          'http://localhost:5174'
+        ];
+    
     return {
-      origin: nodeEnv === 'production' 
-        ? [frontendUrl] 
-        : [frontendUrl, 'http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174'],
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
