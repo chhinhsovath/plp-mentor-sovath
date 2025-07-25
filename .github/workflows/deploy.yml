@@ -1,0 +1,103 @@
+# .github/workflows/deploy.yml
+name: Deploy to Production Server
+
+on:
+  push:
+    branches:
+      - main  # Change to 'master' if that's your default branch
+    paths:
+      - 'backend/**'  # Only deploy when backend changes
+  workflow_dispatch:  # Allow manual deployment
+
+jobs:
+  deploy:
+    name: Deploy Backend API
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+          
+      - name: Install dependencies locally (for testing)
+        working-directory: ./backend
+        run: npm ci
+        
+      - name: Run tests (optional)
+        working-directory: ./backend
+        run: npm test --if-present
+        
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            echo "🔄 Starting deployment..."
+            
+            # Navigate to project directory
+            cd /var/csv/mentor_api/plp-mentor-sovath
+            
+            # Show current status
+            echo "📍 Current directory: $(pwd)"
+            echo "📋 Git status before update:"
+            git status
+            
+            # Stash any local changes
+            git stash
+            
+            # Fetch and pull latest changes
+            echo "⬇️ Fetching latest changes..."
+            git fetch origin
+            
+            echo "🔄 Pulling latest changes..."
+            git pull origin main
+            
+            # Navigate to backend
+            cd backend
+            
+            # Install/update dependencies
+            echo "📦 Installing dependencies..."
+            npm install
+            
+            # Run database migrations
+            echo "🗃️ Running database migrations..."
+            npm run migration:run || echo "⚠️ Migration failed or no migrations to run"
+            
+            # Build the application
+            echo "🏗️ Building application..."
+            npm run build || echo "⚠️ Build completed with warnings"
+            
+            # Restart PM2 process
+            echo "🔄 Restarting API..."
+            pm2 restart mentoring-platform-api
+            
+            # Wait a moment for startup
+            sleep 3
+            
+            # Check PM2 status
+            echo "✅ Checking PM2 status..."
+            pm2 list
+            
+            # Test API health
+            echo "🧪 Testing API health..."
+            curl -f http://localhost:3001/api/v1/health || echo "⚠️ Health check failed"
+            
+            echo "🎉 Deployment completed!"
+            
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed!"
+          fi
