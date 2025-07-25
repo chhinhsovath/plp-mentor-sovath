@@ -42,6 +42,7 @@ import {
   PlayCircleOutlined,
   StopOutlined,
   ReloadOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -329,6 +330,23 @@ export const MissionsPage: React.FC = () => {
           <TeamOutlined />
           <Text>{participants?.length || 0} នាក់</Text>
         </Space>
+      ),
+    },
+    {
+      title: 'របាយការណ៍',
+      key: 'reports',
+      width: 120,
+      align: 'center',
+      render: (_: any, record: Mission) => (
+        <Tooltip title="ចូលទៅកាន់របាយការណ៍">
+          <Button
+            type="link"
+            icon={<FileTextOutlined />}
+            onClick={() => navigate(`/missions/${record.id}`, { state: { activeTab: 'reports' } })}
+          >
+            របាយការណ៍
+          </Button>
+        </Tooltip>
       ),
     },
     {

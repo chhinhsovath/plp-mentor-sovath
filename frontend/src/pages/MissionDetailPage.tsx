@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   Card,
   Typography,
@@ -22,6 +22,7 @@ import {
   Form,
   Select,
   Input,
+  App,
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -52,7 +53,11 @@ import {
   MissionStatus,
   MissionParticipant,
   MissionTracking,
+  MissionReport,
+  CreateMissionReportInput,
 } from '../types/mission';
+import { MissionReportForm } from '../components/MissionReportForm';
+import { MissionReportView } from '../components/MissionReportView';
 
 // Fix for default markers in React-Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -67,20 +72,36 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 export const MissionDetailPage: React.FC = () => {
+  const { message: messageApi } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [mission, setMission] = useState<Mission | null>(null);
   const [loading, setLoading] = useState(true);
   const [participantModalVisible, setParticipantModalVisible] = useState(false);
   const [checkInModalVisible, setCheckInModalVisible] = useState(false);
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [missionReports, setMissionReports] = useState<MissionReport[]>([]);
+  const [selectedReport, setSelectedReport] = useState<MissionReport | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('details');
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (id) {
       fetchMission();
+      fetchMissionReports();
     }
   }, [id]);
+
+  useEffect(() => {
+    // Check if we should navigate to a specific tab
+    const state = location.state as any;
+    if (state?.activeTab) {
+      setActiveTab(state.activeTab);
+    }
+  }, [location.state]);
 
   const fetchMission = async () => {
     if (!id) return;
@@ -95,6 +116,34 @@ export const MissionDetailPage: React.FC = () => {
       navigate('/missions');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchMissionReports = async () => {
+    if (!id) return;
+    
+    try {
+      const reports = await missionService.getMissionReports(id);
+      setMissionReports(reports);
+    } catch (error) {
+      console.error('Error fetching mission reports:', error);
+    }
+  };
+
+  const handleSubmitReport = async (values: CreateMissionReportInput) => {
+    if (!id) return;
+    
+    setReportSubmitting(true);
+    try {
+      await missionService.createMissionReport(values);
+      messageApi.success('របាយការណ៍បេសកកម្មត្រូវបានដាក់ស្នើដោយជោគជ័យ');
+      setReportModalVisible(false);
+      fetchMissionReports();
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      messageApi.error('មិនអាចដាក់ស្នើរបាយការណ៍បានទេ');
+    } finally {
+      setReportSubmitting(false);
     }
   };
 
@@ -184,6 +233,30 @@ export const MissionDetailPage: React.FC = () => {
     }
   };
 
+  const getMissionTypeInKhmer = (type: MissionType): string => {
+    const typeMap: Record<MissionType, string> = {
+      [MissionType.FIELD_TRIP]: 'ទស្សនកិច្ច',
+      [MissionType.TRAINING]: 'វគ្គបណ្តុះបណ្តាល',
+      [MissionType.MEETING]: 'កិច្ចប្រជុំ',
+      [MissionType.MONITORING]: 'ការត្រួតពិនិត្យ',
+      [MissionType.OTHER]: 'ផ្សេងៗ',
+    };
+    return typeMap[type] || type;
+  };
+
+  const getMissionStatusInKhmer = (status: MissionStatus): string => {
+    const statusMap: Record<MissionStatus, string> = {
+      [MissionStatus.DRAFT]: 'សេចក្តីព្រាង',
+      [MissionStatus.SUBMITTED]: 'បានដាក់ស្នើ',
+      [MissionStatus.APPROVED]: 'បានអនុម័ត',
+      [MissionStatus.REJECTED]: 'បានបដិសេធ',
+      [MissionStatus.IN_PROGRESS]: 'កំពុងដំណើរការ',
+      [MissionStatus.COMPLETED]: 'បានបញ្ចប់',
+      [MissionStatus.CANCELLED]: 'បានលុបចោល',
+    };
+    return statusMap[status] || status;
+  };
+
   const getMissionStatusIcon = (status: MissionStatus) => {
     switch (status) {
       case MissionStatus.APPROVED:
@@ -211,10 +284,10 @@ export const MissionDetailPage: React.FC = () => {
   if (!mission) {
     return (
       <Empty
-        description="Mission not found"
+        description="រកមិនឃើញបេសកកម្ម"
         style={{ marginTop: '50px' }}
       >
-        <Button onClick={() => navigate('/missions')}>Back to Missions</Button>
+        <Button onClick={() => navigate('/missions')}>ត្រឡប់ទៅបេសកកម្ម</Button>
       </Empty>
     );
   }
@@ -229,20 +302,20 @@ export const MissionDetailPage: React.FC = () => {
                 icon={<ArrowLeftOutlined />} 
                 onClick={() => navigate('/missions')}
               >
-                Back to Missions
+                ត្រឡប់ទៅបេសកកម្ម
               </Button>
               <Title level={2} style={{ margin: 0 }}>
                 {mission.title}
               </Title>
               <Tag color={getMissionTypeColor(mission.type)}>
-                {mission.type.replace('_', ' ').toUpperCase()}
+                {getMissionTypeInKhmer(mission.type)}
               </Tag>
               <Badge
                 status={getMissionStatusColor(mission.status) as any}
                 text={
                   <Space>
                     {getMissionStatusIcon(mission.status)}
-                    {mission.status.replace('_', ' ').toUpperCase()}
+                    {getMissionStatusInKhmer(mission.status)}
                   </Space>
                 }
               />
@@ -255,71 +328,71 @@ export const MissionDetailPage: React.FC = () => {
                 icon={<EditOutlined />}
                 onClick={() => navigate(`/missions/${mission.id}/edit`)}
               >
-                Edit Mission
+                កែសម្រួលបេសកកម្ម
               </Button>
             )}
           </Col>
         </Row>
       </div>
 
-      <Tabs defaultActiveKey="details">
-        <TabPane tab="Details" key="details">
+      <Tabs activeKey={activeTab} onChange={setActiveTab}>
+        <TabPane tab="ព័ត៌មានលម្អិត" key="details">
           <Row gutter={[16, 16]}>
             <Col xs={24} lg={16}>
-              <Card title="Mission Information">
+              <Card title="ព័ត៌មានបេសកកម្ម">
                 <Descriptions bordered column={1}>
-                  <Descriptions.Item label="Description">
-                    {mission.description || 'No description provided'}
+                  <Descriptions.Item label="ការពិពណ៌នា">
+                    {mission.description || 'មិនមានការពិពណ៌នា'}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Purpose">
-                    {mission.purpose || 'Not specified'}
+                  <Descriptions.Item label="គោលបំណង">
+                    {mission.purpose || 'មិនបានបញ្ជាក់'}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Objectives">
-                    {mission.objectives || 'Not specified'}
+                  <Descriptions.Item label="គោលដៅ">
+                    {mission.objectives || 'មិនបានបញ្ជាក់'}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Expected Outcomes">
-                    {mission.expectedOutcomes || 'Not specified'}
+                  <Descriptions.Item label="លទ្ធផលរំពឹងទុក">
+                    {mission.expectedOutcomes || 'មិនបានបញ្ជាក់'}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Start Date">
+                  <Descriptions.Item label="កាលបរិច្ឆេទចាប់ផ្តើម">
                     <Space>
                       <CalendarOutlined />
                       {dayjs(mission.startDate).format('MMMM D, YYYY HH:mm')}
                     </Space>
                   </Descriptions.Item>
-                  <Descriptions.Item label="End Date">
+                  <Descriptions.Item label="កាលបរិច្ឆេទបញ្ចប់">
                     <Space>
                       <CalendarOutlined />
                       {dayjs(mission.endDate).format('MMMM D, YYYY HH:mm')}
                     </Space>
                   </Descriptions.Item>
-                  <Descriptions.Item label="Duration">
-                    {dayjs(mission.endDate).diff(dayjs(mission.startDate), 'days')} days
+                  <Descriptions.Item label="រយៈពេល">
+                    {dayjs(mission.endDate).diff(dayjs(mission.startDate), 'days')} ថ្ងៃ
                   </Descriptions.Item>
                   {mission.budget && (
-                    <Descriptions.Item label="Budget">
+                    <Descriptions.Item label="ថវិកា">
                       <Space>
                         <DollarOutlined />
-                        ${mission.budget.toFixed(2)}
+                        ៛{Number(mission.budget).toLocaleString('km-KH')}
                       </Space>
                     </Descriptions.Item>
                   )}
-                  <Descriptions.Item label="Created By">
+                  <Descriptions.Item label="បង្កើតដោយ">
                     {mission.createdBy?.fullName || mission.createdBy?.username}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Created At">
+                  <Descriptions.Item label="បង្កើតនៅ">
                     {dayjs(mission.createdAt).format('MMMM D, YYYY HH:mm')}
                   </Descriptions.Item>
                 </Descriptions>
               </Card>
 
-              <Card title="Logistics" style={{ marginTop: 16 }}>
+              <Card title="ព័ត៌មានអំពីភស្តុភារ" style={{ marginTop: 16 }}>
                 <Descriptions bordered column={1}>
                   {mission.transportationDetails && (
                     <Descriptions.Item 
                       label={
                         <Space>
                           <CarOutlined />
-                          Transportation
+                          មធ្យោបាយធ្វើដំណើរ
                         </Space>
                       }
                     >
@@ -331,7 +404,7 @@ export const MissionDetailPage: React.FC = () => {
                       label={
                         <Space>
                           <HomeOutlined />
-                          Accommodation
+                          កន្លែងស្នាក់នៅ
                         </Space>
                       }
                     >
@@ -348,7 +421,7 @@ export const MissionDetailPage: React.FC = () => {
                   title={
                     <Space>
                       <EnvironmentOutlined />
-                      {t('missions.details.location') || 'ទីតាំង'}
+                      ទីតាំង
                     </Space>
                   } 
                   style={{ marginBottom: 16 }}
@@ -360,7 +433,7 @@ export const MissionDetailPage: React.FC = () => {
                     {mission.latitude && mission.longitude && (
                       <>
                         <Text type="secondary" style={{ fontSize: '12px' }}>
-                          {t('missions.details.coordinates') || 'កូអរដោនេ'}: {mission.latitude.toFixed(6)}, {mission.longitude.toFixed(6)}
+                          កូអរដោនេ: {Number(mission.latitude).toFixed(6)}, {Number(mission.longitude).toFixed(6)}
                         </Text>
                         <div style={{ height: 300, width: '100%', marginTop: 8, border: '1px solid #d9d9d9', borderRadius: 6, overflow: 'hidden' }}>
                           <MapContainer
@@ -378,7 +451,7 @@ export const MissionDetailPage: React.FC = () => {
                                   <Text strong>{mission.location}</Text>
                                   <br />
                                   <Text type="secondary" style={{ fontSize: '12px' }}>
-                                    {mission.latitude.toFixed(6)}, {mission.longitude.toFixed(6)}
+                                    {Number(mission.latitude).toFixed(6)}, {Number(mission.longitude).toFixed(6)}
                                   </Text>
                                 </div>
                               </Popup>
@@ -392,18 +465,18 @@ export const MissionDetailPage: React.FC = () => {
               )}
 
               {mission.approvalComments && (
-                <Card title="Approval Comments">
+                <Card title="មតិយោបល់អនុម័ត">
                   <Paragraph>{mission.approvalComments}</Paragraph>
                   {mission.approvedBy && (
                     <Text type="secondary">
-                      Approved by: {mission.approvedBy.fullName || mission.approvedBy.username}
+                      អនុម័តដោយ: {mission.approvedBy.fullName || mission.approvedBy.username}
                     </Text>
                   )}
                 </Card>
               )}
 
               {mission.rejectionReason && (
-                <Card title="Rejection Reason">
+                <Card title="មូលហេតុបដិសេធ">
                   <Paragraph type="danger">{mission.rejectionReason}</Paragraph>
                 </Card>
               )}
@@ -415,13 +488,13 @@ export const MissionDetailPage: React.FC = () => {
           tab={
             <Space>
               <TeamOutlined />
-              Participants ({mission.missionParticipants?.length || 0})
+              អ្នកចូលរួម ({mission.missionParticipants?.length || 0})
             </Space>
           } 
           key="participants"
         >
           <Card
-            title="Mission Participants"
+            title="អ្នកចូលរួមបេសកកម្ម"
             extra={
               mission.status === MissionStatus.APPROVED && (
                 <Button
@@ -429,7 +502,7 @@ export const MissionDetailPage: React.FC = () => {
                   icon={<UserAddOutlined />}
                   onClick={() => setParticipantModalVisible(true)}
                 >
-                  Add Participant
+                  បន្ថែមអ្នកចូលរួម
                 </Button>
               )
             }
@@ -443,7 +516,7 @@ export const MissionDetailPage: React.FC = () => {
                     actions={[
                       participant.hasCheckedIn ? (
                         <Tag color="success">
-                          <CheckCircleOutlined /> Checked In
+                          <CheckCircleOutlined /> បានចុះឈ្មោះចូលរួម
                         </Tag>
                       ) : (
                         <Button
@@ -452,7 +525,7 @@ export const MissionDetailPage: React.FC = () => {
                           onClick={() => handleCheckIn(participant.id)}
                           disabled={mission.status !== MissionStatus.IN_PROGRESS}
                         >
-                          Check In
+                          ចុះឈ្មោះចូលរួម
                         </Button>
                       ),
                       <Button
@@ -462,7 +535,7 @@ export const MissionDetailPage: React.FC = () => {
                         onClick={() => handleRemoveParticipant(participant.id)}
                         disabled={mission.status !== MissionStatus.APPROVED}
                       >
-                        Remove
+                        ដកចេញ
                       </Button>,
                     ]}
                   >
@@ -471,7 +544,7 @@ export const MissionDetailPage: React.FC = () => {
                       title={
                         <Space>
                           {participant.user.fullName || participant.user.username}
-                          {participant.isLeader && <Tag color="gold">Leader</Tag>}
+                          {participant.isLeader && <Tag color="gold">ប្រធានក្រុម</Tag>}
                           <Tag>{participant.role}</Tag>
                         </Space>
                       }
@@ -480,12 +553,12 @@ export const MissionDetailPage: React.FC = () => {
                           <Text type="secondary">{participant.user.email}</Text>
                           {participant.hasConfirmed && (
                             <Text type="success">
-                              Confirmed on {dayjs(participant.confirmedAt).format('MMM D, YYYY')}
+                              បានបញ្ជាក់នៅ {dayjs(participant.confirmedAt).format('MMM D, YYYY')}
                             </Text>
                           )}
                           {participant.hasCheckedIn && (
                             <Text type="success">
-                              Checked in on {dayjs(participant.checkedInAt).format('MMM D, YYYY HH:mm')}
+                              បានចុះឈ្មោះចូលរួមនៅ {dayjs(participant.checkedInAt).format('MMM D, YYYY HH:mm')}
                             </Text>
                           )}
                         </Space>
@@ -495,13 +568,107 @@ export const MissionDetailPage: React.FC = () => {
                 )}
               />
             ) : (
-              <Empty description="No participants yet" />
+              <Empty description="មិនទាន់មានអ្នកចូលរួម" />
             )}
           </Card>
         </TabPane>
 
-        <TabPane tab="Tracking" key="tracking">
-          <Card title="Mission Tracking">
+        <TabPane 
+          tab={
+            <Space>
+              <FileTextOutlined />
+              របាយការណ៍ ({missionReports.length})
+            </Space>
+          } 
+          key="reports"
+        >
+          <Card
+            title="របាយការណ៍បេសកកម្ម"
+            extra={
+              mission && (
+                <Button
+                  type="primary"
+                  icon={<FileTextOutlined />}
+                  onClick={() => setReportModalVisible(true)}
+                >
+                  បង្កើតរបាយការណ៍ថ្មី
+                </Button>
+              )
+            }
+          >
+            {missionReports.length > 0 ? (
+              <List
+                itemLayout="horizontal"
+                dataSource={missionReports}
+                renderItem={(report: MissionReport) => (
+                  <List.Item
+                    actions={[
+                      <Button
+                        type="link"
+                        onClick={() => setSelectedReport(report)}
+                      >
+                        មើលលម្អិត
+                      </Button>,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar icon={<FileTextOutlined />} />
+                      }
+                      title={
+                        <Space>
+                          <Text>របាយការណ៍បេសកកម្ម</Text>
+                          <Tag color={
+                            report.status === 'approved' ? 'green' :
+                            report.status === 'rejected' ? 'red' :
+                            report.status === 'submitted' ? 'blue' :
+                            'default'
+                          }>
+                            {report.status === 'draft' && 'សេចក្តីព្រាង'}
+                            {report.status === 'submitted' && 'បានដាក់ស្នើ'}
+                            {report.status === 'approved' && 'បានអនុម័ត'}
+                            {report.status === 'rejected' && 'បានបដិសេធ'}
+                          </Tag>
+                        </Space>
+                      }
+                      description={
+                        <Space direction="vertical" size="small">
+                          <Text type="secondary">
+                            ដាក់ស្នើដោយ: {report.submittedBy.fullName || report.submittedBy.username}
+                          </Text>
+                          <Text type="secondary">
+                            កាលបរិច្ឆេទ: {dayjs(report.submittedAt).format('DD/MM/YYYY HH:mm')}
+                          </Text>
+                          <Text ellipsis style={{ maxWidth: 400 }}>
+                            {report.summary}
+                          </Text>
+                        </Space>
+                      }
+                    />
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <Empty 
+                description="មិនមានរបាយការណ៍" 
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              >
+                {mission && (
+                  <Button
+                    type="primary"
+                    icon={<FileTextOutlined />}
+                    onClick={() => setReportModalVisible(true)}
+                  >
+                    បង្កើតរបាយការណ៍ដំបូង
+                  </Button>
+                )}
+              </Empty>
+            )}
+          </Card>
+        </TabPane>
+
+        <TabPane tab="ការតាមដាន" key="tracking">
+          <Card title="ការតាមដានបេសកកម្ម">
             {mission.trackingData && mission.trackingData.length > 0 ? (
               <Timeline>
                 {mission.trackingData.map((tracking: MissionTracking) => (
@@ -516,11 +683,11 @@ export const MissionDetailPage: React.FC = () => {
                         <Text type="secondary">
                           {dayjs(tracking.recordedAt).format('MMM D, YYYY HH:mm')}
                         </Text>
-                        <Text type="secondary">by {tracking.user.fullName || tracking.user.username}</Text>
+                        <Text type="secondary">ដោយ {tracking.user.fullName || tracking.user.username}</Text>
                       </Space>
                       {tracking.latitude && tracking.longitude && (
                         <Text type="secondary">
-                          Location: {tracking.latitude.toFixed(6)}, {tracking.longitude.toFixed(6)}
+                          ទីតាំង: {Number(tracking.latitude).toFixed(6)}, {Number(tracking.longitude).toFixed(6)}
                         </Text>
                       )}
                     </Space>
@@ -586,6 +753,40 @@ export const MissionDetailPage: React.FC = () => {
             </Space>
           </Form.Item>
         </Form>
+      </Modal>
+
+      {/* Mission Report Modal */}
+      <Modal
+        title="បង្កើតរបាយការណ៍បេសកកម្ម"
+        visible={reportModalVisible}
+        onCancel={() => setReportModalVisible(false)}
+        footer={null}
+        width={1000}
+        destroyOnClose
+      >
+        {mission && (
+          <MissionReportForm
+            mission={mission}
+            onSubmit={handleSubmitReport}
+            onCancel={() => setReportModalVisible(false)}
+            loading={reportSubmitting}
+          />
+        )}
+      </Modal>
+
+      {/* Report View Modal */}
+      <Modal
+        title="លម្អិតរបាយការណ៍បេសកកម្ម"
+        visible={!!selectedReport}
+        onCancel={() => setSelectedReport(null)}
+        footer={[
+          <Button key="close" onClick={() => setSelectedReport(null)}>
+            បិទ
+          </Button>,
+        ]}
+        width={1000}
+      >
+        {selectedReport && <MissionReportView report={selectedReport} />}
       </Modal>
     </div>
   );

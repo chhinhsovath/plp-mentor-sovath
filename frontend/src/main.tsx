@@ -7,6 +7,7 @@ import App from './App.tsx'
 // import { OfflineProvider } from './contexts/OfflineContext' // Removed offline features
 import i18n from './i18n/i18n.ts'
 import './index.css'
+import 'leaflet/dist/leaflet.css'
 
 console.log('Main.tsx loaded');
 

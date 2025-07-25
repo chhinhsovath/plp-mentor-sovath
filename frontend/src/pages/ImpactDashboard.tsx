@@ -29,8 +29,9 @@ import {
   ThunderboltOutlined
 } from '@ant-design/icons';
 import styled, { keyframes } from 'styled-components';
-import { Line, Column, Pie, Area } from '@ant-design/plots';
+// Removed chart imports due to errors
 import CountUp from 'react-countup';
+import StaticCambodiaMap from '../components/StaticCambodiaMap';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -116,26 +117,10 @@ const ActivityFeed = styled.div`
 
 const MapContainer = styled.div`
   height: 400px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 18px;
   position: relative;
   overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: ${pulse} 3s ease-in-out infinite;
-  }
+  background: #f0f0f0;
 `;
 
 // Mock real-time data generator
@@ -185,6 +170,62 @@ const ImpactDashboard: React.FC = () => {
     { province: 'ផ្សេងៗ', count: 15, percentage: 8 },
   ];
 
+  // Demographic data
+  const demographicData = [
+    { type: 'គ្រូបង្រៀន', value: 35, color: '#5B8FF9' },
+    { type: 'នាយកសាលា', value: 20, color: '#61DDAA' },
+    { type: 'អ្នកណែនាំ', value: 25, color: '#65789B' },
+    { type: 'មន្ត្រីអប់រំ', value: 20, color: '#F6BD16' },
+  ];
+
+  const topUsersData = [
+    { 
+      rank: 1, 
+      name: 'សុខ សុភាព', 
+      role: 'អ្នកណែនាំ', 
+      score: 4.9, 
+      observations: 38,
+      progress: 95,
+      avatar: '🥇'
+    },
+    { 
+      rank: 2, 
+      name: 'លី សុខា', 
+      role: 'នាយកសាលា', 
+      score: 4.6, 
+      observations: 36,
+      progress: 88,
+      avatar: '🥈'
+    },
+    { 
+      rank: 3, 
+      name: 'ពៅ ច័ន្ទថា', 
+      role: 'គ្រូបង្រៀន', 
+      score: 4.7, 
+      observations: 35,
+      progress: 82,
+      avatar: '🥉'
+    },
+    { 
+      rank: 4, 
+      name: 'ហេង សំណាង', 
+      role: 'មន្ត្រីអប់រំ', 
+      score: 4.5, 
+      observations: 33,
+      progress: 78,
+      avatar: '4'
+    },
+    { 
+      rank: 5, 
+      name: 'ចាន់ ដារា', 
+      role: 'គ្រូបង្រៀន', 
+      score: 4.4, 
+      observations: 31,
+      progress: 75,
+      avatar: '5'
+    },
+  ];
+
   const mentorPerformance = [
     { name: 'សុខ សុភាព', observations: 45, rating: 4.8 },
     { name: 'ចាន់ ដារា', observations: 42, rating: 4.7 },
@@ -220,54 +261,14 @@ const ImpactDashboard: React.FC = () => {
     },
   ];
 
-  // Chart configurations
-  const lineConfig = {
-    data: weeklyTrendData,
-    xField: 'day',
-    yField: 'observations',
-    seriesField: 'type',
-    smooth: true,
-    animation: {
-      appear: {
-        animation: 'path-in',
-        duration: 1000,
-      },
-    },
-    point: {
-      size: 5,
-      shape: 'diamond',
-    },
-    label: {
-      style: {
-        fill: '#aaa',
-      },
-    },
-  };
-
-  const pieConfig = {
-    data: provinceData,
-    angleField: 'percentage',
-    colorField: 'province',
-    radius: 0.8,
-    label: {
-      type: 'outer',
-      content: '{name} {percentage}%',
-    },
-    interactions: [
-      {
-        type: 'pie-legend-active',
-      },
-      {
-        type: 'element-active',
-      },
-    ],
-  };
+  // Chart configurations removed - using native Ant Design components instead
 
   if (loading) {
     return (
       <DashboardWrapper>
         <div style={{ textAlign: 'center', padding: '100px 0' }}>
-          <Spin size="large" tip="កំពុងផ្ទុកទិន្នន័យ..." />
+          <Spin size="large" />
+          <p style={{ marginTop: 16 }}>កំពុងផ្ទុកទិន្នន័យ...</p>
         </div>
       </DashboardWrapper>
     );
@@ -391,7 +392,24 @@ const ImpactDashboard: React.FC = () => {
             title="និន្នាការការសង្កេតប្រចាំសប្តាហ៍" 
             extra={<Tag color="blue">សប្តាហ៍នេះ</Tag>}
           >
-            <Line {...lineConfig} height={300} />
+            <div style={{ padding: '20px 0' }}>
+              {weeklyTrendData.map((item, index) => (
+                <div key={index} style={{ marginBottom: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span>{item.day}</span>
+                    <span style={{ fontWeight: 'bold' }}>{item.observations} ការសង្កេត</span>
+                  </div>
+                  <Progress 
+                    percent={(item.observations / 200) * 100} 
+                    showInfo={false}
+                    strokeColor={item.observations >= item.target ? '#52c41a' : '#faad14'}
+                  />
+                </div>
+              ))}
+              <div style={{ marginTop: 24, textAlign: 'center' }}>
+                <Text type="secondary">គោលដៅ៖ 150 ការសង្កេត/ថ្ងៃ</Text>
+              </div>
+            </div>
           </Card>
         </Col>
         
@@ -403,7 +421,7 @@ const ImpactDashboard: React.FC = () => {
                 <ClockCircleOutlined />
               </Badge>
             }
-            bodyStyle={{ padding: '12px' }}
+            styles={{ body: { padding: '12px' } }}
           >
             <ActivityFeed>
               <List
@@ -445,7 +463,21 @@ const ImpactDashboard: React.FC = () => {
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} md={12}>
           <Card title="ការចែកចាយតាមខេត្ត">
-            <Pie {...pieConfig} height={300} />
+            <List
+              size="small"
+              dataSource={provinceData}
+              renderItem={item => (
+                <List.Item>
+                  <div style={{ width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <span>{item.province}</span>
+                      <span style={{ fontWeight: 'bold' }}>{item.percentage}%</span>
+                    </div>
+                    <Progress percent={item.percentage} showInfo={false} strokeColor="#1890ff" />
+                  </div>
+                </List.Item>
+              )}
+            />
           </Card>
         </Col>
         
@@ -494,6 +526,108 @@ const ImpactDashboard: React.FC = () => {
         </Col>
       </Row>
 
+      {/* Demographic Section */}
+      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+        <Col xs={24}>
+          <Card>
+            <Title level={4} style={{ marginBottom: 24 }}>ចំនួនសរុបអ្នកប្រើប្រាស់តាមប្រភេទ</Title>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} md={10}>
+                <div style={{ padding: '20px 0' }}>
+                  <List
+                    size="small"
+                    dataSource={demographicData}
+                    renderItem={item => (
+                      <List.Item>
+                        <div style={{ width: '100%' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <div style={{ 
+                                width: 12, 
+                                height: 12, 
+                                borderRadius: '50%', 
+                                backgroundColor: item.color 
+                              }} />
+                              {item.type}
+                            </span>
+                            <span style={{ fontWeight: 'bold', fontSize: 16 }}>{item.value}%</span>
+                          </div>
+                          <Progress 
+                            percent={item.value} 
+                            showInfo={false} 
+                            strokeColor={item.color}
+                            style={{ marginBottom: 0 }}
+                          />
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              </Col>
+              <Col xs={24} md={14}>
+                <Title level={5} style={{ marginBottom: 16 }}>ចំណាត់ថ្នាក់អ្នកប្រើប្រាស់</Title>
+                <List
+                  dataSource={topUsersData}
+                  renderItem={(user) => (
+                    <List.Item
+                      style={{ 
+                        padding: '12px 16px',
+                        borderRadius: 8,
+                        marginBottom: 8,
+                        backgroundColor: user.rank <= 3 ? '#f6f8fa' : '#fff',
+                        border: '1px solid #f0f0f0'
+                      }}
+                    >
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar 
+                            size={48}
+                            style={{ 
+                              backgroundColor: user.rank <= 3 ? '#fff' : '#f0f0f0',
+                              fontSize: 24,
+                              border: user.rank <= 3 ? '2px solid #1890ff' : '1px solid #d9d9d9'
+                            }}
+                          >
+                            {user.avatar}
+                          </Avatar>
+                        }
+                        title={
+                          <Space>
+                            <Text strong style={{ fontSize: 16 }}>{user.name}</Text>
+                            <Tag color={
+                              user.role === 'អ្នកណែនាំ' ? 'blue' :
+                              user.role === 'នាយកសាលា' ? 'green' :
+                              user.role === 'គ្រូបង្រៀន' ? 'purple' : 'orange'
+                            }>
+                              {user.role}
+                            </Tag>
+                          </Space>
+                        }
+                        description={
+                          <Space size="large">
+                            <span>ការវាយតម្លៃ: ⭐ {user.score}</span>
+                            <span>• {user.observations} ការសង្កេត</span>
+                          </Space>
+                        }
+                      />
+                      <div style={{ textAlign: 'right', minWidth: 120 }}>
+                        <Text type="secondary" style={{ fontSize: 12 }}>លេខ {user.rank}</Text>
+                        <Progress 
+                          percent={user.progress} 
+                          size="small" 
+                          strokeColor={user.rank <= 3 ? '#52c41a' : '#1890ff'}
+                          style={{ marginTop: 4 }}
+                        />
+                      </div>
+                    </List.Item>
+                  )}
+                />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+
       {/* Heat Map */}
       <Row gutter={[16, 16]}>
         <Col xs={24}>
@@ -506,16 +640,7 @@ const ImpactDashboard: React.FC = () => {
               </Space>
             }
           >
-            <MapContainer>
-              <div style={{ textAlign: 'center' }}>
-                <Title level={3} style={{ color: 'white', marginBottom: 16 }}>
-                  ផែនទីកម្ពុជា - សកម្មភាពអ្នកណែនាំ
-                </Title>
-                <Paragraph style={{ color: 'rgba(255,255,255,0.8)' }}>
-                  ផែនទីអន្តរកម្មនឹងមានពេលក្រោយ
-                </Paragraph>
-              </div>
-            </MapContainer>
+            <StaticCambodiaMap />
           </Card>
         </Col>
       </Row>

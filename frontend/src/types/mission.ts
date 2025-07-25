@@ -108,6 +108,115 @@ export interface UpdateMissionInput extends Partial<CreateMissionInput> {
   completionReport?: string;
 }
 
+export interface MissionReport {
+  id: string;
+  missionId: string;
+  mission?: Mission;
+  submittedBy: User;
+  submittedAt: string;
+  reportType: MissionType;
+  status: 'draft' | 'submitted' | 'approved' | 'rejected';
+  
+  // Common fields for all mission types
+  summary: string;
+  achievements: string[];
+  challenges: string[];
+  recommendations: string[];
+  
+  // Field trip specific
+  placesVisited?: string[];
+  peopleMetCount?: number;
+  keyFindings?: string[];
+  
+  // Training specific
+  participantsCount?: number;
+  topicsCovered?: string[];
+  skillsAcquired?: string[];
+  trainingMaterials?: string[];
+  participantFeedback?: string;
+  
+  // Meeting specific
+  attendeesCount?: number;
+  agendaItems?: string[];
+  decisions?: string[];
+  actionItems?: Array<{
+    task: string;
+    responsible: string;
+    deadline: string;
+  }>;
+  
+  // Monitoring specific
+  sitesMonitored?: string[];
+  complianceStatus?: 'compliant' | 'partially_compliant' | 'non_compliant';
+  issuesIdentified?: string[];
+  correctiveActions?: string[];
+  
+  // Impact assessment
+  impactMetrics?: {
+    peopleImpacted: number;
+    areasImproved: string[];
+    quantifiableResults: Array<{
+      metric: string;
+      value: number;
+      unit: string;
+    }>;
+  };
+  
+  // Attachments
+  photos?: Array<{
+    url: string;
+    caption: string;
+  }>;
+  documents?: Array<{
+    url: string;
+    name: string;
+    type: string;
+  }>;
+  
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateMissionReportInput {
+  missionId: string;
+  summary: string;
+  achievements: string[];
+  challenges: string[];
+  recommendations: string[];
+  
+  // Type-specific fields
+  placesVisited?: string[];
+  peopleMetCount?: number;
+  keyFindings?: string[];
+  participantsCount?: number;
+  topicsCovered?: string[];
+  skillsAcquired?: string[];
+  trainingMaterials?: string[];
+  participantFeedback?: string;
+  attendeesCount?: number;
+  agendaItems?: string[];
+  decisions?: string[];
+  actionItems?: Array<{
+    task: string;
+    responsible: string;
+    deadline: string;
+  }>;
+  sitesMonitored?: string[];
+  complianceStatus?: 'compliant' | 'partially_compliant' | 'non_compliant';
+  issuesIdentified?: string[];
+  correctiveActions?: string[];
+  
+  impactMetrics?: {
+    peopleImpacted: number;
+    areasImproved: string[];
+    quantifiableResults: Array<{
+      metric: string;
+      value: number;
+      unit: string;
+    }>;
+  };
+}
+
 export interface UpdateMissionStatusInput {
   status: MissionStatus;
   approvalComments?: string;

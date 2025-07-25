@@ -10,6 +10,8 @@ import {
   MissionsResponse,
   MissionParticipant,
   MissionTracking,
+  MissionReport,
+  CreateMissionReportInput,
 } from '../types/mission';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
@@ -228,6 +230,94 @@ class MissionService {
   // Cancel mission
   async cancelMission(id: string): Promise<Mission> {
     return this.updateMissionStatus(id, { status: 'cancelled' as any });
+  }
+
+  // Mission Reports
+  async createMissionReport(data: CreateMissionReportInput): Promise<MissionReport> {
+    const response = await axios.post(
+      `${API_BASE_URL}/missions/${data.missionId}/reports`,
+      data,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async getMissionReports(missionId: string): Promise<MissionReport[]> {
+    const response = await axios.get(
+      `${API_BASE_URL}/missions/${missionId}/reports`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async getMissionReportById(missionId: string, reportId: string): Promise<MissionReport> {
+    const response = await axios.get(
+      `${API_BASE_URL}/missions/${missionId}/reports/${reportId}`,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async updateMissionReport(
+    missionId: string,
+    reportId: string,
+    data: Partial<CreateMissionReportInput>
+  ): Promise<MissionReport> {
+    const response = await axios.patch(
+      `${API_BASE_URL}/missions/${missionId}/reports/${reportId}`,
+      data,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async submitMissionReport(missionId: string, reportId: string): Promise<MissionReport> {
+    const response = await axios.post(
+      `${API_BASE_URL}/missions/${missionId}/reports/${reportId}/submit`,
+      {},
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async approveMissionReport(
+    missionId: string,
+    reportId: string,
+    comments?: string
+  ): Promise<MissionReport> {
+    const response = await axios.post(
+      `${API_BASE_URL}/missions/${missionId}/reports/${reportId}/approve`,
+      { comments },
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
+  }
+
+  async rejectMissionReport(
+    missionId: string,
+    reportId: string,
+    reason: string
+  ): Promise<MissionReport> {
+    const response = await axios.post(
+      `${API_BASE_URL}/missions/${missionId}/reports/${reportId}/reject`,
+      { reason },
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+    return response.data;
   }
 
   // Helper method to get current user ID

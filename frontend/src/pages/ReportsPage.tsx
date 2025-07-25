@@ -579,10 +579,12 @@ const ReportsPage: React.FC = () => {
         <Col xs={24} lg={12}>
           <ReportCard title="និន្នាការការសង្កេត (៣០ ថ្ងៃចុងក្រោយ)">
             <ReportErrorBoundary>
-              {chartLoading ? (
+              {chartLoading || observationLoading ? (
                 <ChartLoadingSpinner />
-              ) : (
+              ) : observationData.length > 0 ? (
                 <Line {...observationTrendConfig} height={300} />
+              ) : (
+                <Empty description="មិនមានទិន្នន័យ" />
               )}
             </ReportErrorBoundary>
           </ReportCard>
@@ -594,23 +596,23 @@ const ReportsPage: React.FC = () => {
                 <ChartLoadingSpinner />
               ) : (
                 <Pie
-              data={[
-                { province: 'ភ្នំពេញ', value: 35 },
-                { province: 'កណ្តាល', value: 28 },
-                { province: 'កំពង់ចាម', value: 22 },
-                { province: 'សៀមរាប', value: 18 },
-                { province: 'បាត់ដំបង', value: 15 },
-                { province: 'ផ្សេងៗ', value: 12 }
-              ]}
-              angleField="value"
-              colorField="province"
-              radius={0.8}
-              label={{
-                type: 'outer',
-                content: '{name} {percentage}'
-              }}
-              height={300}
-            />
+                  data={[
+                    { province: 'ភ្នំពេញ', value: 35 },
+                    { province: 'កណ្តាល', value: 28 },
+                    { province: 'កំពង់ចាម', value: 22 },
+                    { province: 'សៀមរាប', value: 18 },
+                    { province: 'បាត់ដំបង', value: 15 },
+                    { province: 'ផ្សេងៗ', value: 12 }
+                  ]}
+                  angleField="value"
+                  colorField="province"
+                  radius={0.8}
+                  label={{
+                    type: 'outer',
+                    content: (data) => `${data.province} ${(data.percent * 100).toFixed(1)}%`
+                  }}
+                  height={300}
+                />
               )}
             </ReportErrorBoundary>
           </ReportCard>
@@ -668,9 +670,9 @@ const ReportsPage: React.FC = () => {
         <Col xs={24}>
           <ReportCard title="ដំណើរការលទ្ធផលគ្រូបង្រៀន">
             <ReportErrorBoundary>
-              {chartLoading ? (
+              {chartLoading || teacherLoading ? (
                 <ChartLoadingSpinner />
-              ) : (
+              ) : teacherData.length > 0 ? (
                 <Column
                   data={teacherData.flatMap(item => [
                     { province: item.province, type: 'ល្អបំផុត', value: item.excellent },
@@ -681,6 +683,8 @@ const ReportsPage: React.FC = () => {
                   {...teacherPerformanceConfig}
                   height={400}
                 />
+              ) : (
+                <Empty description="មិនមានទិន្នន័យ" />
               )}
             </ReportErrorBoundary>
           </ReportCard>
@@ -690,46 +694,50 @@ const ReportsPage: React.FC = () => {
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
           <ReportCard title="ការវិភាគជំនាញគ្រូ">
-            <Gauge
-              percent={0.75}
-              range={{
-                color: 'l(0) 0:#ff4d4f 0.5:#faad14 1:#52c41a'
-              }}
-              startAngle={180}
-              endAngle={0}
-              height={200}
-              statistic={{
-                title: {
-                  formatter: () => 'កម្រិតជំនាញមធ្យម',
-                  style: { fontSize: '16px' }
-                },
-                content: {
-                  formatter: () => '75%',
-                  style: { fontSize: '24px' }
-                }
-              }}
-            />
+            <ReportErrorBoundary>
+              <Gauge
+                percent={0.75}
+                range={{
+                  color: 'l(0) 0:#ff4d4f 0.5:#faad14 1:#52c41a'
+                }}
+                startAngle={180}
+                endAngle={0}
+                height={200}
+                statistic={{
+                  title: {
+                    formatter: () => 'កម្រិតជំនាញមធ្យម',
+                    style: { fontSize: '16px' }
+                  },
+                  content: {
+                    formatter: () => '75%',
+                    style: { fontSize: '24px' }
+                  }
+                }}
+              />
+            </ReportErrorBoundary>
           </ReportCard>
         </Col>
         <Col xs={24} md={12}>
           <ReportCard title="ការចូលរួមការបណ្តុះបណ្តាល">
-            <Area
-              data={[
-                { month: 'មករា', value: 65 },
-                { month: 'កុម្ភៈ', value: 72 },
-                { month: 'មីនា', value: 78 },
-                { month: 'មេសា', value: 83 },
-                { month: 'ឧសភា', value: 88 },
-                { month: 'មិថុនា', value: 92 }
-              ]}
-              xField="month"
-              yField="value"
-              smooth
-              areaStyle={{
-                fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff'
-              }}
-              height={200}
-            />
+            <ReportErrorBoundary>
+              <Area
+                data={[
+                  { month: 'មករា', value: 65 },
+                  { month: 'កុម្ភៈ', value: 72 },
+                  { month: 'មីនា', value: 78 },
+                  { month: 'មេសា', value: 83 },
+                  { month: 'ឧសភា', value: 88 },
+                  { month: 'មិថុនា', value: 92 }
+                ]}
+                xField="month"
+                yField="value"
+                smooth
+                areaStyle={{
+                  fill: 'l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff'
+                }}
+                height={200}
+              />
+            </ReportErrorBoundary>
           </ReportCard>
         </Col>
       </Row>
@@ -753,15 +761,21 @@ const ReportsPage: React.FC = () => {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={16}>
           <ReportCard title="ការរីកចម្រើនតាមមុខវិជ្ជា">
-            <Column
-              data={generateStudentProgress().flatMap(item => [
-                { subject: item.subject, type: 'មុនសិក្សា', value: item.preTest },
-                { subject: item.subject, type: 'ក្រោយសិក្សា', value: item.postTest },
-                { subject: item.subject, type: 'ការរីកចម្រើន', value: item.improvement }
-              ])}
-              {...studentProgressConfig}
-              height={400}
-            />
+            {studentLoading ? (
+              <ChartLoadingSpinner />
+            ) : studentData.length > 0 ? (
+              <Column
+                data={studentData.flatMap(item => [
+                  { subject: item.subject, type: 'មុនសិក្សា', value: item.preTest },
+                  { subject: item.subject, type: 'ក្រោយសិក្សា', value: item.postTest },
+                  { subject: item.subject, type: 'ការរីកចម្រើន', value: item.improvement }
+                ])}
+                {...studentProgressConfig}
+                height={400}
+              />
+            ) : (
+              <Empty description="មិនមានទិន្នន័យ" />
+            )}
           </ReportCard>
         </Col>
         <Col xs={24} lg={8}>
