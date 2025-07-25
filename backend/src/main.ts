@@ -14,13 +14,14 @@ async function bootstrap() {
     get: (key: string) => process.env[key],
   } as any);
   
-  const httpsOptions = securityConfig.getHttpsOptions();
+  // DISABLE HTTPS for now
+  const httpsOptions = null; // securityConfig.getHttpsOptions();
   
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
   });
 
-  // Security middleware
+  // Security middleware - DISABLE HSTS
   app.use(helmet.default({
     contentSecurityPolicy: {
       directives: {
@@ -31,10 +32,11 @@ async function bootstrap() {
         fontSrc: ["'self'", "data:"],
       },
     },
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-    },
+    hsts: false, // DISABLED - this was causing the HTTPS redirect
+    // hsts: {
+    //   maxAge: 31536000,
+    //   includeSubDomains: true,
+    // },
   }));
 
   // Compression middleware

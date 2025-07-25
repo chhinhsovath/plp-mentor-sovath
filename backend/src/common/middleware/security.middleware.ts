@@ -16,10 +16,10 @@ export class SecurityMiddleware implements NestMiddleware {
     // Remove server information
     res.removeHeader('X-Powered-By');
     
-    // Force HTTPS in production
-    if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
-      return res.redirect(`https://${req.header('host')}${req.url}`);
-    }
+    // Force HTTPS in production - DISABLED for now
+    // if (process.env.NODE_ENV === 'production' && req.header('x-forwarded-proto') !== 'https') {
+    //   return res.redirect(`https://${req.header('host')}${req.url}`);
+    // }
 
     next();
   }
