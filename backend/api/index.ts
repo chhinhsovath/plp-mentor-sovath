@@ -13,6 +13,7 @@ async function bootstrap() {
     app.enableCors({
       origin: [
         'https://mentoring.openplp.com',
+        'https://www.mentoring.openplp.com',
         'https://plp-mentor-sovath.vercel.app',
         'https://plp-mentor-sovath-*.vercel.app',
         'http://localhost:5173',
