@@ -1,0 +1,11 @@
+.signature-canvas {
+  border-radius: 4px;
+  background-color: #fafafa;
+  cursor: crosshair;
+  width: 100% !important;
+  max-width: 400px;
+}
+
+.signature-canvas:hover {
+  background-color: #f5f5f5;
+}

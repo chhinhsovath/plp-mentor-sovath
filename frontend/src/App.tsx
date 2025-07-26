@@ -47,6 +47,7 @@ import ROICalculator from './pages/ROICalculator'
 import ComparativeAnalytics from './pages/ComparativeAnalytics'
 import PresentationDashboard from './pages/PresentationDashboard'
 import SchoolsPage from './pages/SchoolsPage'
+import ObservationFormKhmerPage from './pages/ObservationFormKhmerPage'
 // import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
@@ -134,6 +135,17 @@ function App() {
                   fallback={<UnauthorizedPage />}
                 >
                   <ObservationEditPage />
+                </RoleBasedRoute>
+              } 
+            />
+            <Route 
+              path="observations/khmer-form" 
+              element={
+                <RoleBasedRoute 
+                  allowedRoles={OBSERVER_ROLES}
+                  fallback={<UnauthorizedPage />}
+                >
+                  <ObservationFormKhmerPage />
                 </RoleBasedRoute>
               } 
             />

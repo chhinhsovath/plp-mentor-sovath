@@ -17,6 +17,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { HierarchyModule } from './hierarchy/hierarchy.module';
 import { MissionsModule } from './missions/missions.module';
 import { SurveysModule } from './surveys/surveys.module';
+import { ObservationKhmerModule } from './modules/observation-khmer/observation-khmer.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { ErrorLoggingInterceptor } from './common/interceptors/error-logging.interceptor';
@@ -47,6 +48,7 @@ import { SecurityMiddleware } from './common/middleware/security.middleware';
     HierarchyModule,
     MissionsModule,
     SurveysModule,
+    ObservationKhmerModule,
   ],
   controllers: [AppController],
   providers: [

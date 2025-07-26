@@ -148,6 +148,13 @@ const AntdLayout: React.FC = () => {
           requiredPermissions: [PERMISSIONS.VIEW_OBSERVATION],
         },
         {
+          key: 'observations-khmer',
+          label: 'ទំរង់វាយតម្លៃការបង្រៀន',
+          icon: <FormOutlined />,
+          path: '/observations/khmer-form',
+          requiredPermissions: [PERMISSIONS.VIEW_OBSERVATION],
+        },
+        {
           key: 'missions',
           label: t('navigation.missions') || 'បេសកកម្ម',
           icon: <DeploymentUnitOutlined />,
