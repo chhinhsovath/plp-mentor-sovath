@@ -330,7 +330,7 @@ const AntdLayout: React.FC = () => {
     // Role Demo (always visible for testing)
     {
       key: 'role-demo',
-      label: 'Role Hierarchy Demo',
+      label: 'បង្ហាញឋានានុក្រមតួនាទី',
       icon: <TeamOutlined />,
       path: '/role-demo',
     },
@@ -338,7 +338,7 @@ const AntdLayout: React.FC = () => {
     // Assessment Access Demo (always visible for testing)
     {
       key: 'assessment-demo',
-      label: 'Assessment Access Demo',
+      label: 'បង្ហាញសិទ្ធិវាយតម្លៃ',
       icon: <FormOutlined />,
       path: '/assessment-demo',
     },

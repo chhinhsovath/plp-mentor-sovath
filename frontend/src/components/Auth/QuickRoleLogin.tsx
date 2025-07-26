@@ -90,7 +90,7 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
       title={
         <Space>
           <CrownOutlined style={{ color: '#faad14' }} />
-          <span>Quick Demo Login - សម្រាប់ធ្វើតេស្តតួនាទី</span>
+          <span>ចូលប្រើរហ័ស - សម្រាប់ធ្វើតេស្តតួនាទី</span>
         </Space>
       }
       style={{ marginTop: 24 }}
@@ -98,7 +98,7 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
     >
       <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Text type="secondary">
-          ចុចប៊ូតុងខាងក្រោមដើម្បីចូលប្រើប្រាស់ជាមួយតួនាទីផ្សេងៗ | Click any button to login with that role
+          ចុចប៊ូតុងខាងក្រោមដើម្បីចូលប្រើប្រាស់ជាមួយតួនាទីផ្សេងៗ
         </Text>
         
         <Row gutter={[8, 8]}>
@@ -107,9 +107,9 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
               <Tooltip 
                 title={
                   <div>
-                    <div>Username: {demo.username}</div>
-                    <div>Password: {demo.password}</div>
-                    <div>Access: {demo.access}</div>
+                    <div>ឈ្មោះអ្នកប្រើ: {demo.username}</div>
+                    <div>ពាក្យសម្ងាត់: {demo.password}</div>
+                    <div>សិទ្ធិ: {demo.access}</div>
                   </div>
                 }
               >
@@ -139,20 +139,20 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
         <Divider />
         
         <div style={{ backgroundColor: '#f0f2f5', padding: 8, borderRadius: 8 }}>
-          <Title level={5} style={{ margin: 0, marginBottom: 4, fontSize: 14 }}>Role Features Summary:</Title>
+          <Title level={5} style={{ margin: 0, marginBottom: 4, fontSize: 14 }}>សង្ខេបមុខងារតាមតួនាទី:</Title>
           <Row gutter={[8, 4]}>
             <Col xs={24} sm={12}>
               <Space direction="vertical" size={0} style={{ fontSize: 12 }}>
-                <Text style={{ fontSize: 12 }}><Tag color="red" style={{ fontSize: 11 }}>Admin</Tag> All features + System settings</Text>
-                <Text style={{ fontSize: 12 }}><Tag color="orange" style={{ fontSize: 11 }}>Zone/Provincial</Tag> Approve missions + Analytics</Text>
-                <Text style={{ fontSize: 12 }}><Tag color="gold" style={{ fontSize: 11 }}>Department</Tag> Manage forms + View reports</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="red" style={{ fontSize: 11 }}>រដ្ឋបាល</Tag> មុខងារទាំងអស់ + កំណត់ប្រព័ន្ធ</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="orange" style={{ fontSize: 11 }}>តំបន់/ខេត្ត</Tag> អនុម័តបេសកកម្ម + វិភាគ</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="gold" style={{ fontSize: 11 }}>នាយកដ្ឋាន</Tag> គ្រប់គ្រងទម្រង់ + មើលរបាយការណ៍</Text>
               </Space>
             </Col>
             <Col xs={24} sm={12}>
               <Space direction="vertical" size={0} style={{ fontSize: 12 }}>
-                <Text style={{ fontSize: 12 }}><Tag color="green" style={{ fontSize: 11 }}>Cluster</Tag> View multiple schools</Text>
-                <Text style={{ fontSize: 12 }}><Tag color="blue" style={{ fontSize: 11 }}>Director</Tag> Approve school missions</Text>
-                <Text style={{ fontSize: 12 }}><Tag color="purple" style={{ fontSize: 11 }}>Teacher</Tag> Create observations only</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="green" style={{ fontSize: 11 }}>ចង្កោម</Tag> មើលសាលាច្រើន</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="blue" style={{ fontSize: 11 }}>នាយក</Tag> អនុម័តបេសកកម្មសាលា</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="purple" style={{ fontSize: 11 }}>គ្រូ</Tag> បង្កើតការសង្កេតតែប៉ុណ្ណោះ</Text>
               </Space>
             </Col>
           </Row>

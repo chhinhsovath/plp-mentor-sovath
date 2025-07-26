@@ -203,13 +203,13 @@ const LoginPage = () => {
             </Form>
 
             <Divider style={{ margin: '32px 0 24px' }}>
-              <Text type="secondary">{t('auth.or')}</Text>
+              <Text type="secondary">ឬ</Text>
             </Divider>
 
             <div style={{ textAlign: 'center' }}>
               <Space direction="vertical" size="small">
                 <Text type="secondary" style={{ fontSize: '14px' }}>
-                  {t('auth.demoCredentials')}
+                  ព័ត៌មានចូលប្រើសាកល្បង
                 </Text>
                 
                 <Space direction="vertical" size="small">

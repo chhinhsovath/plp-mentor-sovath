@@ -234,7 +234,7 @@ const RoleHierarchyDemo: React.FC = () => {
 
   const columns = [
     {
-      title: 'តួនាទី (Role)',
+      title: 'តួនាទី',
       dataIndex: 'role',
       key: 'role',
       render: (role: string) => (
@@ -245,13 +245,13 @@ const RoleHierarchyDemo: React.FC = () => {
       ),
     },
     {
-      title: 'សិទ្ធិមើល (View Access)',
+      title: 'សិទ្ធិមើល',
       dataIndex: 'canView',
       key: 'canView',
       render: (text: string) => <Tag color="blue">{text}</Tag>,
     },
     {
-      title: 'គ្រប់គ្រង (Manages)',
+      title: 'គ្រប់គ្រង',
       dataIndex: 'manages',
       key: 'manages',
       render: (manages: string[]) => (
@@ -261,7 +261,7 @@ const RoleHierarchyDemo: React.FC = () => {
               {role}
             </Tag>
           ))}
-          {manages.length === 0 && <Text type="secondary">None</Text>}
+          {manages.length === 0 && <Text type="secondary">គ្មាន</Text>}
         </Space>
       ),
     },
@@ -297,19 +297,19 @@ const RoleHierarchyDemo: React.FC = () => {
   return (
     <div style={{ padding: '24px' }}>
       <Card>
-        <Title level={2}>Role Hierarchy Access Demo</Title>
+        <Title level={2}>បង្ហាញឋានានុក្រមតួនាទី</Title>
         <Paragraph>
-          ប្រព័ន្ធគ្រប់គ្រងតួនាទី និងសិទ្ធិចូលប្រើប្រាស់សម្រាប់ PLP Mentor System
+          ប្រព័ន្ធគ្រប់គ្រងតួនាទី និងសិទ្ធិចូលប្រើប្រាស់សម្រាប់ប្រព័ន្ធ PLP Mentor
         </Paragraph>
 
         <Alert
-          message="Login Credentials Available"
-          description="Click the 'View Login Info' button to see demo user credentials for each role"
+          message="មានព័ត៌មានចូលប្រើប្រាស់"
+          description="ចុចប៊ូតុង 'មើលព័ត៌មានចូលប្រើ' ដើម្បីមើលព័ត៌មានគណនីសាកល្បងសម្រាប់តួនាទីនីមួយៗ"
           type="info"
           showIcon
           action={
             <Button size="small" onClick={() => setLoginModalVisible(true)}>
-              View Login Info
+              មើលព័ត៌មានចូលប្រើ
             </Button>
           }
           style={{ marginBottom: 24 }}
@@ -324,7 +324,7 @@ const RoleHierarchyDemo: React.FC = () => {
 
         <Divider />
 
-        <Title level={3}>Form Access by Role</Title>
+        <Title level={3}>សិទ្ធិចូលប្រើទម្រង់តាមតួនាទី</Title>
         <Row gutter={[16, 16]}>
           {roleData.map((role) => (
             <Col key={role.role} xs={24} sm={12} md={8} lg={6}>
@@ -339,7 +339,7 @@ const RoleHierarchyDemo: React.FC = () => {
               >
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <div>
-                    <Text type="secondary">Student Assessment:</Text>
+                    <Text type="secondary">វាយតម្លៃសិស្ស:</Text>
                     {role.formAccess.studentAssessment ? (
                       <CheckCircleOutlined style={{ color: '#52c41a', marginLeft: 8 }} />
                     ) : (
@@ -347,7 +347,7 @@ const RoleHierarchyDemo: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <Text type="secondary">Teacher Assessment:</Text>
+                    <Text type="secondary">វាយតម្លៃគ្រូ:</Text>
                     {role.formAccess.teacherAssessment ? (
                       <CheckCircleOutlined style={{ color: '#52c41a', marginLeft: 8 }} />
                     ) : (
@@ -358,17 +358,17 @@ const RoleHierarchyDemo: React.FC = () => {
                   <Space wrap>
                     {role.formAccess.canCreate && (
                       <Tag color="blue" icon={<FormOutlined />}>
-                        Create
+                        បង្កើត
                       </Tag>
                     )}
                     {role.formAccess.canEdit && (
-                      <Tag color="orange" icon={<EditOutlined />}>
-                        Edit
+                      <Tag color="orange" icon={<FormOutlined />}>
+                        កែសម្រួល
                       </Tag>
                     )}
                     {role.formAccess.canApprove && (
                       <Tag color="green" icon={<CheckCircleOutlined />}>
-                        Approve
+                        អនុម័ត
                       </Tag>
                     )}
                   </Space>
@@ -381,7 +381,7 @@ const RoleHierarchyDemo: React.FC = () => {
 
       {/* Role Details Modal */}
       <Modal
-        title={`Role Details: ${selectedRole}`}
+        title={`ព័ត៌មានលម្អិតតួនាទី: ${selectedRole}`}
         open={!!selectedRole}
         onCancel={() => setSelectedRole(null)}
         footer={null}
@@ -389,7 +389,7 @@ const RoleHierarchyDemo: React.FC = () => {
       >
         {selectedRole && (
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Menu Access" key="1">
+            <TabPane tab="សិទ្ធិចូលប្រើម៉ឺនុយ" key="1">
               <List
                 dataSource={roleData.find((r) => r.role === selectedRole)?.menuAccess || []}
                 renderItem={(menu) => (
@@ -402,14 +402,14 @@ const RoleHierarchyDemo: React.FC = () => {
                 )}
               />
             </TabPane>
-            <TabPane tab="Form Permissions" key="2">
+            <TabPane tab="សិទ្ធិប្រើប្រាស់ទម្រង់" key="2">
               <Space direction="vertical" style={{ width: '100%' }}>
                 <Alert
-                  message="Student Assessment Forms"
+                  message="ទម្រង់វាយតម្លៃសិស្ស"
                   description={
                     roleData.find((r) => r.role === selectedRole)?.formAccess.studentAssessment
-                      ? 'Can access and create student assessment forms'
-                      : 'No access to student assessment forms'
+                      ? 'អាចចូលប្រើ និងបង្កើតទម្រង់វាយតម្លៃសិស្ស'
+                      : 'មិនមានសិទ្ធិចូលប្រើទម្រង់វាយតម្លៃសិស្ស'
                   }
                   type={
                     roleData.find((r) => r.role === selectedRole)?.formAccess.studentAssessment
@@ -419,11 +419,11 @@ const RoleHierarchyDemo: React.FC = () => {
                   showIcon
                 />
                 <Alert
-                  message="Teacher Assessment Forms"
+                  message="ទម្រង់វាយតម្លៃគ្រូ"
                   description={
                     roleData.find((r) => r.role === selectedRole)?.formAccess.teacherAssessment
-                      ? 'Can access and evaluate teacher performance'
-                      : 'No access to teacher assessment forms'
+                      ? 'អាចចូលប្រើ និងវាយតម្លៃការបង្រៀនរបស់គ្រូ'
+                      : 'មិនមានសិទ្ធិចូលប្រើទម្រង់វាយតម្លៃគ្រូ'
                   }
                   type={
                     roleData.find((r) => r.role === selectedRole)?.formAccess.teacherAssessment
@@ -434,17 +434,17 @@ const RoleHierarchyDemo: React.FC = () => {
                 />
               </Space>
             </TabPane>
-            <TabPane tab="Management Scope" key="3">
+            <TabPane tab="វិសាលភាពគ្រប់គ្រង" key="3">
               <Paragraph>
-                <Text strong>View Access: </Text>
+                <Text strong>សិទ្ធិមើល: </Text>
                 {roleData.find((r) => r.role === selectedRole)?.canView}
               </Paragraph>
               <Paragraph>
-                <Text strong>Can Manage: </Text>
-                {roleData.find((r) => r.role === selectedRole)?.manages.join(', ') || 'None'}
+                <Text strong>អាចគ្រប់គ្រង: </Text>
+                {roleData.find((r) => r.role === selectedRole)?.manages.join(', ') || 'គ្មាន'}
               </Paragraph>
               <Paragraph>
-                <Text strong>Description: </Text>
+                <Text strong>ពិពណ៌នា: </Text>
                 {roleData.find((r) => r.role === selectedRole)?.description}
               </Paragraph>
             </TabPane>
@@ -454,15 +454,15 @@ const RoleHierarchyDemo: React.FC = () => {
 
       {/* Login Credentials Modal */}
       <Modal
-        title="Demo User Login Credentials"
+        title="ព័ត៌មានចូលប្រើអ្នកប្រើសាកល្បង"
         open={loginModalVisible}
         onCancel={() => setLoginModalVisible(false)}
         footer={null}
         width={600}
       >
         <Alert
-          message="Important"
-          description="These are demo accounts for testing role-based access. Use them to login and see how different roles interact with the system."
+          message="សំខាន់"
+          description="ទាំងនេះជាគណនីសាកល្បងសម្រាប់ធ្វើតេស្តសិទ្ធិតាមតួនាទី។ ប្រើវាដើម្បីចូលប្រើ និងមើលរបៀបដែលតួនាទីផ្សេងៗធ្វើអន្តរកម្មជាមួយប្រព័ន្ធ។"
           type="warning"
           showIcon
           style={{ marginBottom: 16 }}
@@ -476,8 +476,8 @@ const RoleHierarchyDemo: React.FC = () => {
                 title={cred.role}
                 description={
                   <Space direction="vertical">
-                    <Text code>Username: {cred.username}</Text>
-                    <Text code>Password: {cred.password}</Text>
+                    <Text code>ឈ្មោះអ្នកប្រើ: {cred.username}</Text>
+                    <Text code>ពាក្យសម្ងាត់: {cred.password}</Text>
                   </Space>
                 }
               />

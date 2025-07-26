@@ -91,14 +91,14 @@ const RoleSwitcher: React.FC = () => {
         localStorage.setItem('access_token', response.access_token);
         localStorage.setItem('user', JSON.stringify(response.user));
         
-        message.success(`Switched to ${response.user.role.name} role successfully!`);
+        message.success(`បានប្តូរទៅតួនាទី ${response.user.role.name} ដោយជោគជ័យ!`);
         setIsModalOpen(false);
         
         // Reload the page to ensure all components update with new role
         window.location.reload();
       }
     } catch (error) {
-      message.error('Failed to switch role. Please try again.');
+      message.error('មិនអាចប្តូរតួនាទីបានទេ។ សូមព្យាយាមម្តងទៀត។');
     } finally {
       setSwitching(false);
     }
@@ -116,7 +116,7 @@ const RoleSwitcher: React.FC = () => {
       >
         <FloatButton
           icon={currentRoleConfig?.icon || <UserOutlined />}
-          tooltip={`Current: ${currentRole}`}
+          tooltip={`តួនាទីបច្ចុប្បន្ន: ${currentRole}`}
           onClick={() => setIsModalOpen(true)}
           badge={{ dot: true }}
         />
@@ -126,7 +126,7 @@ const RoleSwitcher: React.FC = () => {
         title={
           <Space>
             <SwapOutlined />
-            <span>Quick Role Switcher - ប្តូរតួនាទីរហ័ស</span>
+            <span>ប្តូរតួនាទីរហ័ស</span>
           </Space>
         }
         open={isModalOpen}
@@ -136,7 +136,7 @@ const RoleSwitcher: React.FC = () => {
       >
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           <div style={{ textAlign: 'center', marginBottom: 16 }}>
-            <Text>Current Role: </Text>
+            <Text>តួនាទីបច្ចុប្បន្ន: </Text>
             <Tag 
               icon={currentRoleConfig?.icon} 
               color={currentRoleConfig?.color}
@@ -146,7 +146,7 @@ const RoleSwitcher: React.FC = () => {
             </Tag>
           </div>
 
-          <Title level={5}>Switch to Another Role:</Title>
+          <Title level={5}>ប្តូរទៅតួនាទីផ្សេង:</Title>
           
           <Row gutter={[12, 12]}>
             {demoRoles.map((demo) => {
@@ -194,7 +194,7 @@ const RoleSwitcher: React.FC = () => {
             borderRadius: 8 
           }}>
             <Text type="secondary">
-              <strong>Note:</strong> Switching roles will reload the page to update all permissions and menu items.
+              <strong>ចំណាំ:</strong> ការប្តូរតួនាទីនឹងផ្ទុកទំព័រឡើងវិញដើម្បីធ្វើបច្ចុប្បន្នភាពសិទ្ធិ និងធាតុម៉ឺនុយទាំងអស់។
             </Text>
           </div>
         </Space>
