@@ -608,9 +608,13 @@ const ReportsPage: React.FC = () => {
                   colorField="province"
                   radius={0.8}
                   label={{
-                    type: 'spider',
-                    labelHeight: 28,
-                    content: ({ percent }) => `${(percent * 100).toFixed(0)}%`
+                    type: 'inner',
+                    offset: '-30%',
+                    content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+                    style: {
+                      fontSize: 14,
+                      textAlign: 'center'
+                    }
                   }}
                   height={300}
                 />
