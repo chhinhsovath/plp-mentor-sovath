@@ -609,7 +609,8 @@ const ReportsPage: React.FC = () => {
                   radius={0.8}
                   label={{
                     type: 'spider',
-                    content: '{name} {percentage}'
+                    labelHeight: 28,
+                    content: ({ percent }) => `${(percent * 100).toFixed(0)}%`
                   }}
                   height={300}
                 />
