@@ -8,7 +8,7 @@ export const notifyMissionCreated = async (missionId: string, missionTitle: stri
     detail: {
       id: Date.now().toString(),
       userId: 'current-user',
-      type: NotificationType.MISSION_CREATED,
+      type: 'mission_created' as NotificationType,
       title: 'បេសកកម្មថ្មី',
       message: `បេសកកម្ម "${missionTitle}" ត្រូវបានបង្កើត`,
       data: { missionId },
@@ -30,7 +30,7 @@ export const notifyObservationCompleted = async (observationId: string, teacherN
     detail: {
       id: Date.now().toString(),
       userId: 'current-user',
-      type: NotificationType.OBSERVATION_COMPLETED,
+      type: 'observation_completed' as NotificationType,
       title: 'ការសង្កេតបានបញ្ចប់',
       message: `ការសង្កេតលើគ្រូ ${teacherName} ត្រូវបានបញ្ចប់`,
       data: { observationId },
@@ -52,7 +52,7 @@ export const notifyApprovalRequired = async (itemId: string, itemType: string, i
     detail: {
       id: Date.now().toString(),
       userId: 'current-user',
-      type: NotificationType.APPROVAL_REQUIRED,
+      type: 'approval_required' as NotificationType,
       title: 'ត្រូវការការអនុម័ត',
       message: `${itemType} "${itemTitle}" ត្រូវការការអនុម័តរបស់អ្នក`,
       data: { itemId, itemType },
@@ -77,7 +77,7 @@ export const notifySystemAlert = async (title: string, message: string) => {
     detail: {
       id: Date.now().toString(),
       userId: 'current-user',
-      type: NotificationType.SYSTEM_ALERT,
+      type: 'system_alert' as NotificationType,
       title,
       message,
       data: {},
@@ -95,7 +95,7 @@ export const notifyAnnouncement = async (title: string, message: string, link?: 
     detail: {
       id: Date.now().toString(),
       userId: 'current-user',
-      type: NotificationType.ANNOUNCEMENT,
+      type: 'announcement' as NotificationType,
       title,
       message,
       data: { link },
@@ -113,27 +113,27 @@ export const notifyAnnouncement = async (title: string, message: string, link?: 
 };
 
 // Test notification function
-export const sendTestNotification = async (type: NotificationType = NotificationType.SYSTEM_ALERT) => {
+export const sendTestNotification = async (type: NotificationType = 'system_alert') => {
   const testNotifications = {
-    [NotificationType.MISSION_CREATED]: {
+    ['mission_created']: {
       title: 'បេសកកម្មថ្មី',
       message: 'បេសកកម្ម "ការសង្កេតការបង្រៀនគណិតវិទ្យា" ត្រូវបានបង្កើត',
       priority: 'medium' as const,
       category: 'mission' as const,
     },
-    [NotificationType.OBSERVATION_COMPLETED]: {
+    ['observation_completed']: {
       title: 'ការសង្កេតបានបញ្ចប់',
       message: 'ការសង្កេតលើគ្រូ សុខ សារ៉ាត់ ត្រូវបានបញ្ចប់',
       priority: 'high' as const,
       category: 'observation' as const,
     },
-    [NotificationType.APPROVAL_REQUIRED]: {
+    ['approval_required']: {
       title: 'ត្រូវការការអនុម័ត',
       message: 'បេសកកម្ម "ទស្សនកិច្ចសាលា" ត្រូវការការអនុម័តរបស់អ្នក',
       priority: 'urgent' as const,
       category: 'approval' as const,
     },
-    [NotificationType.SYSTEM_ALERT]: {
+    ['system_alert']: {
       title: 'ការជូនដំណឹងប្រព័ន្ធ',
       message: 'នេះគឺជាការជូនដំណឹងសាកល្បងពីប្រព័ន្ធ',
       priority: 'high' as const,
@@ -141,7 +141,7 @@ export const sendTestNotification = async (type: NotificationType = Notification
     },
   };
 
-  const notification = testNotifications[type] || testNotifications[NotificationType.SYSTEM_ALERT];
+  const notification = testNotifications[type] || testNotifications['system_alert'];
 
   window.dispatchEvent(new CustomEvent('new-notification', {
     detail: {
