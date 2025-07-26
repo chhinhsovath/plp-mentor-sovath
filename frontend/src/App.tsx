@@ -37,8 +37,6 @@ import SurveyListPage from './pages/surveys/SurveyListPage'
 import SurveyBuilderPage from './pages/surveys/SurveyBuilderPage'
 import PublicSurveyPage from './pages/surveys/PublicSurveyPage'
 import SurveyStatisticsPage from './pages/surveys/SurveyStatisticsPage'
-import PublicImpactAssessmentForm from './pages/forms/PublicImpactAssessmentForm'
-import ImpactAssessmentDashboard from './pages/ImpactAssessmentDashboard'
 import MobileDeviceManager from './components/MobileIntegration/MobileDeviceManager'
 import { DevConsole } from './components/DevConsole'
 import ResultsChain from './pages/ResultsChain'
@@ -88,7 +86,6 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/survey/:slug" element={<PublicSurveyPage />} />
-                <Route path="/forms/impact-assessment" element={<PublicImpactAssessmentForm />} />
                 <Route
             path="/"
             element={
@@ -418,19 +415,6 @@ function App() {
             
             {/* Schools - Available to all authenticated users */}
             <Route path="schools" element={<SchoolsPage />} />
-            
-            {/* Impact Assessment Dashboard - Available to management roles */}
-            <Route 
-              path="impact-assessment-dashboard" 
-              element={
-                <RoleBasedRoute 
-                  allowedRoles={MANAGEMENT_ROLES}
-                  fallback={<UnauthorizedPage />}
-                >
-                  <ImpactAssessmentDashboard />
-                </RoleBasedRoute>
-              } 
-            />
             
             {/* Test i18n - Temporary */}
             <Route path="test-i18n" element={<TestI18n />} />
