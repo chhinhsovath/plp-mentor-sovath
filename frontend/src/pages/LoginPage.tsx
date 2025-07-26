@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../contexts/AuthContext'
 import { LoginCredentials } from '../types/auth'
 import { ErrorService } from '../services/error.service'
+import QuickRoleLogin from '../components/Auth/QuickRoleLogin'
 
 const { Title, Text, Link } = Typography
 
@@ -43,6 +44,10 @@ const LoginPage = () => {
       username,
       password
     })
+    // Auto-submit the form after filling credentials
+    setTimeout(() => {
+      form.submit()
+    }, 100)
   }
 
   const onFinish = async (values: LoginCredentials) => {
@@ -132,8 +137,8 @@ const LoginPage = () => {
               size="large"
               requiredMark={false}
               initialValues={{
-                username: 'chhinhs',
-                password: 'password'
+                username: '',
+                password: ''
               }}
             >
               <Form.Item
@@ -234,6 +239,9 @@ const LoginPage = () => {
               </Space>
             </div>
           </Card>
+          
+          {/* Quick Role Login Component */}
+          <QuickRoleLogin onSelectRole={fillDemoCredentials} />
         </Col>
       </Row>
     </div>

@@ -51,6 +51,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { usePermissions } from '../../hooks/usePermissions'
 import { PERMISSIONS } from '../../utils/permissions'
 import type { MenuProps } from 'antd'
+import RoleSwitcher from '../Auth/RoleSwitcher'
 
 const { Header, Sider, Content } = Layout
 const { Title, Text } = Typography
@@ -142,13 +143,6 @@ const AntdLayout: React.FC = () => {
           requiredPermissions: [PERMISSIONS.VIEW_OBSERVATION],
         },
         {
-          key: 'observations-khmer',
-          label: 'ទំរង់វាយតម្លៃការបង្រៀន',
-          icon: <FormOutlined />,
-          path: '/observations/khmer-form',
-          requiredPermissions: [PERMISSIONS.VIEW_OBSERVATION],
-        },
-        {
           key: 'missions',
           label: t('navigation.missions') || 'បេសកកម្ម',
           icon: <DeploymentUnitOutlined />,
@@ -158,7 +152,7 @@ const AntdLayout: React.FC = () => {
         },
         {
           key: 'forms',
-          label: t('navigation.forms') || 'ទម្រង់',
+          label: t('navigation.forms') || 'ទម្រង់វាយតម្លៃ',
           icon: <FormOutlined />,
           path: '/forms',
           requiredPermissions: [PERMISSIONS.MANAGE_FORMS],
@@ -332,6 +326,22 @@ const AntdLayout: React.FC = () => {
       icon: <SettingOutlined />,
       path: '/settings',
     },
+    
+    // Role Demo (always visible for testing)
+    {
+      key: 'role-demo',
+      label: 'Role Hierarchy Demo',
+      icon: <TeamOutlined />,
+      path: '/role-demo',
+    },
+    
+    // Assessment Access Demo (always visible for testing)
+    {
+      key: 'assessment-demo',
+      label: 'Assessment Access Demo',
+      icon: <FormOutlined />,
+      path: '/assessment-demo',
+    },
   ]
 
   const hasAccess = (item: MenuItem): boolean => {
@@ -478,7 +488,9 @@ const AntdLayout: React.FC = () => {
         // Skip if user doesn't have access
         if (!hasAccess(item)) continue
         
-        if (item.path && item.path === location.pathname) {
+        // Check if the current path matches exactly or starts with the item path
+        // This handles sub-pages like /admin/surveys/new matching /admin/surveys
+        if (item.path && (location.pathname === item.path || location.pathname.startsWith(item.path + '/'))) {
           return item.key
         }
         
@@ -500,7 +512,8 @@ const AntdLayout: React.FC = () => {
   const getDefaultOpenKeys = () => {
     const findParentKey = (items: MenuItem[], targetPath: string, parentKey?: string): string | null => {
       for (const item of items) {
-        if (item.path === targetPath && parentKey) {
+        // Check if the current path matches exactly or starts with the item path
+        if (item.path && (targetPath === item.path || targetPath.startsWith(item.path + '/')) && parentKey) {
           return parentKey
         }
         if (item.children) {
@@ -818,6 +831,9 @@ const AntdLayout: React.FC = () => {
           <Outlet />
         </Content>
       </Layout>
+      
+      {/* Role Switcher Float Button */}
+      <RoleSwitcher />
     </Layout>
   )
 }

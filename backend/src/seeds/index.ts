@@ -4,6 +4,7 @@ import { seedDefaultAdmin } from './default-admin.seed';
 import { seedObservationForms } from './observation-forms.seed';
 import { seedComprehensiveForms } from './comprehensive-forms.seed';
 import { seedDevelopmentUsers } from './development-users.seed';
+import { seedRoleDemoUsers } from './role-demo-users.seed';
 
 export async function runSeeds(dataSource: DataSource) {
   console.log('🌱 Starting database seeding...');
@@ -12,6 +13,7 @@ export async function runSeeds(dataSource: DataSource) {
     await seedRoleHierarchy(dataSource);
     await seedDefaultAdmin(dataSource);
     await seedDevelopmentUsers(dataSource);
+    await seedRoleDemoUsers(dataSource);
     await seedObservationForms(dataSource);
     await seedComprehensiveForms(dataSource);
 

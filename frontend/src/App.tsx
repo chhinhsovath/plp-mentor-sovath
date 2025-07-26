@@ -48,6 +48,8 @@ import ComparativeAnalytics from './pages/ComparativeAnalytics'
 import PresentationDashboard from './pages/PresentationDashboard'
 import SchoolsPage from './pages/SchoolsPage'
 import ObservationFormKhmerPage from './pages/ObservationFormKhmerPage'
+import RoleHierarchyDemo from './pages/RoleHierarchyDemo'
+import AssessmentAccessDemo from './pages/AssessmentAccessDemo'
 // import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
@@ -135,17 +137,6 @@ function App() {
                   fallback={<UnauthorizedPage />}
                 >
                   <ObservationEditPage />
-                </RoleBasedRoute>
-              } 
-            />
-            <Route 
-              path="observations/khmer-form" 
-              element={
-                <RoleBasedRoute 
-                  allowedRoles={OBSERVER_ROLES}
-                  fallback={<UnauthorizedPage />}
-                >
-                  <ObservationFormKhmerPage />
                 </RoleBasedRoute>
               } 
             />
@@ -350,6 +341,12 @@ function App() {
             
             {/* Settings - Available to all authenticated users */}
             <Route path="settings" element={<SettingsPage />} />
+            
+            {/* Role Hierarchy Demo - Available to all authenticated users */}
+            <Route path="role-demo" element={<RoleHierarchyDemo />} />
+            
+            {/* Assessment Access Demo - Available to all authenticated users */}
+            <Route path="assessment-demo" element={<AssessmentAccessDemo />} />
             
             {/* Results Chain - Available to management roles */}
             <Route 
