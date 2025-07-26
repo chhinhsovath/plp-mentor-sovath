@@ -260,6 +260,7 @@ const AnalyticsDashboardPage: React.FC = () => {
     yField: 'value',
     seriesField: 'type',
     smooth: true,
+    autoFit: true,
     animation: {
       appear: {
         animation: 'path-in',
@@ -269,19 +270,21 @@ const AnalyticsDashboardPage: React.FC = () => {
     tooltip: {
       shared: true,
     },
+    legend: {
+      position: 'top' as const,
+    },
   }), [timeSeriesData]);
 
-  // Province performance radar chart
+  // Province performance radar chart - removed due to API compatibility issues
   const radarConfig = useMemo(() => ({
-    data: provinceData.map(p => ({
-      province: p.name,
-      performance: p.performance,
-      growth: p.growth + 50, // Normalize for radar
-      schools: (p.schools / 45) * 100 // Normalize to percentage
-    })),
-    xField: 'province',
+    data: provinceData.flatMap(p => [
+      { item: 'ការអនុវត្ត', province: p.name, value: p.performance },
+      { item: 'ការកើនឡើង', province: p.name, value: Math.max(0, p.growth + 50) },
+      { item: 'ចំនួនសាលា', province: p.name, value: (p.schools / 45) * 100 }
+    ]),
+    xField: 'item',
     yField: 'value',
-    seriesField: 'indicator',
+    seriesField: 'province',
     meta: {
       value: {
         min: 0,
@@ -299,15 +302,14 @@ const AnalyticsDashboardPage: React.FC = () => {
     data: subjectData,
     xField: 'subject',
     yField: 'score',
-    seriesField: 'type',
-    color: ({ score }) => {
-      if (score >= 80) return '#52c41a';
-      if (score >= 70) return '#1890ff';
-      if (score >= 60) return '#faad14';
+    color: (datum: any) => {
+      if (datum.score >= 80) return '#52c41a';
+      if (datum.score >= 70) return '#1890ff';
+      if (datum.score >= 60) return '#faad14';
       return '#ff4d4f';
     },
     label: {
-      position: 'top',
+      position: 'top' as const,
       style: {
         fill: '#000',
       },
@@ -361,6 +363,8 @@ const AnalyticsDashboardPage: React.FC = () => {
     yField: 'day',
     colorField: 'value',
     color: ['#f0f0f0', '#1890ff', '#0050b3'],
+    sizeField: 'value',
+    shape: 'square',
     label: {
       style: {
         fill: '#fff',
@@ -628,7 +632,7 @@ const AnalyticsDashboardPage: React.FC = () => {
               }))}
               xField="observations"
               yField="score"
-              size={5}
+              sizeField={5}
               shape="circle"
               color="#1890ff"
               xAxis={{
