@@ -608,8 +608,8 @@ const ReportsPage: React.FC = () => {
                   colorField="province"
                   radius={0.8}
                   label={{
-                    type: 'outer',
-                    content: (data) => `${data.province} ${(data.percent * 100).toFixed(1)}%`
+                    type: 'spider',
+                    content: '{name} {percentage}'
                   }}
                   height={300}
                 />
