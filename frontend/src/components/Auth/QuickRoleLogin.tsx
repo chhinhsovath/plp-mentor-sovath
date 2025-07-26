@@ -101,9 +101,9 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
           ចុចប៊ូតុងខាងក្រោមដើម្បីចូលប្រើប្រាស់ជាមួយតួនាទីផ្សេងៗ | Click any button to login with that role
         </Text>
         
-        <Row gutter={[12, 12]}>
+        <Row gutter={[8, 8]}>
           {demoRoles.map((demo) => (
-            <Col key={demo.username} xs={24} sm={12} md={8} lg={6}>
+            <Col key={demo.username} xs={12} sm={8} md={6} lg={6} xl={6} xxl={4}>
               <Tooltip 
                 title={
                   <div>
@@ -120,15 +120,15 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
                   style={{ 
                     width: '100%',
                     height: 'auto',
-                    padding: '12px',
+                    padding: '8px 4px',
                     backgroundColor: demo.color,
                     borderColor: demo.color,
                   }}
-                  size="large"
+                  size="middle"
                 >
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                    <div style={{ fontSize: '16px', fontWeight: 600 }}>{demo.role}</div>
-                    <div style={{ fontSize: '12px', opacity: 0.9 }}>{demo.description}</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                    <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.2 }}>{demo.role}</div>
+                    <div style={{ fontSize: '11px', opacity: 0.9, lineHeight: 1.2 }}>{demo.description}</div>
                   </div>
                 </Button>
               </Tooltip>
@@ -138,21 +138,21 @@ const QuickRoleLogin: React.FC<QuickLoginProps> = ({ onSelectRole }) => {
 
         <Divider />
         
-        <div style={{ backgroundColor: '#f0f2f5', padding: 12, borderRadius: 8 }}>
-          <Title level={5} style={{ margin: 0, marginBottom: 8 }}>Role Features Summary:</Title>
-          <Row gutter={[16, 8]}>
-            <Col span={12}>
-              <Space direction="vertical" size="small">
-                <Text><Tag color="red">Admin</Tag> All features + System settings</Text>
-                <Text><Tag color="orange">Zone/Provincial</Tag> Approve missions + Analytics</Text>
-                <Text><Tag color="gold">Department</Tag> Manage forms + View reports</Text>
+        <div style={{ backgroundColor: '#f0f2f5', padding: 8, borderRadius: 8 }}>
+          <Title level={5} style={{ margin: 0, marginBottom: 4, fontSize: 14 }}>Role Features Summary:</Title>
+          <Row gutter={[8, 4]}>
+            <Col xs={24} sm={12}>
+              <Space direction="vertical" size={0} style={{ fontSize: 12 }}>
+                <Text style={{ fontSize: 12 }}><Tag color="red" style={{ fontSize: 11 }}>Admin</Tag> All features + System settings</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="orange" style={{ fontSize: 11 }}>Zone/Provincial</Tag> Approve missions + Analytics</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="gold" style={{ fontSize: 11 }}>Department</Tag> Manage forms + View reports</Text>
               </Space>
             </Col>
-            <Col span={12}>
-              <Space direction="vertical" size="small">
-                <Text><Tag color="green">Cluster</Tag> View multiple schools</Text>
-                <Text><Tag color="blue">Director</Tag> Approve school missions</Text>
-                <Text><Tag color="purple">Teacher</Tag> Create observations only</Text>
+            <Col xs={24} sm={12}>
+              <Space direction="vertical" size={0} style={{ fontSize: 12 }}>
+                <Text style={{ fontSize: 12 }}><Tag color="green" style={{ fontSize: 11 }}>Cluster</Tag> View multiple schools</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="blue" style={{ fontSize: 11 }}>Director</Tag> Approve school missions</Text>
+                <Text style={{ fontSize: 12 }}><Tag color="purple" style={{ fontSize: 11 }}>Teacher</Tag> Create observations only</Text>
               </Space>
             </Col>
           </Row>

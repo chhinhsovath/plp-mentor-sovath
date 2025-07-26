@@ -80,10 +80,11 @@ const LoginPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
+        overflowY: 'auto',
       }}
     >
-      <Row justify="center" style={{ width: '100%' }}>
-        <Col xs={24} sm={20} md={16} lg={12} xl={8}>
+      <Row justify="center" style={{ width: '100%', maxWidth: '1200px', margin: '20px 0' }}>
+        <Col xs={24} sm={22} md={20} lg={16} xl={14} xxl={12}>
           <Card
             style={{
               borderRadius: '12px',
