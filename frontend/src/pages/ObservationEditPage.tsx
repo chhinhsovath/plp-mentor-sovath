@@ -25,7 +25,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { observationService } from '../services/observation.service';
+import { formService } from '../services/form.service';
 import { ObservationForm, ObservationSession } from '../types/observation';
+import { FormTemplate } from '../types/form';
 import { useAuth } from '../contexts/AuthContext';
 
 const { Title, Text } = Typography;
@@ -44,11 +46,14 @@ const ObservationEditPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [observation, setObservation] = useState<ObservationSession | null>(null);
   const [observationForms, setObservationForms] = useState<ObservationForm[]>([]);
+  const [formTemplates, setFormTemplates] = useState<FormTemplate[]>([]);
   const [selectedForm, setSelectedForm] = useState<ObservationForm | null>(null);
+  const [selectedFormType, setSelectedFormType] = useState<'standard' | 'template' | 'khmer'>('standard');
 
-  // Load observation forms
+  // Load observation forms and form templates
   useEffect(() => {
     loadObservationForms();
+    loadFormTemplates();
   }, []);
 
   // Load existing observation if in edit mode
@@ -65,6 +70,15 @@ const ObservationEditPage: React.FC = () => {
     } catch (error) {
       console.error('Error loading observation forms:', error);
       message.error(t('observations.loadFormsError'));
+    }
+  };
+
+  const loadFormTemplates = async () => {
+    try {
+      const { forms } = await formService.getForms({ status: 'published' });
+      setFormTemplates(forms);
+    } catch (error) {
+      console.error('Error loading form templates:', error);
     }
   };
 
@@ -167,6 +181,11 @@ const ObservationEditPage: React.FC = () => {
   const handleSubmit = () => {
     form.validateFields()
       .then(values => {
+        // If Khmer form is selected, redirect to the Khmer form page
+        if (values.formType === 'khmer') {
+          navigate('/observations/khmer-form');
+          return;
+        }
         handleSave(values, 'in_progress');
       })
       .catch(errorInfo => {
@@ -206,29 +225,89 @@ const ObservationEditPage: React.FC = () => {
               onFinish={handleSubmit}
               initialValues={{
                 observerName: user?.name,
+                formType: 'standard',
               }}
             >
               {/* Form Selection */}
               <Card title={t('observations.formSelection')} style={{ marginBottom: 24 }}>
                 <Form.Item
-                  name="formId"
-                  label={t('observations.observationForm')}
-                  rules={[{ required: true, message: t('observations.formRequired') }]}
+                  name="formType"
+                  label="ប្រភេទទម្រង់សង្កេត"
+                  rules={[{ required: true, message: 'សូមជ្រើសរើសប្រភេទទម្រង់' }]}
                 >
                   <Select
-                    placeholder={t('observations.selectForm')}
-                    onChange={handleFormSelect}
+                    placeholder="ជ្រើសរើសប្រភេទទម្រង់"
+                    onChange={(value) => {
+                      setSelectedFormType(value);
+                      form.setFieldsValue({ formId: undefined });
+                      setSelectedForm(null);
+                    }}
                     disabled={isEditMode}
                   >
-                    {observationForms.map(form => (
-                      <Option key={form.id} value={form.id}>
-                        {form.name} - {form.gradeLevel} ({form.subject})
-                      </Option>
-                    ))}
+                    <Option value="standard">ទម្រង់សង្កេតស្តង់ដារ</Option>
+                    <Option value="template">ទម្រង់ពីគំរូ</Option>
+                    <Option value="khmer">ទម្រង់វាយតម្លៃការបង្រៀននិងរៀន</Option>
                   </Select>
                 </Form.Item>
 
-                {selectedForm && (
+                {selectedFormType === 'standard' && (
+                  <Form.Item
+                    name="formId"
+                    label={t('observations.observationForm')}
+                    rules={[{ required: true, message: t('observations.formRequired') }]}
+                  >
+                    <Select
+                      placeholder={t('observations.selectForm')}
+                      onChange={handleFormSelect}
+                      disabled={isEditMode}
+                    >
+                      {observationForms.map(form => (
+                        <Option key={form.id} value={form.id}>
+                          {form.name} - {form.gradeLevel} ({form.subject})
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                )}
+
+                {selectedFormType === 'template' && (
+                  <Form.Item
+                    name="formId"
+                    label="ជ្រើសរើសគំរូទម្រង់"
+                    rules={[{ required: true, message: 'សូមជ្រើសរើសគំរូទម្រង់' }]}
+                  >
+                    <Select
+                      placeholder="ជ្រើសរើសគំរូទម្រង់"
+                      onChange={handleFormSelect}
+                      disabled={isEditMode}
+                    >
+                      {formTemplates.map(form => (
+                        <Option key={form.id} value={form.id}>
+                          {form.nameKm || form.name} - {form.descriptionKm || form.description}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                )}
+
+                {selectedFormType === 'khmer' && (
+                  <Alert
+                    message="ទម្រង់វាយតម្លៃការបង្រៀននិងរៀន"
+                    description="អ្នកនឹងត្រូវបញ្ជូនទៅកាន់ទំព័រទម្រង់វាយតម្លៃការបង្រៀននិងរៀន"
+                    type="info"
+                    showIcon
+                    action={
+                      <Button
+                        type="primary"
+                        onClick={() => navigate('/observations/khmer-form')}
+                      >
+                        បន្តទៅទម្រង់
+                      </Button>
+                    }
+                  />
+                )}
+
+                {selectedForm && selectedFormType !== 'khmer' && (
                   <Alert
                     message={selectedForm.description}
                     type="info"
@@ -237,7 +316,8 @@ const ObservationEditPage: React.FC = () => {
                 )}
               </Card>
 
-              {/* Basic Information */}
+              {/* Basic Information - Only show if not Khmer form */}
+              {selectedFormType !== 'khmer' && (
               <Card title={t('observations.basicInfo')} style={{ marginBottom: 24 }}>
                 <Row gutter={16}>
                   <Col xs={24} md={12}>
@@ -302,8 +382,10 @@ const ObservationEditPage: React.FC = () => {
                   </Col>
                 </Row>
               </Card>
+              )}
 
-              {/* Date and Time */}
+              {/* Date and Time - Only show if not Khmer form */}
+              {selectedFormType !== 'khmer' && (
               <Card title={t('observations.dateTime')} style={{ marginBottom: 24 }}>
                 <Row gutter={16}>
                   <Col xs={24} md={8}>
@@ -344,8 +426,10 @@ const ObservationEditPage: React.FC = () => {
                   </Col>
                 </Row>
               </Card>
+              )}
 
-              {/* Student Information */}
+              {/* Student Information - Only show if not Khmer form */}
+              {selectedFormType !== 'khmer' && (
               <Card title={t('observations.studentInfo')} style={{ marginBottom: 24 }}>
                 <Row gutter={16}>
                   <Col xs={24} md={12}>
@@ -368,8 +452,10 @@ const ObservationEditPage: React.FC = () => {
                   </Col>
                 </Row>
               </Card>
+              )}
 
-              {/* Reflection Summary */}
+              {/* Reflection Summary - Only show if not Khmer form */}
+              {selectedFormType !== 'khmer' && (
               <Card title={t('observations.reflection')} style={{ marginBottom: 24 }}>
                 <Form.Item
                   name="reflectionSummary"
@@ -381,6 +467,7 @@ const ObservationEditPage: React.FC = () => {
                   />
                 </Form.Item>
               </Card>
+              )}
 
               {/* Actions */}
               <div style={{ textAlign: 'right' }}>
@@ -388,6 +475,7 @@ const ObservationEditPage: React.FC = () => {
                   <Button onClick={() => navigate('/observations')}>
                     {t('common.cancel')}
                   </Button>
+                  {selectedFormType !== 'khmer' && (
                   <Button 
                     onClick={handleSaveDraft}
                     loading={saving}
@@ -395,14 +483,15 @@ const ObservationEditPage: React.FC = () => {
                   >
                     {t('observations.saveDraft')}
                   </Button>
+                  )}
                   <Button 
                     type="primary"
                     htmlType="submit"
                     icon={<SendOutlined />}
                     loading={saving}
-                    disabled={saving}
+                    disabled={saving && selectedFormType !== 'khmer'}
                   >
-                    {t('observations.saveAndContinue')}
+                    {selectedFormType === 'khmer' ? 'បន្តទៅទំរង់' : t('observations.saveAndContinue')}
                   </Button>
                 </Space>
               </div>

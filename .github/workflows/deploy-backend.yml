@@ -1,0 +1,53 @@
+name: Deploy Backend to Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: 157.10.73.52
+        username: ubuntu
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          # Navigate to the application directory
+          cd /var/csv/mentor_api/plp-mentor-sovath || exit 1
+          
+          # Pull the latest code
+          if [ -d ".git" ]; then
+            git pull origin main
+          else
+            git clone https://github.com/chhinhsovath/plp-mentor-sovath.git .
+          fi
+          
+          # Navigate to backend directory
+          cd backend
+          
+          # Install dependencies
+          npm install
+          
+          # Build the application (if needed)
+          npm run build || echo "No build script found"
+          
+          # Restart the application using PM2
+          pm2 restart plp-backend || pm2 start npm --name "plp-backend" -- start
+          
+          # Save PM2 configuration
+          pm2 save
+          
+          # Check if the service is running
+          sleep 5
+          curl -f http://localhost:3001/api/v1/health || echo "Health check failed"

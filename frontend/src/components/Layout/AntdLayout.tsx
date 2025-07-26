@@ -88,12 +88,6 @@ const AntdLayout: React.FC = () => {
     if (!isMobile) {
       const savedState = localStorage.getItem('sidebarCollapsed')
       setCollapsed(savedState === 'true')
-      
-      // Load saved open keys
-      const savedOpenKeys = localStorage.getItem('sidebarOpenKeys')
-      if (savedOpenKeys) {
-        setOpenKeys(JSON.parse(savedOpenKeys))
-      }
     }
   }, [isMobile])
 
@@ -399,11 +393,23 @@ const AntdLayout: React.FC = () => {
     }
   }
 
-  // Handle submenu open/close
+  // Handle submenu open/close - only keep one submenu open at a time
   const handleOpenChange = (keys: string[]) => {
-    setOpenKeys(keys)
-    if (!isMobile) {
-      localStorage.setItem('sidebarOpenKeys', JSON.stringify(keys))
+    // Get the latest opened key (the last one in the array)
+    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1)
+    
+    // If opening a new submenu, only keep that one open
+    if (latestOpenKey) {
+      setOpenKeys([latestOpenKey])
+      if (!isMobile) {
+        localStorage.setItem('sidebarOpenKeys', JSON.stringify([latestOpenKey]))
+      }
+    } else {
+      // If closing a submenu, allow it
+      setOpenKeys(keys)
+      if (!isMobile) {
+        localStorage.setItem('sidebarOpenKeys', JSON.stringify(keys))
+      }
     }
   }
 
@@ -509,16 +515,18 @@ const AntdLayout: React.FC = () => {
     return parentKey ? [parentKey] : []
   }
 
-  // Update open keys when location changes
+  // Update open keys when location changes - only keep active category open
   useEffect(() => {
     if (!collapsed && !isMobile) {
       const defaultKeys = getDefaultOpenKeys()
       if (defaultKeys.length > 0) {
-        setOpenKeys(prev => {
-          const newKeys = [...new Set([...prev, ...defaultKeys])]
-          localStorage.setItem('sidebarOpenKeys', JSON.stringify(newKeys))
-          return newKeys
-        })
+        // Only set the parent key of the current active route
+        setOpenKeys(defaultKeys)
+        localStorage.setItem('sidebarOpenKeys', JSON.stringify(defaultKeys))
+      } else {
+        // If no parent key found (top-level menu), close all submenus
+        setOpenKeys([])
+        localStorage.setItem('sidebarOpenKeys', JSON.stringify([]))
       }
     }
   }, [location.pathname, collapsed, isMobile])
