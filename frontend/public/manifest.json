@@ -2,19 +2,19 @@
   "name": "ប្រព័ន្ធគ្រប់គ្រងការណែនាំ PLP",
   "short_name": "PLP Mentoring",
   "description": "ប្រព័ន្ធឌីជីថលសម្រាប់ការសង្កេតនិងណែនាំគ្រូបង្រៀននៅកម្ពុជា",
-  "start_url": "/",
+  "start_url": "/mentoring/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
   "icons": [
     {
-      "src": "/plp-logo.png",
+      "src": "/mentoring/plp-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/plp-logo.png",
+      "src": "/mentoring/plp-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -31,15 +31,15 @@
       "name": "New Observation",
       "short_name": "Observe",
       "description": "Start a new teacher observation",
-      "url": "/observations/new",
-      "icons": [{ "src": "/icons/shortcut-observe.png", "sizes": "96x96" }]
+      "url": "/mentoring/observations/new",
+      "icons": [{ "src": "/mentoring/icons/shortcut-observe.png", "sizes": "96x96" }]
     },
     {
       "name": "My Dashboard",
       "short_name": "Dashboard",
       "description": "View your analytics dashboard",
-      "url": "/dashboard",
-      "icons": [{ "src": "/icons/shortcut-dashboard.png", "sizes": "96x96" }]
+      "url": "/mentoring/dashboard",
+      "icons": [{ "src": "/mentoring/icons/shortcut-dashboard.png", "sizes": "96x96" }]
     }
   ]
 }
