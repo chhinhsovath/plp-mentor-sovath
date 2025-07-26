@@ -63,6 +63,20 @@ const HeaderCard = styled(Card)`
   h1, h2, h3, p {
     color: white !important;
   }
+  
+  h1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+  
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 20px !important;
+    }
+  }
 `;
 
 const CalculatorCard = styled(Card)`
@@ -245,11 +259,10 @@ const ROICalculator: React.FC = () => {
           <Col xs={24} md={12}>
             <Space direction="vertical" size="large">
               <Title level={1} style={{ margin: 0 }}>
-                <CalculatorOutlined /> គណនា ROI ការវិនិយោគអប់រំ
+                <CalculatorOutlined /> គណនា ROI ការវិនិយោគ
               </Title>
-              <Paragraph style={{ fontSize: 18, opacity: 0.9 }}>
-                ស្វែងយល់ពីតម្លៃពិតប្រាកដនៃការវិនិយោគរបស់អ្នកក្នុងការអប់រំ
-                និងផលប៉ះពាល់រយៈពេលវែង
+              <Paragraph style={{ fontSize: 18 }}>
+                ស្វែងយល់ពីតម្លៃពិតប្រាកដនៃការវិនិយោគរបស់អ្នកក្នុងការអប់រំ និងផលប៉ះពាល់រយៈពេលវែង
               </Paragraph>
             </Space>
           </Col>
