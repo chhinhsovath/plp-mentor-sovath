@@ -1,0 +1,67 @@
+.notification-dropdown {
+  max-height: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.notification-item {
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 12px 20px !important;
+}
+
+.notification-item:hover {
+  background-color: #f5f5f5;
+}
+
+.notification-item.unread {
+  background-color: #e6f7ff;
+}
+
+.notification-item .ant-list-item-meta-title {
+  margin-bottom: 4px;
+}
+
+.notification-item .ant-list-item-meta-description {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.notification-dropdown .ant-tabs {
+  padding: 0 20px;
+}
+
+.notification-dropdown .ant-tabs-nav {
+  margin-bottom: 0;
+}
+
+.notification-dropdown .ant-tabs-content {
+  padding: 0;
+}
+
+.notification-dropdown .ant-empty {
+  margin: 40px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notification-dropdown {
+    width: 100vw !important;
+    max-width: 420px;
+  }
+}

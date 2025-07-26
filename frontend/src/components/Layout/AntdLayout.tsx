@@ -52,6 +52,7 @@ import { usePermissions } from '../../hooks/usePermissions'
 import { PERMISSIONS } from '../../utils/permissions'
 import type { MenuProps } from 'antd'
 import RoleSwitcher from '../Auth/RoleSwitcher'
+import NotificationCenter from '../NotificationCenter/NotificationCenter'
 
 const { Header, Sider, Content } = Layout
 const { Title, Text } = Typography
@@ -800,22 +801,26 @@ const AntdLayout: React.FC = () => {
             </Title>
           </Space>
 
-          {!isMobile && (
-            <Dropdown
-              menu={{ items: userMenuItems }}
-              placement="bottomRight"
-              trigger={['click']}
-            >
-              <Button type="text" style={{ height: 40 }}>
-                <Space>
-                  <Avatar size={32} style={{ backgroundColor: token.colorPrimary }}>
-                    {user?.fullName?.charAt(0).toUpperCase()}
-                  </Avatar>
-                  <span>{user?.fullName}</span>
-                </Space>
-              </Button>
-            </Dropdown>
-          )}
+          <Space size="middle">
+            <NotificationCenter />
+            
+            {!isMobile && (
+              <Dropdown
+                menu={{ items: userMenuItems }}
+                placement="bottomRight"
+                trigger={['click']}
+              >
+                <Button type="text" style={{ height: 40 }}>
+                  <Space>
+                    <Avatar size={32} style={{ backgroundColor: token.colorPrimary }}>
+                      {user?.fullName?.charAt(0).toUpperCase()}
+                    </Avatar>
+                    <span>{user?.fullName}</span>
+                  </Space>
+                </Button>
+              </Dropdown>
+            )}
+          </Space>
         </Header>
 
         {/* Content */}

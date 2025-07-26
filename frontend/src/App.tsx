@@ -50,6 +50,7 @@ import SchoolsPage from './pages/SchoolsPage'
 import ObservationFormKhmerPage from './pages/ObservationFormKhmerPage'
 import RoleHierarchyDemo from './pages/RoleHierarchyDemo'
 import AssessmentAccessDemo from './pages/AssessmentAccessDemo'
+import NotificationsPage from './pages/NotificationsPage'
 // import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
@@ -341,6 +342,9 @@ function App() {
             
             {/* Settings - Available to all authenticated users */}
             <Route path="settings" element={<SettingsPage />} />
+            
+            {/* Notifications - Available to all authenticated users */}
+            <Route path="notifications" element={<NotificationsPage />} />
             
             {/* Role Hierarchy Demo - Available to all authenticated users */}
             <Route path="role-demo" element={<RoleHierarchyDemo />} />
