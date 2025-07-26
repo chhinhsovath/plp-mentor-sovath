@@ -200,6 +200,14 @@ const AntdLayout: React.FC = () => {
           minimumRole: 'administrator',
         },
         {
+          key: 'impact-assessment-dashboard',
+          label: 'ផលប៉ះពាល់ព្រំដែន',
+          icon: <GlobalOutlined />,
+          path: '/impact-assessment-dashboard',
+          requiredPermissions: [PERMISSIONS.VIEW_REPORTS],
+          minimumRole: 'department',
+        },
+        {
           key: 'comparative-analytics',
           label: 'វិភាគប្រៀបធៀប',
           icon: <SwapOutlined />,

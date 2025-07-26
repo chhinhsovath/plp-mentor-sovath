@@ -30,7 +30,6 @@ import {
   DotChartOutlined,
   AreaChartOutlined,
   RadarChartOutlined,
-  HeatMapOutlined,
   FundOutlined,
   RiseOutlined,
   FallOutlined,
@@ -47,7 +46,7 @@ import {
   InfoCircleOutlined,
   LoadingOutlined
 } from '@ant-design/icons';
-import { Line, Column, Pie, Area, Gauge, Bar, Scatter, Radar, Heatmap, Funnel } from '@ant-design/plots';
+import { Line, Column, Pie, Area, Gauge, Bar, Scatter, Funnel } from '@ant-design/plots';
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import CountUp from 'react-countup';
@@ -336,43 +335,6 @@ const AnalyticsDashboardPage: React.FC = () => {
     },
   };
 
-  // Heatmap data - memoized for performance
-  const generateHeatmapData = useCallback(() => {
-    const hours = Array.from({ length: 24 }, (_, i) => i);
-    const days = ['ច័ន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍', 'អាទិត្យ'];
-    const data = [];
-    
-    days.forEach(day => {
-      hours.forEach(hour => {
-        data.push({
-          day,
-          hour: `${hour}:00`,
-          value: Math.floor(Math.random() * 100)
-        });
-      });
-    });
-    
-    return data;
-  }, []);
-
-  const heatmapData = useMemo(() => generateHeatmapData(), [generateHeatmapData, refreshKey]);
-  
-  const heatmapConfig = useMemo(() => ({
-    data: heatmapData,
-    xField: 'hour',
-    yField: 'day',
-    colorField: 'value',
-    color: ['#f0f0f0', '#1890ff', '#0050b3'],
-    sizeField: 'value',
-    shape: 'square',
-    label: {
-      style: {
-        fill: '#fff',
-        shadowBlur: 2,
-        shadowColor: 'rgba(0, 0, 0, .45)',
-      },
-    },
-  }), [heatmapData]);
 
   // Top performers data
   const topPerformers = [
@@ -603,18 +565,39 @@ const AnalyticsDashboardPage: React.FC = () => {
 
   const renderActivityTab = () => (
     <>
-      {/* Activity Heatmap */}
+      {/* Activity by Day */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24}>
           <ChartCard 
-            title="ផែនទីកំដៅសកម្មភាព"
-            extra={<Text type="secondary">សកម្មភាពតាមម៉ោង និងថ្ងៃ</Text>}
+            title="សកម្មភាពតាមថ្ងៃ"
+            extra={<Text type="secondary">ចំនួនសកម្មភាពក្នុងមួយសប្តាហ៍</Text>}
           >
             <AnalyticsErrorBoundary>
               {chartLoading ? (
                 <ChartLoadingSpinner />
               ) : (
-                <Heatmap {...heatmapConfig} height={400} />
+                <Column
+                  data={[
+                    { day: 'ច័ន្ទ', activities: Math.floor(Math.random() * 100) + 50 },
+                    { day: 'អង្គារ', activities: Math.floor(Math.random() * 100) + 50 },
+                    { day: 'ពុធ', activities: Math.floor(Math.random() * 100) + 50 },
+                    { day: 'ព្រហស្បតិ៍', activities: Math.floor(Math.random() * 100) + 50 },
+                    { day: 'សុក្រ', activities: Math.floor(Math.random() * 100) + 50 },
+                    { day: 'សៅរ៍', activities: Math.floor(Math.random() * 100) + 20 },
+                    { day: 'អាទិត្យ', activities: Math.floor(Math.random() * 100) + 20 }
+                  ]}
+                  xField="day"
+                  yField="activities"
+                  color="#1890ff"
+                  label={{
+                    position: 'top' as const,
+                    style: { fill: '#000' }
+                  }}
+                  columnStyle={{
+                    radius: [20, 20, 0, 0],
+                  }}
+                  height={400}
+                />
               )}
             </AnalyticsErrorBoundary>
           </ChartCard>
@@ -862,7 +845,7 @@ const AnalyticsDashboardPage: React.FC = () => {
                 options={[
                   { label: 'ទិដ្ឋភាពទូទៅ', value: 'overview', icon: <DotChartOutlined /> },
                   { label: 'ការអនុវត្ត', value: 'performance', icon: <BarChartOutlined /> },
-                  { label: 'សកម្មភាព', value: 'activity', icon: <HeatMapOutlined /> },
+                  { label: 'សកម្មភាព', value: 'activity', icon: <AreaChartOutlined /> },
                   { label: 'ការប្រៀបធៀប', value: 'comparison', icon: <FundOutlined /> }
                 ]}
                 block
