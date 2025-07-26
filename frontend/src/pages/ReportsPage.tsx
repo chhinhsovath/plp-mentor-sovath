@@ -607,13 +607,11 @@ const ReportsPage: React.FC = () => {
                   angleField="value"
                   colorField="province"
                   radius={0.8}
-                  label={{
-                    type: 'inner',
-                    offset: '-30%',
-                    content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-                    style: {
-                      fontSize: 14,
-                      textAlign: 'center'
+                  label={false}
+                  legend={{
+                    position: 'right',
+                    itemName: {
+                      formatter: (text, item) => `${text}: ${item.value}`
                     }
                   }}
                   height={300}
