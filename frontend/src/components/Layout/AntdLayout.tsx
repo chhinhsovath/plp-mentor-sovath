@@ -45,6 +45,7 @@ import {
   LineChartOutlined,
   SolutionOutlined,
   BankOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../contexts/AuthContext'
@@ -343,6 +344,20 @@ const AntdLayout: React.FC = () => {
       icon: <FormOutlined />,
       path: '/assessment-demo',
     },
+    
+    // Divider
+    {
+      key: 'divider-2',
+      type: 'divider',
+    },
+    
+    // Showcase (opens in new tab)
+    {
+      key: 'showcase',
+      label: 'ការបង្ហាញប្រព័ន្ធ',
+      icon: <AppstoreOutlined />,
+      path: '/showcase',
+    },
   ]
 
   const hasAccess = (item: MenuItem): boolean => {
@@ -397,9 +412,14 @@ const AntdLayout: React.FC = () => {
     
     const item = findItem(menuItems)
     if (item && item.path) {
-      navigate(item.path)
-      if (isMobile) {
-        setMobileDrawerOpen(false)
+      // Special handling for showcase - open in new tab
+      if (item.key === 'showcase') {
+        window.open(item.path, '_blank')
+      } else {
+        navigate(item.path)
+        if (isMobile) {
+          setMobileDrawerOpen(false)
+        }
       }
     }
   }

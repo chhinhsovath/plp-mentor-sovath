@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធវាយតម្លៃផលប៉ះពាល់អប់រំពីជម្លោះព្រំដែន</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Khmer OS', 'Khmer OS Battambang', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #003d7a 0%, #e00025 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .tab-button:last-child {
+            border-right: none;
+        }
+
+        .tab-button:hover {
+            background: #e9ecef;
+        }
+
+        .tab-button.active {
+            background: #003d7a;
+            color: white;
+        }
+
+        .tab-content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            color: #003d7a;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #003d7a;
+            box-shadow: 0 0 0 0.2rem rgba(0,61,122,0.25);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .grade-selection {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .grade-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .grade-item.selected {
+            background: #e3f2fd;
+            border-color: #003d7a;
+        }
+
+        .grade-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .grade-numbers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .grade-numbers input {
+            padding: 5px;
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #003d7a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #002b57;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-card h4 {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #003d7a;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .report-table th {
+            background: #003d7a;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .report-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .severity-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .severity-1 { background: #d4edda; color: #155724; }
+        .severity-2 { background: #fff3cd; color: #856404; }
+        .severity-3 { background: #ffeaa7; color: #d63031; }
+        .severity-4 { background: #fab1a0; color: #d63031; }
+        .severity-5 { background: #ff7675; color: white; }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #003d7a;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .form-grid,
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #003d7a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .totals-section {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #003d7a;
+        }
+
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .total-item {
+            text-align: center;
+        }
+
+        .total-item label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .total-item .total-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003d7a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ប្រព័ន្ធវាយតម្លៃផលប៉ះពាល់អប់រំពីជម្លោះព្រំដែន</h1>
+        <p>ប្រព័ន្ធគ្រប់គ្រង និងវិភាគទិន្នន័យសម្រាប់សាលារៀនតាមបណ្តោយព្រំដែនកម្ពុជា-ថៃ</p>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('submit')">បញ្ជូលរបាយការណ៍</button>
+            <button class="tab-button" onclick="showTab('dashboard')">ទិដ្ឋភាពទូទៅ</button>
+            <button class="tab-button" onclick="showTab('reports')">របាយការណ៍លម្អិត</button>
+        </div>
+
+        <!-- Submit Report Tab -->
+        <div id="submit-tab" class="tab-content active">
+            <div class="success-message" id="success-message">
+                ✓ របាយការណ៍ត្រូវបានបញ្ជូនដោយជោគជ័យ!
+            </div>
+            <div class="error-message" id="error-message">
+                ✗ មានកំហុសក្នុងការបញ្ជូនរបាយការណ៍។ សូមពិនិត្យឡើងវិញ។
+            </div>
+
+            <form id="impact-form">
+                <!-- Basic School Information -->
+                <div class="form-section">
+                    <h3>ព័ត៌មានមូលដ្ឋានរបស់សាលា</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="school-name">ឈ្មោះសាលា *</label>
+                            <input type="text" id="school-name" name="schoolName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="school-type">ប្រភេទសាលា *</label>
+                            <select id="school-type" name="schoolType" required onchange="updateGradeOptions()">
+                                <option value="">ជ្រើសរើសប្រភេទសាលា</option>
+                                <option value="primary">សាលាបឋមសិក្សា</option>
+                                <option value="lower-secondary">សាលាមធ្យមសិក្សាបឋមភូមិ</option>
+                                <option value="upper-secondary">សាលាមធ្យមសិក្សាទុតិយភូមិ</option>
+                                <option value="high-school">វិទ្យាល័យ</option>
+                                <option value="technical">សាលាបច្ចេកទេស</option>
+                                <option value="university">សាកលវិទ្យាល័យ</option>
+                                <option value="pagoda">សាលាវត្ត</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="province">ខេត្ត *</label>
+                            <select id="province" name="province" required onchange="updateDistricts()">
+                                <option value="">ជ្រើសរើសខេត្ត</option>
+                                <option value="banteay-meanchey">បន្ទាយមានជ័យ</option>
+                                <option value="battambang">បាត់ដំបង</option>
+                                <option value="pailin">ប៉ៃលិន</option>
+                                <option value="oddar-meanchey">ឧត្តរមានជ័យ</option>
+                                <option value="preah-vihear">ព្រះវិហារ</option>
+                                <option value="stung-treng">ស្ទឹងត្រែង</option>
+                                <option value="ratanakiri">រតនគិរី</option>
+                                <option value="mondulkiri">មណ្ឌលគិរី</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="district">ស្រុក/ក្រុង *</label>
+                            <select id="district" name="district" required onchange="updateCommunes()">
+                                <option value="">ជ្រើសរើសស្រុក/ក្រុង</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="commune">ឃុំ/សង្កាត់ *</label>
+                            <select id="commune" name="commune" required onchange="updateVillages()">
+                                <option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="village">ភូមិ *</label>
+                            <select id="village" name="village" required>
+                                <option value="">ជ្រើសរើសភូមិ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grade Level Selection -->
+                <div class="form-section">
+                    <h3>ព័ត៌មានសិស្សតាមថ្នាក់</h3>
+                    <div id="grade-selection" class="grade-selection">
+                        <p>សូមជ្រើសរើសថ្នាក់ដែលមានសិស្សរងផលប៉ះពាល់</p>
+                        <div id="grade-options" class="grade-grid">
+                            <!-- Grade options will be populated dynamically -->
+                        </div>
+                    </div>
+                    <div class="totals-section">
+                        <h4>សរុបសិស្ស</h4>
+                        <div class="totals-grid">
+                            <div class="total-item">
+                                <label>សិស្សសរុប</label>
+                                <div class="total-value" id="total-students">0</div>
+                            </div>
+                            <div class="total-item">
+                                <label>សិស្សរងផលប៉ះពាល់</label>
+                                <div class="total-value" id="total-affected">0</div>
+                            </div>
+                            <div class="total-item">
+                                <label>ភាគរយរងផលប៉ះពាល់</label>
+                                <div class="total-value" id="total-percentage">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact Assessment -->
+                <div class="form-section">
+                    <h3>ការវាយតម្លៃផលប៉ះពាល់</h3>
+                    <div class="form-group">
+                        <label>ប្រភេទផលប៉ះពាល់ *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-1" name="impactTypes" value="school-closure">
+                                <label for="impact-1">សាលាបិទទ្វារ</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-2" name="impactTypes" value="student-evacuation">
+                                <label for="impact-2">សិស្សជម្លៀស</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-3" name="impactTypes" value="teacher-absence">
+                                <label for="impact-3">គ្រូអវត្តមាន</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-4" name="impactTypes" value="infrastructure-damage">
+                                <label for="impact-4">ហេដ្ឋារចនាសម្ព័ន្ធខូចខាត</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-5" name="impactTypes" value="learning-disruption">
+                                <label for="impact-5">ការរំខានដល់ការសិក្សា</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-6" name="impactTypes" value="psychological-impact">
+                                <label for="impact-6">ផលប៉ះពាល់ផ្លូវចិត្ត</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-7" name="impactTypes" value="material-shortage">
+                                <label for="impact-7">កង្វះសម្ភារៈសិក្សា</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="impact-8" name="impactTypes" value="other">
+                                <label for="impact-8">ផ្សេងៗ</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="severity">កម្រិតធ្ងន់ធ្ងរ *</label>
+                            <select id="severity" name="severity" required>
+                                <option value="">ជ្រើសរើសកម្រិត</option>
+                                <option value="1">១ - តិចតួចបំផុត</option>
+                                <option value="2">២ - តិចតួច</option>
+                                <option value="3">៣ - មធ្យម</option>
+                                <option value="4">៤ - ធ្ងន់ធ្ងរ</option>
+                                <option value="5">៥ - ធ្ងន់ធ្ងរបំផុត</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="incident-date">កាលបរិច្ឆេទកើតហេតុ *</label>
+                            <input type="date" id="incident-date" name="incidentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">រយៈពេល (ថ្ងៃ)</label>
+                            <input type="number" id="duration" name="duration" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="teacher-affected">គ្រូបង្រៀនរងផលប៉ះពាល់</label>
+                            <input type="number" id="teacher-affected" name="teacherAffected" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">ពិពណ៌នាលម្អិត</label>
+                        <textarea id="description" name="description" rows="4" placeholder="សូមពិពណ៌នាអំពីស្ថានភាពនិងផលប៉ះពាល់លម្អិត..."></textarea>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">បញ្ជូនរបាយការណ៍</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">សម្អាតទម្រង់</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h4>របាយការណ៍សរុប</h4>
+                    <div class="number" id="total-reports">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>សាលារងផលប៉ះពាល់</h4>
+                    <div class="number" id="affected-schools">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>សិស្សរងផលប៉ះពាល់</h4>
+                    <div class="number" id="affected-students">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4>គ្រូរងផលប៉ះពាល់</h4>
+                    <div class="number" id="affected-teachers">0</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>ការច្រោះទិន្នន័យ</h3>
+                <div class="filter-grid">
+                    <div class="form-group">
+                        <label for="filter-province">ខេត្ត</label>
+                        <select id="filter-province" onchange="applyFilters()">
+                            <option value="">ទាំងអស់</option>
+                            <option value="banteay-meanchey">បន្ទាយមានជ័យ</option>
+                            <option value="battambang">បាត់ដំបង</option>
+                            <option value="pailin">ប៉ៃលិន</option>
+                            <option value="oddar-meanchey">ឧត្តរមានជ័យ</option>
+                            <option value="preah-vihear">ព្រះវិហារ</option>
+                            <option value="stung-treng">ស្ទឹងត្រែង</option>
+                            <option value="ratanakiri">រតនគិរី</option>
+                            <option value="mondulkiri">មណ្ឌលគិរី</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-severity">កម្រិតធ្ងន់ធ្ងរ</label>
+                        <select id="filter-severity" onchange="applyFilters()">
+                            <option value="">ទាំងអស់</option>
+                            <option value="1">១ - តិចតួចបំផុត</option>
+                            <option value="2">២ - តិចតួច</option>
+                            <option value="3">៣ - មធ្យម</option>
+                            <option value="4">៤ - ធ្ងន់ធ្ងរ</option>
+                            <option value="5">៥ - ធ្ងន់ធ្ងរបំផុត</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-date-from">ចាប់ពីថ្ងៃ</label>
+                        <input type="date" id="filter-date-from" onchange="applyFilters()">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-date-to">ដល់ថ្ងៃ</label>
+                        <input type="date" id="filter-date-to" onchange="applyFilters()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div>📊 តារាងស្ថិតិនឹងបង្ហាញនៅទីនេះ</div>
+            </div>
+
+            <div class="chart-container">
+                <div>📈 ក្រាហ្វិកវិភាគនឹងបង្ហាញនៅទីនេះ</div>
+            </div>
+        </div>
+
+        <!-- Detailed Reports Tab -->
+        <div id="reports-tab" class="tab-content">
+            <div class="export-buttons">
+                <button class="btn btn-success" onclick="exportCSV()">ទាញយក CSV</button>
+                <button class="btn btn-danger" onclick="exportPDF()">ទាញយក PDF</button>
+            </div>
+
+            <table class="report-table" id="reports-table">
+                <thead>
+                    <tr>
+                        <th>កាលបរិច្ឆេទ</th>
+                        <th>សាលា</th>
+                        <th>ខេត្ត</th>
+                        <th>ប្រភេទសាលា</th>
+                        <th>សិស្សរងផលប៉ះពាល់</th>
+                        <th>កម្រិតធ្ងន់ធ្ងរ</th>
+                        <th>សកម្មភាព</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-body">
+                    <!-- Reports will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div id="report-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>ព័ត៌មានលម្អិតរបាយការណ៍</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modal-body">
+                <!-- Report details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Geographic data structure
+        const geoData = {
+            'banteay-meanchey': {
+                name: 'បន្ទាយមានជ័យ',
+                districts: {
+                    'mongkol-borei': {
+                        name: 'មង្គលបូរី',
+                        communes: {
+                            'banteay-neang': {
+                                name: 'បន្ទាយនាង',
+                                villages: ['អូរធំ', 'ភ្នំ', 'បន្ទាយនាង', 'គោកព្នៅ', 'ត្រាង']
+                            },
+                            'bat-trang': {
+                                name: 'បត់ត្រង់',
+                                villages: ['ខ្ទុម្ពរាយលិច', 'ខ្ទុម្ពរាយកើត', 'អន្លង់ថ្ងាន់កើត']
+                            }
+                        }
+                    },
+                    'thma-puok': {
+                        name: 'ថ្មពួក',
+                        communes: {
+                            'thma-puok': {
+                                name: 'ថ្មពួក',
+                                villages: ['ថ្មពួក', 'ព្រៃល្វា', 'បឹងជាំ']
+                            }
+                        }
+                    }
+                }
+            },
+            'battambang': {
+                name: 'បាត់ដំបង',
+                districts: {
+                    'battambang': {
+                        name: 'បាត់ដំបង',
+                        communes: {
+                            'svay-por': {
+                                name: 'ស្វាយប៉ោ',
+                                villages: ['ស្វាយប៉ោ', 'តាប៉ុន', 'ព្រែកមហាថោង']
+                            }
+                        }
+                    }
+                }
+            },
+            'pailin': {
+                name: 'ប៉ៃលិន',
+                districts: {
+                    'pailin': {
+                        name: 'ប៉ៃលិន',
+                        communes: {
+                            'pailin': {
+                                name: 'ប៉ៃលិន',
+                                villages: ['ប៉ៃលិន', 'អូរតាវ៉ាវ', 'ទួលល្វា']
+                            }
+                        }
+                    }
+                }
+            },
+            'oddar-meanchey': {
+                name: 'ឧត្តរមានជ័យ',
+                districts: {
+                    'anlong-veng': {
+                        name: 'អន្លង់វែង',
+                        communes: {
+                            'anlong-veng': {
+                                name: 'អន្លង់វែង',
+                                villages: ['អន្លង់វែង', 'ត្រពាំងប្រីយ៍', 'លំទង']
+                            }
+                        }
+                    }
+                }
+            },
+            'preah-vihear': {
+                name: 'ព្រះវិហារ',
+                districts: {
+                    'chey-saen': {
+                        name: 'ជ័យសែន',
+                        communes: {
+                            'chey-saen': {
+                                name: 'ជ័យសែន',
+                                villages: ['ជ័យសែន', 'ព្រៃមាស', 'តាមាវ']
+                            }
+                        }
+                    }
+                }
+            },
+            'stung-treng': {
+                name: 'ស្ទឹងត្រែង',
+                districts: {
+                    'stung-treng': {
+                        name: 'ស្ទឹងត្រែង',
+                        communes: {
+                            'stung-treng': {
+                                name: 'ស្ទឹងត្រែង',
+                                villages: ['ស្ទឹងត្រែង', 'ព្រែកក្រសាំង', 'សំបូរ']
+                            }
+                        }
+                    }
+                }
+            },
+            'ratanakiri': {
+                name: 'រតនគិរី',
+                districts: {
+                    'banlung': {
+                        name: 'បានលុង',
+                        communes: {
+                            'banlung': {
+                                name: 'បានលុង',
+                                villages: ['បានលុង', 'លាបានសៀក', 'យ៉ាកឡោម']
+                            }
+                        }
+                    }
+                }
+            },
+            'mondulkiri': {
+                name: 'មណ្ឌលគិរី',
+                districts: {
+                    'senmonorom': {
+                        name: 'សែនមនោរម្យ',
+                        communes: {
+                            'senmonorom': {
+                                name: 'សែនមនោរម្យ',
+                                villages: ['សែនមនោរម្យ', 'ស្ពានមាន', 'សុខដុម']
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Grade options by school type
+        const gradeOptions = {
+            'primary': {
+                name: 'បឋមសិក្សា',
+                grades: ['ថ្នាក់ទី១', 'ថ្នាក់ទី២', 'ថ្នាក់ទី៣', 'ថ្នាក់ទី៤', 'ថ្នាក់ទី៥', 'ថ្នាក់ទី៦']
+            },
+            'lower-secondary': {
+                name: 'មធ្យមសិក្សាបឋមភូមិ',
+                grades: ['ថ្នាក់ទី៧', 'ថ្នាក់ទី៨', 'ថ្នាក់ទី៩']
+            },
+            'upper-secondary': {
+                name: 'មធ្យមសិក្សាទុតិយភូមិ',
+                grades: ['ថ្នាក់ទី១០', 'ថ្នាក់ទី១១', 'ថ្នាក់ទី១២']
+            },
+            'high-school': {
+                name: 'វិទ្យាល័យ',
+                grades: ['ថ្នាក់ទី៧', 'ថ្នាក់ទី៨', 'ថ្នាក់ទី៩', 'ថ្នាក់ទី១០', 'ថ្នាក់ទី១១', 'ថ្នាក់ទី១២']
+            },
+            'technical': {
+                name: 'សាលាបច្ចេកទេស',
+                grades: ['ឆ្នាំទី១', 'ឆ្នាំទី២', 'ឆ្នាំទី៣']
+            },
+            'university': {
+                name: 'សាកលវិទ្យាល័យ',
+                grades: ['ឆ្នាំទី១', 'ឆ្នាំទី២', 'ឆ្នាំទី៣', 'ឆ្នាំទី៤']
+            },
+            'pagoda': {
+                name: 'សាលាវត្ត',
+                grades: ['កម្រិតដំបូង', 'កម្រិតមធ្យម', 'កម្រិតខ្ពស់']
+            }
+        };
+
+        // Data storage
+        let reports = JSON.parse(localStorage.getItem('impactReports') || '[]');
+
+        // Tab switching
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'dashboard') {
+                updateDashboard();
+            } else if (tab === 'reports') {
+                updateReportsTable();
+            }
+        }
+
+        // Update geographic dropdowns
+        function updateDistricts() {
+            const province = document.getElementById('province').value;
+            const districtSelect = document.getElementById('district');
+            districtSelect.innerHTML = '<option value="">ជ្រើសរើសស្រុក/ក្រុង</option>';
+            
+            if (province && geoData[province]) {
+                Object.keys(geoData[province].districts).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = geoData[province].districts[key].name;
+                    districtSelect.appendChild(option);
+                });
+            }
+            
+            updateCommunes();
+        }
+
+        function updateCommunes() {
+            const province = document.getElementById('province').value;
+            const district = document.getElementById('district').value;
+            const communeSelect = document.getElementById('commune');
+            communeSelect.innerHTML = '<option value="">ជ្រើសរើសឃុំ/សង្កាត់</option>';
+            
+            if (province && district && geoData[province]?.districts[district]) {
+                Object.keys(geoData[province].districts[district].communes).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = geoData[province].districts[district].communes[key].name;
+                    communeSelect.appendChild(option);
+                });
+            }
+            
+            updateVillages();
+        }
+
+        function updateVillages() {
+            const province = document.getElementById('province').value;
+            const district = document.getElementById('district').value;
+            const commune = document.getElementById('commune').value;
+            const villageSelect = document.getElementById('village');
+            villageSelect.innerHTML = '<option value="">ជ្រើសរើសភូមិ</option>';
+            
+            if (province && district && commune && geoData[province]?.districts[district]?.communes[commune]) {
+                geoData[province].districts[district].communes[commune].villages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Update grade options based on school type
+        function updateGradeOptions() {
+            const schoolType = document.getElementById('school-type').value;
+            const gradeContainer = document.getElementById('grade-options');
+            gradeContainer.innerHTML = '';
+            
+            if (schoolType && gradeOptions[schoolType]) {
+                gradeOptions[schoolType].grades.forEach((grade, index) => {
+                    const gradeItem = document.createElement('div');
+                    gradeItem.className = 'grade-item';
+                    gradeItem.innerHTML = `
+                        <label>
+                            <input type="checkbox" id="grade-${index}" onchange="toggleGradeNumbers(${index})">
+                            ${grade}
+                        </label>
+                        <div class="grade-numbers" id="grade-numbers-${index}" style="display: none;">
+                            <input type="number" id="total-${index}" placeholder="សិស្សសរុប" min="0" onchange="calculateTotals()">
+                            <input type="number" id="affected-${index}" placeholder="រងផលប៉ះពាល់" min="0" onchange="calculateTotals()">
+                        </div>
+                    `;
+                    gradeContainer.appendChild(gradeItem);
+                });
+            }
+        }
+
+        // Toggle grade number inputs
+        function toggleGradeNumbers(index) {
+            const checkbox = document.getElementById(`grade-${index}`);
+            const numbersDiv = document.getElementById(`grade-numbers-${index}`);
+            const gradeItem = checkbox.closest('.grade-item');
+            
+            if (checkbox.checked) {
+                numbersDiv.style.display = 'grid';
+                gradeItem.classList.add('selected');
+            } else {
+                numbersDiv.style.display = 'none';
+                gradeItem.classList.remove('selected');
+                document.getElementById(`total-${index}`).value = '';
+                document.getElementById(`affected-${index}`).value = '';
+            }
+            
+            calculateTotals();
+        }
+
+        // Calculate totals
+        function calculateTotals() {
+            let totalStudents = 0;
+            let totalAffected = 0;
+            
+            const schoolType = document.getElementById('school-type').value;
+            if (schoolType && gradeOptions[schoolType]) {
+                gradeOptions[schoolType].grades.forEach((grade, index) => {
+                    const checkbox = document.getElementById(`grade-${index}`);
+                    if (checkbox && checkbox.checked) {
+                        const total = parseInt(document.getElementById(`total-${index}`).value) || 0;
+                        const affected = parseInt(document.getElementById(`affected-${index}`).value) || 0;
+                        totalStudents += total;
+                        totalAffected += affected;
+                    }
+                });
+            }
+            
+            document.getElementById('total-students').textContent = totalStudents.toLocaleString();
+            document.getElementById('total-affected').textContent = totalAffected.toLocaleString();
+            
+            const percentage = totalStudents > 0 ? Math.round((totalAffected / totalStudents) * 100) : 0;
+            document.getElementById('total-percentage').textContent = percentage + '%';
+        }
+
+        // Form submission
+        document.getElementById('impact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(e.target);
+            const report = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                schoolName: formData.get('schoolName'),
+                schoolType: formData.get('schoolType'),
+                province: formData.get('province'),
+                district: formData.get('district'),
+                commune: formData.get('commune'),
+                village: formData.get('village'),
+                grades: collectGradeData(),
+                totalStudents: parseInt(document.getElementById('total-students').textContent.replace(/,/g, '')),
+                totalAffected: parseInt(document.getElementById('total-affected').textContent.replace(/,/g, '')),
+                impactTypes: Array.from(document.querySelectorAll('input[name="impactTypes"]:checked')).map(cb => cb.value),
+                severity: parseInt(formData.get('severity')),
+                incidentDate: formData.get('incidentDate'),
+                duration: parseInt(formData.get('duration')) || 0,
+                teacherAffected: parseInt(formData.get('teacherAffected')) || 0,
+                description: formData.get('description')
+            };
+            
+            // Save report
+            reports.push(report);
+            localStorage.setItem('impactReports', JSON.stringify(reports));
+            
+            // Show success message
+            showMessage('success', 'របាយការណ៍ត្រូវបានបញ្ជូនដោយជោគជ័យ!');
+            
+            // Reset form
+            resetForm();
+        });
+
+        // Collect grade data
+        function collectGradeData() {
+            const gradeData = [];
+            const schoolType = document.getElementById('school-type').value;
+            
+            if (schoolType && gradeOptions[schoolType]) {
+                gradeOptions[schoolType].grades.forEach((grade, index) => {
+                    const checkbox = document.getElementById(`grade-${index}`);
+                    if (checkbox && checkbox.checked) {
+                        gradeData.push({
+                            grade: grade,
+                            total: parseInt(document.getElementById(`total-${index}`).value) || 0,
+                            affected: parseInt(document.getElementById(`affected-${index}`).value) || 0
+                        });
+                    }
+                });
+            }
+            
+            return gradeData;
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('impact-form').reset();
+            document.getElementById('grade-options').innerHTML = '';
+            document.getElementById('total-students').textContent = '0';
+            document.getElementById('total-affected').textContent = '0';
+            document.getElementById('total-percentage').textContent = '0%';
+            updateDistricts();
+        }
+
+        // Show message
+        function showMessage(type, message) {
+            const messageDiv = document.getElementById(`${type}-message`);
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = message;
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const filteredReports = getFilteredReports();
+            
+            document.getElementById('total-reports').textContent = filteredReports.length;
+            
+            const uniqueSchools = new Set(filteredReports.map(r => r.schoolName));
+            document.getElementById('affected-schools').textContent = uniqueSchools.size;
+            
+            const totalStudents = filteredReports.reduce((sum, r) => sum + r.totalAffected, 0);
+            document.getElementById('affected-students').textContent = totalStudents.toLocaleString();
+            
+            const totalTeachers = filteredReports.reduce((sum, r) => sum + r.teacherAffected, 0);
+            document.getElementById('affected-teachers').textContent = totalTeachers.toLocaleString();
+        }
+
+        // Get filtered reports
+        function getFilteredReports() {
+            let filtered = [...reports];
+            
+            const province = document.getElementById('filter-province').value;
+            if (province) {
+                filtered = filtered.filter(r => r.province === province);
+            }
+            
+            const severity = document.getElementById('filter-severity').value;
+            if (severity) {
+                filtered = filtered.filter(r => r.severity === parseInt(severity));
+            }
+            
+            const dateFrom = document.getElementById('filter-date-from').value;
+            if (dateFrom) {
+                filtered = filtered.filter(r => r.incidentDate >= dateFrom);
+            }
+            
+            const dateTo = document.getElementById('filter-date-to').value;
+            if (dateTo) {
+                filtered = filtered.filter(r => r.incidentDate <= dateTo);
+            }
+            
+            return filtered;
+        }
+
+        // Apply filters
+        function applyFilters() {
+            if (document.getElementById('dashboard-tab').classList.contains('active')) {
+                updateDashboard();
+            } else if (document.getElementById('reports-tab').classList.contains('active')) {
+                updateReportsTable();
+            }
+        }
+
+        // Update reports table
+        function updateReportsTable() {
+            const tbody = document.getElementById('reports-body');
+            tbody.innerHTML = '';
+            
+            const filteredReports = getFilteredReports();
+            
+            filteredReports.forEach(report => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(report.incidentDate).toLocaleDateString('km-KH')}</td>
+                    <td>${report.schoolName}</td>
+                    <td>${geoData[report.province]?.name || report.province}</td>
+                    <td>${gradeOptions[report.schoolType]?.name || report.schoolType}</td>
+                    <td>${report.totalAffected.toLocaleString()}</td>
+                    <td><span class="severity-badge severity-${report.severity}">${report.severity}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewReport(${report.id})">មើលលម្អិត</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // View report details
+        function viewReport(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+            
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="form-section">
+                    <h3>ព័ត៌មានសាលា</h3>
+                    <p><strong>ឈ្មោះសាលា:</strong> ${report.schoolName}</p>
+                    <p><strong>ប្រភេទ:</strong> ${gradeOptions[report.schoolType]?.name || report.schoolType}</p>
+                    <p><strong>ទីតាំង:</strong> ${report.village}, ${geoData[report.province]?.districts[report.district]?.communes[report.commune]?.name}, 
+                        ${geoData[report.province]?.districts[report.district]?.name}, ${geoData[report.province]?.name}</p>
+                </div>
+                
+                <div class="form-section">
+                    <h3>ព័ត៌មានសិស្សតាមថ្នាក់</h3>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>ថ្នាក់</th>
+                                <th>សិស្សសរុប</th>
+                                <th>រងផលប៉ះពាល់</th>
+                                <th>ភាគរយ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${report.grades.map(g => `
+                                <tr>
+                                    <td>${g.grade}</td>
+                                    <td>${g.total}</td>
+                                    <td>${g.affected}</td>
+                                    <td>${g.total > 0 ? Math.round((g.affected / g.total) * 100) : 0}%</td>
+                                </tr>
+                            `).join('')}
+                            <tr style="font-weight: bold;">
+                                <td>សរុប</td>
+                                <td>${report.totalStudents}</td>
+                                <td>${report.totalAffected}</td>
+                                <td>${report.totalStudents > 0 ? Math.round((report.totalAffected / report.totalStudents) * 100) : 0}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="form-section">
+                    <h3>ព័ត៌មានផលប៉ះពាល់</h3>
+                    <p><strong>កាលបរិច្ឆេទ:</strong> ${new Date(report.incidentDate).toLocaleDateString('km-KH')}</p>
+                    <p><strong>រយៈពេល:</strong> ${report.duration} ថ្ងៃ</p>
+                    <p><strong>កម្រិតធ្ងន់ធ្ងរ:</strong> <span class="severity-badge severity-${report.severity}">${report.severity}</span></p>
+                    <p><strong>គ្រូរងផលប៉ះពាល់:</strong> ${report.teacherAffected} នាក់</p>
+                    <p><strong>ប្រភេទផលប៉ះពាល់:</strong></p>
+                    <ul>
+                        ${report.impactTypes.map(type => {
+                            const labels = {
+                                'school-closure': 'សាលាបិទទ្វារ',
+                                'student-evacuation': 'សិស្សជម្លៀស',
+                                'teacher-absence': 'គ្រូអវត្តមាន',
+                                'infrastructure-damage': 'ហេដ្ឋារចនាសម្ព័ន្ធខូចខាត',
+                                'learning-disruption': 'ការរំខានដល់ការសិក្សា',
+                                'psychological-impact': 'ផលប៉ះពាល់ផ្លូវចិត្ត',
+                                'material-shortage': 'កង្វះសម្ភារៈសិក្សា',
+                                'other': 'ផ្សេងៗ'
+                            };
+                            return `<li>${labels[type] || type}</li>`;
+                        }).join('')}
+                    </ul>
+                    ${report.description ? `<p><strong>ពិពណ៌នា:</strong> ${report.description}</p>` : ''}
+                </div>
+            `;
+            
+            document.getElementById('report-modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('report-modal').style.display = 'none';
+        }
+
+        // Export functions
+        function exportCSV() {
+            const filteredReports = getFilteredReports();
+            
+            let csv = 'កាលបរិច្ឆេទ,សាលា,ខេត្ត,ស្រុក,ឃុំ,ភូមិ,ប្រភេទសាលា,សិស្សសរុប,សិស្សរងផលប៉ះពាល់,គ្រូរងផលប៉ះពាល់,កម្រិតធ្ងន់ធ្ងរ,រយៈពេល(ថ្ងៃ)\n';
+            
+            filteredReports.forEach(report => {
+                csv += `${report.incidentDate},${report.schoolName},${geoData[report.province]?.name},`;
+                csv += `${geoData[report.province]?.districts[report.district]?.name},`;
+                csv += `${geoData[report.province]?.districts[report.district]?.communes[report.commune]?.name},`;
+                csv += `${report.village},${gradeOptions[report.schoolType]?.name},`;
+                csv += `${report.totalStudents},${report.totalAffected},${report.teacherAffected},`;
+                csv += `${report.severity},${report.duration}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `impact-report-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        function exportPDF() {
+            alert('ការទាញយក PDF នឹងត្រូវបានអនុវត្តនៅពេលក្រោយ។ សូមប្រើប្រាស់ CSV សម្រាប់ពេលនេះ។');
+        }
+
+        // Initialize sample data
+        function initializeSampleData() {
+            if (reports.length === 0) {
+                const sampleReports = [
+                    {
+                        id: 1,
+                        timestamp: new Date('2024-01-15').toISOString(),
+                        schoolName: 'សាលាបឋមសិក្សាបន្ទាយនាង',
+                        schoolType: 'primary',
+                        province: 'banteay-meanchey',
+                        district: 'mongkol-borei',
+                        commune: 'banteay-neang',
+                        village: 'បន្ទាយនាង',
+                        grades: [
+                            { grade: 'ថ្នាក់ទី១', total: 45, affected: 38 },
+                            { grade: 'ថ្នាក់ទី២', total: 42, affected: 35 },
+                            { grade: 'ថ្នាក់ទី៣', total: 48, affected: 40 }
+                        ],
+                        totalStudents: 135,
+                        totalAffected: 113,
+                        impactTypes: ['school-closure', 'student-evacuation'],
+                        severity: 4,
+                        incidentDate: '2024-01-15',
+                        duration: 5,
+                        teacherAffected: 6,
+                        description: 'សាលាបានបិទទ្វារដោយសារការប៉ះទង្គិចនៅព្រំដែន'
+                    },
+                    {
+                        id: 2,
+                        timestamp: new Date('2024-01-20').toISOString(),
+                        schoolName: 'វិទ្យាល័យថ្មពួក',
+                        schoolType: 'high-school',
+                        province: 'banteay-meanchey',
+                        district: 'thma-puok',
+                        commune: 'thma-puok',
+                        village: 'ថ្មពួក',
+                        grades: [
+                            { grade: 'ថ្នាក់ទី៧', total: 80, affected: 65 },
+                            { grade: 'ថ្នាក់ទី៨', total: 75, affected: 60 },
+                            { grade: 'ថ្នាក់ទី៩', total: 70, affected: 55 },
+                            { grade: 'ថ្នាក់ទី១០', total: 65, affected: 50 }
+                        ],
+                        totalStudents: 290,
+                        totalAffected: 230,
+                        impactTypes: ['learning-disruption', 'psychological-impact'],
+                        severity: 3,
+                        incidentDate: '2024-01-20',
+                        duration: 3,
+                        teacherAffected: 12,
+                        description: 'ការរំខានដល់ការសិក្សាដោយសារសំឡេងគ្រាប់កាំភ្លើង'
+                    },
+                    {
+                        id: 3,
+                        timestamp: new Date('2024-02-01').toISOString(),
+                        schoolName: 'សាលាបឋមសិក្សាប៉ៃលិន',
+                        schoolType: 'primary',
+                        province: 'pailin',
+                        district: 'pailin',
+                        commune: 'pailin',
+                        village: 'ប៉ៃលិន',
+                        grades: [
+                            { grade: 'ថ្នាក់ទី១', total: 35, affected: 20 },
+                            { grade: 'ថ្នាក់ទី២', total: 38, affected: 22 },
+                            { grade: 'ថ្នាក់ទី៣', total: 40, affected: 25 }
+                        ],
+                        totalStudents: 113,
+                        totalAffected: 67,
+                        impactTypes: ['teacher-absence', 'material-shortage'],
+                        severity: 2,
+                        incidentDate: '2024-02-01',
+                        duration: 2,
+                        teacherAffected: 3,
+                        description: 'គ្រូអវត្តមានដោយសារការព្រួយបារម្ភពីសុវត្ថិភាព'
+                    }
+                ];
+                
+                reports = sampleReports;
+                localStorage.setItem('impactReports', JSON.stringify(reports));
+            }
+        }
+
+        // Initialize the application
+        window.onload = function() {
+            initializeSampleData();
+            updateDashboard();
+        };
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('report-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>

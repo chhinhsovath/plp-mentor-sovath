@@ -51,6 +51,7 @@ import ObservationFormKhmerPage from './pages/ObservationFormKhmerPage'
 import RoleHierarchyDemo from './pages/RoleHierarchyDemo'
 import AssessmentAccessDemo from './pages/AssessmentAccessDemo'
 import NotificationsPage from './pages/NotificationsPage'
+import ShowcasePage2 from './pages/ShowcasePage2'
 // import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
@@ -419,6 +420,9 @@ function App() {
             {/* Test i18n - Temporary */}
             <Route path="test-i18n" element={<TestI18n />} />
           </Route>
+          
+          {/* Showcase - Public route */}
+          <Route path="/showcase" element={<ShowcasePage2 />} />
                 </Routes>
               </div>
             </AuthProvider>
