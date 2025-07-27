@@ -22,13 +22,13 @@ import {
   ApiOutlined,
   DatabaseOutlined
 } from '@ant-design/icons';
-import { Card, Row, Col, Statistic, Avatar, Text } from 'antd';
+import { Card, Row, Col, Statistic, Avatar } from 'antd';
 import InteractiveDemo from '../components/Showcase/InteractiveDemo';
 import PlatformMetrics from '../components/Showcase/PlatformMetrics';
 import ShowcasePage from './ShowcasePage';
 
 const { Header, Content } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const ShowcasePage2: React.FC = () => {
   const [activeSection, setActiveSection] = useState('overview');
