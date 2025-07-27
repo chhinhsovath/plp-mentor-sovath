@@ -24,7 +24,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../auth/decorators/public.decorator';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 import { Parser } from 'json2csv';
 
 @Controller('api/impact-assessments')
@@ -118,7 +118,7 @@ export class ImpactAssessmentsController {
   // Delete impact assessment (requires auth and admin role)
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('administrator', 'zone', 'provincial')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.ZONE, UserRole.PROVINCIAL)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.impactAssessmentsService.remove(id);
     return {
@@ -130,7 +130,7 @@ export class ImpactAssessmentsController {
   // Verify/Approve impact assessment (requires auth)
   @Post(':id/verify')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('department', 'provincial', 'zone', 'administrator')
+  @Roles(UserRole.DEPARTMENT, UserRole.PROVINCIAL, UserRole.ZONE, UserRole.ADMINISTRATOR)
   async verify(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: User,
@@ -153,7 +153,7 @@ export class ImpactAssessmentsController {
   // Bulk delete (requires auth and admin role)
   @Post('bulk/delete')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('administrator', 'zone', 'provincial')
+  @Roles(UserRole.ADMINISTRATOR, UserRole.ZONE, UserRole.PROVINCIAL)
   async bulkDelete(@Body() body: { ids: string[] }) {
     const { ids } = body;
     

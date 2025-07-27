@@ -93,11 +93,9 @@ export class ImpactAssessmentsService {
     const assessment = await this.findOne(id);
     
     // Remove fields that shouldn't be updated
-    delete updateDto.id;
-    delete updateDto.createdAt;
-    delete updateDto.submittedAt;
+    const { id: _id, createdAt, submittedAt, ...cleanUpdateDto } = updateDto as any;
 
-    Object.assign(assessment, updateDto);
+    Object.assign(assessment, cleanUpdateDto);
     return await this.impactAssessmentRepository.save(assessment);
   }
 

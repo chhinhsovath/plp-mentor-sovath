@@ -99,7 +99,7 @@ export class NotificationService {
     }
 
     if (dto.roleIds && dto.roleIds.length > 0) {
-      return this.userRepository.find({ where: { roleId: In(dto.roleIds) } });
+      return this.userRepository.find({ where: { role: In(dto.roleIds) } });
     }
 
     return [];
@@ -370,7 +370,7 @@ export class NotificationService {
   }
 
   // Process weekly digest emails
-  @Cron(CronExpression.EVERY_MONDAY_AT_8AM)
+  @Cron('0 8 * * 1') // Every Monday at 8 AM
   async processWeeklyDigest(): Promise<void> {
     const users = await this.userRepository.find();
 

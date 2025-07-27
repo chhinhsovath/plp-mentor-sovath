@@ -11,7 +11,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { NotificationService } from '../services/notification.service';
 import { NotificationPreferences } from '../entities/notification-preferences.entity';
 
