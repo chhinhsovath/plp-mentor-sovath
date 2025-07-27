@@ -85,20 +85,24 @@ const PlatformMetrics: React.FC = () => {
     }
   ];
 
+  const transformedGrowthData = growthData.flatMap(item => [
+    { month: item.month, type: 'អ្នកប្រើប្រាស់', value: item.users },
+    { month: item.month, type: 'ការសង្កេត', value: item.observations }
+  ]);
+
   const lineConfig = {
-    data: growthData,
+    data: transformedGrowthData,
     xField: 'month',
-    yField: ['users', 'observations'],
-    geometryOptions: [
-      { geometry: 'line', color: '#1890ff' },
-      { geometry: 'line', color: '#52c41a' }
-    ],
-    legend: {
-      items: [
-        { name: 'អ្នកប្រើប្រាស់', value: 'users', marker: { style: { fill: '#1890ff' } } },
-        { name: 'ការសង្កេត', value: 'observations', marker: { style: { fill: '#52c41a' } } }
-      ]
-    }
+    yField: 'value',
+    seriesField: 'type',
+    smooth: true,
+    animation: {
+      appear: {
+        animation: 'path-in',
+        duration: 1000,
+      },
+    },
+    color: ['#1890ff', '#52c41a'],
   };
 
   const pieConfig = {
@@ -107,9 +111,10 @@ const PlatformMetrics: React.FC = () => {
     colorField: 'province',
     radius: 0.8,
     label: {
-      type: 'outer',
-      content: '{name} {percentage}'
-    }
+      type: 'spider',
+      content: '{province} ({percentage})',
+    },
+    interactions: [{ type: 'element-active' }],
   };
 
   const columnConfig = {
@@ -122,8 +127,16 @@ const PlatformMetrics: React.FC = () => {
     seriesField: 'type',
     isGroup: true,
     columnStyle: {
-      radius: [20, 20, 0, 0]
-    }
+      radius: [8, 8, 0, 0],
+    },
+    color: ['#ff7875', '#52c41a'],
+    label: {
+      position: 'top',
+      style: {
+        fill: '#000',
+        opacity: 0.6,
+      },
+    },
   };
 
   return (

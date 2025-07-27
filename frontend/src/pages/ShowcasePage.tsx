@@ -316,11 +316,17 @@ const ShowcasePage: React.FC = () => {
                   </Card>
                 </Col>
                 <Col xs={24} md={16}>
-                  <img 
-                    src={`/api/placeholder/800/400`} 
-                    alt={`${role.name} Dashboard`}
-                    style={{ width: '100%', borderRadius: 8 }}
-                  />
+                  <Card style={{ background: '#f5f5f5' }}>
+                    <div style={{ minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Space direction="vertical" align="center">
+                        <Avatar size={64} style={{ backgroundColor: '#1890ff' }}>
+                          <UserOutlined />
+                        </Avatar>
+                        <Title level={4}>{role.name} Interface</Title>
+                        <Text type="secondary">ចំណុចប្រទាក់ពិសេសសម្រាប់តួនាទី {role.name}</Text>
+                      </Space>
+                    </div>
+                  </Card>
                 </Col>
               </Row>
             </TabPane>

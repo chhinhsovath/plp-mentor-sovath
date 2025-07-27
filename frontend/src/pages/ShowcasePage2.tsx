@@ -17,8 +17,12 @@ import {
   CodeOutlined,
   PhoneOutlined,
   ArrowUpOutlined,
-  QuestionCircleOutlined
+  QuestionCircleOutlined,
+  UserOutlined,
+  ApiOutlined,
+  DatabaseOutlined
 } from '@ant-design/icons';
+import { Card, Row, Col, Statistic, Avatar, Text } from 'antd';
 import InteractiveDemo from '../components/Showcase/InteractiveDemo';
 import PlatformMetrics from '../components/Showcase/PlatformMetrics';
 import ShowcasePage from './ShowcasePage';
@@ -123,7 +127,27 @@ const RoleExplorer: React.FC = () => {
         'បង្កើតផែនការកែលម្អ',
         'តាមដានវឌ្ឍនភាពផ្ទាល់ខ្លួន'
       ],
-      screenshot: '/api/placeholder/800/500'
+      dashboardPreview: (
+        <Card style={{ background: '#f5f5f5', padding: 16 }}>
+          <Row gutter={[16, 16]}>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ការសង្កេតរបស់ខ្ញុំ" value={23} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ផែនការកែលម្អ" value={5} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ពិន្ទុមធ្យម" value={85} suffix="%" />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+      )
     },
     {
       key: 'director',
@@ -135,7 +159,27 @@ const RoleExplorer: React.FC = () => {
         'អនុម័តការសង្កេត',
         'វាយតម្លៃការអនុវត្ត'
       ],
-      screenshot: '/api/placeholder/800/500'
+      dashboardPreview: (
+        <Card style={{ background: '#f5f5f5', padding: 16 }}>
+          <Row gutter={[16, 16]}>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ការសង្កេតរបស់ខ្ញុំ" value={23} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ផែនការកែលម្អ" value={5} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ពិន្ទុមធ្យម" value={85} suffix="%" />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+      )
     },
     {
       key: 'provincial',
@@ -147,7 +191,27 @@ const RoleExplorer: React.FC = () => {
         'កំណត់គោលនយោបាយ',
         'តាមដានការអនុវត្ត'
       ],
-      screenshot: '/api/placeholder/800/500'
+      dashboardPreview: (
+        <Card style={{ background: '#f5f5f5', padding: 16 }}>
+          <Row gutter={[16, 16]}>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ការសង្កេតរបស់ខ្ញុំ" value={23} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ផែនការកែលម្អ" value={5} />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic title="ពិន្ទុមធ្យម" value={85} suffix="%" />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+      )
     }
   ];
 
@@ -186,11 +250,7 @@ const RoleExplorer: React.FC = () => {
             </ul>
           </div>
 
-          <img 
-            src={currentRole.screenshot} 
-            alt={`${currentRole.title} interface`}
-            style={{ width: '100%', maxWidth: 800, borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-          />
+          {currentRole.dashboardPreview}
         </div>
       )}
     </div>
@@ -203,13 +263,39 @@ const TechArchitecture: React.FC = () => {
     <div style={{ padding: '24px 0' }}>
       <Title level={2} style={{ marginBottom: 24 }}>ស្ថាបត្យកម្មបច្ចេកវិទ្យា</Title>
       
-      <div style={{ textAlign: 'center', marginBottom: 48 }}>
-        <img 
-          src="/api/placeholder/1000/600" 
-          alt="System Architecture"
-          style={{ maxWidth: '100%', borderRadius: 8 }}
-        />
-      </div>
+      <Card style={{ marginBottom: 48 }}>
+        <div style={{ textAlign: 'center', padding: '40px 20px', background: '#f5f5f5' }}>
+          <Row gutter={[24, 24]} justify="center">
+            <Col xs={24} md={8}>
+              <Card>
+                <Avatar size={64} style={{ backgroundColor: '#1890ff', marginBottom: 16 }}>
+                  <CodeOutlined />
+                </Avatar>
+                <Title level={4}>Frontend Layer</Title>
+                <Text>React + TypeScript + Vite</Text>
+              </Card>
+            </Col>
+            <Col xs={24} md={8}>
+              <Card>
+                <Avatar size={64} style={{ backgroundColor: '#52c41a', marginBottom: 16 }}>
+                  <ApiOutlined />
+                </Avatar>
+                <Title level={4}>Backend API</Title>
+                <Text>NestJS + TypeORM</Text>
+              </Card>
+            </Col>
+            <Col xs={24} md={8}>
+              <Card>
+                <Avatar size={64} style={{ backgroundColor: '#fa8c16', marginBottom: 16 }}>
+                  <DatabaseOutlined />
+                </Avatar>
+                <Title level={4}>Database</Title>
+                <Text>PostgreSQL + Redis</Text>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </Card>
 
       <Title level={3}>បច្ចេកវិទ្យាសំខាន់ៗ</Title>
       <ul style={{ fontSize: 16 }}>
