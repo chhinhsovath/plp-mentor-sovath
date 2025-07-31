@@ -55,6 +55,10 @@ export class CreateTeacherObservationDto {
 
   @ApiProperty()
   @IsString()
+  village: string;
+
+  @ApiProperty()
+  @IsString()
   commune: string;
 
   @ApiProperty()
@@ -67,6 +71,10 @@ export class CreateTeacherObservationDto {
 
   @ApiProperty()
   @IsString()
+  cluster: string;
+
+  @ApiProperty()
+  @IsString()
   observerName: string;
 
   @ApiProperty({ required: false })
@@ -75,12 +83,25 @@ export class CreateTeacherObservationDto {
   observerCode?: string;
 
   @ApiProperty()
+  @IsString()
+  observerPosition: string;
+
+  @ApiProperty()
   @IsDateString()
   observationDate: string;
 
   @ApiProperty()
   @IsString()
   grade: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  group?: string;
+
+  @ApiProperty()
+  @IsString()
+  classType: string;
 
   @ApiProperty()
   @IsString()
@@ -97,11 +118,19 @@ export class CreateTeacherObservationDto {
 
   @ApiProperty()
   @IsString()
+  teacherGender: string;
+
+  @ApiProperty()
+  @IsString()
   startTime: string;
 
   @ApiProperty()
   @IsString()
   endTime: string;
+
+  @ApiProperty()
+  @IsString()
+  topic: string;
 
   @ApiProperty()
   @IsObject()
@@ -124,10 +153,37 @@ export class CreateTeacherObservationDto {
   @Type(() => StudentCountsDto)
   studentCounts: StudentCountsDto;
 
+  @ApiProperty()
+  @IsNumber()
+  totalStudents: number;
+
+  @ApiProperty()
+  @IsNumber()
+  presentStudents: number;
+
+  @ApiProperty()
+  @IsNumber()
+  absentStudents: number;
+
   @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   comments?: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  teachingImprovements?: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  principalSupport?: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  clusterSupport?: string;
 
   @ApiProperty({ required: false })
   @IsString()

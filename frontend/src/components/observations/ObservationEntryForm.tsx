@@ -10,18 +10,25 @@ export interface ObservationFormData {
   // Header information
   schoolName: string;
   schoolCode: string;
+  village: string;
   commune: string;
   district: string;
   province: string;
+  cluster: string;
   observerName: string;
   observerCode: string;
+  observerPosition: string;
   observationDate: string;
   grade: string;
+  group: string;
+  classType: string; // ពហុកម្រិត or regular
   subject: string;
   teacherName: string;
   teacherCode: string;
+  teacherGender: string;
   startTime: string;
   endTime: string;
+  topic: string;
   
   // Section scores
   introductionScores: { [key: string]: number };
@@ -29,7 +36,7 @@ export interface ObservationFormData {
   learningScores: { [key: string]: number };
   assessmentScores: { [key: string]: number };
   
-  // Student counts
+  // Student counts by grade
   studentCounts: {
     grade1: { male: number; female: number };
     grade2: { male: number; female: number };
@@ -39,8 +46,18 @@ export interface ObservationFormData {
     grade6: { male: number; female: number };
   };
   
-  // Comments and signatures
+  // Attendance
+  totalStudents: number;
+  presentStudents: number;
+  absentStudents: number;
+  
+  // Comments and improvement plans
   comments: string;
+  teachingImprovements: string;
+  principalSupport: string;
+  clusterSupport: string;
+  
+  // Signatures
   observerSignature: string;
   teacherSignature: string;
 }
@@ -143,7 +160,7 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
         <Card title="ទម្រង់វាយតម្លៃការបង្រៀននិងរៀនជំនាន់ថ្មី ២" className="mb-4">
         {/* Header Information */}
         <Row gutter={16}>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="ឈ្មោះសាលារៀន"
               name="schoolName"
@@ -152,7 +169,7 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="ឈ្មោះសាលារៀន" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <Form.Item
               label="លេខកូដសាលា"
               name="schoolCode"
@@ -161,7 +178,19 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="លេខកូដ" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
+            <Form.Item
+              label="ភូមិ"
+              name="village"
+              rules={[{ required: true, message: 'សូមបញ្ចូលភូមិ' }]}
+            >
+              <Input placeholder="ភូមិ" />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={6}>
             <Form.Item
               label="ឃុំ/សង្កាត់"
               name="commune"
@@ -170,7 +199,7 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="ឃុំ/សង្កាត់" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <Form.Item
               label="ស្រុក/ខណ្ឌ"
               name="district"
@@ -179,13 +208,22 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="ស្រុក/ខណ្ឌ" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <Form.Item
-              label="ខេត្ត/ក្រុង"
+              label="ខេត្ត/រាជធានី"
               name="province"
-              rules={[{ required: true, message: 'សូមបញ្ចូលខេត្ត/ក្រុង' }]}
+              rules={[{ required: true, message: 'សូមបញ្ចូលខេត្ត/រាជធានី' }]}
             >
-              <Input placeholder="ខេត្ត/ក្រុង" />
+              <Input placeholder="ខេត្ត/រាជធានី" />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              label="ក្រុមសាលា"
+              name="cluster"
+              rules={[{ required: true, message: 'សូមបញ្ចូលក្រុមសាលា' }]}
+            >
+              <Input placeholder="ក្រុមសាលា" />
             </Form.Item>
           </Col>
         </Row>
@@ -202,6 +240,21 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
           </Col>
           <Col span={4}>
             <Form.Item
+              label="តួនាទី"
+              name="observerPosition"
+              rules={[{ required: true, message: 'សូមបញ្ចូលតួនាទី' }]}
+            >
+              <Select placeholder="ជ្រើសរើសតួនាទី">
+                <Option value="principal">នាយកសាលា</Option>
+                <Option value="deputy">នាយករង</Option>
+                <Option value="teacher">គ្រូបង្រៀន</Option>
+                <Option value="cluster_director">នាយកក្រុមសាលា</Option>
+                <Option value="doe_officer">មន្ត្រីការិយាល័យអប់រំ</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={4}>
+            <Form.Item
               label="លេខកូដអ្នកសង្កេត"
               name="observerCode"
             >
@@ -210,7 +263,7 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
           </Col>
           <Col span={4}>
             <Form.Item
-              label="កាលបរិច្ឆេទ"
+              label="កាលបរិច្ឆេទសង្កេត"
               name="observationDate"
               rules={[{ required: true, message: 'សូមជ្រើសរើសកាលបរិច្ឆេទ' }]}
             >
@@ -219,32 +272,11 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
           </Col>
           <Col span={4}>
             <Form.Item
-              label="ថ្នាក់ទី"
-              name="grade"
-              rules={[{ required: true, message: 'សូមជ្រើសរើសថ្នាក់' }]}
+              label="ម៉ោងចូលសង្កេត"
+              name="startTime"
+              rules={[{ required: true, message: 'សូមបញ្ចូលម៉ោងចាប់ផ្តើម' }]}
             >
-              <Select placeholder="ជ្រើសរើសថ្នាក់">
-                <Option value="1">១</Option>
-                <Option value="2">២</Option>
-                <Option value="3">៣</Option>
-                <Option value="4">៤</Option>
-                <Option value="5">៥</Option>
-                <Option value="6">៦</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={4}>
-            <Form.Item
-              label="មុខវិជ្ជា"
-              name="subject"
-              rules={[{ required: true, message: 'សូមជ្រើសរើសមុខវិជ្ជា' }]}
-            >
-              <Select placeholder="ជ្រើសរើសមុខវិជ្ជា">
-                <Option value="khmer">ភាសាខ្មែរ</Option>
-                <Option value="math">គណិតវិទ្យា</Option>
-                <Option value="science">វិទ្យាសាស្ត្រ</Option>
-                <Option value="social">សិក្សាសង្គម</Option>
-              </Select>
+              <Input type="time" />
             </Form.Item>
           </Col>
         </Row>
@@ -259,7 +291,7 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="ឈ្មោះគ្រូបង្រៀន" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={3}>
             <Form.Item
               label="លេខកូដគ្រូ"
               name="teacherCode"
@@ -267,22 +299,84 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
               <Input placeholder="លេខកូដ" />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={3}>
             <Form.Item
-              label="ម៉ោងចាប់ផ្តើម"
-              name="startTime"
-              rules={[{ required: true, message: 'សូមបញ្ចូលម៉ោងចាប់ផ្តើម' }]}
+              label="ភេទ"
+              name="teacherGender"
+              rules={[{ required: true, message: 'សូមជ្រើសរើសភេទ' }]}
             >
-              <Input type="time" />
+              <Select placeholder="ភេទ">
+                <Option value="M">ប្រុស</Option>
+                <Option value="F">ស្រី</Option>
+              </Select>
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={2}>
+            <Form.Item
+              label="ថ្នាក់ទី"
+              name="grade"
+              rules={[{ required: true, message: 'សូមជ្រើសរើសថ្នាក់' }]}
+            >
+              <Select placeholder="ថ្នាក់">
+                <Option value="4">៤</Option>
+                <Option value="5">៥</Option>
+                <Option value="6">៦</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={2}>
+            <Form.Item
+              label="ក្រុម"
+              name="group"
+            >
+              <Input placeholder="ក/ខ" />
+            </Form.Item>
+          </Col>
+          <Col span={3}>
+            <Form.Item
+              label="ប្រភេទថ្នាក់"
+              name="classType"
+              rules={[{ required: true, message: 'សូមជ្រើសរើសប្រភេទថ្នាក់' }]}
+            >
+              <Select placeholder="ប្រភេទ">
+                <Option value="regular">ធម្មតា</Option>
+                <Option value="multigrade">ពហុកម្រិត</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={3}>
             <Form.Item
               label="ម៉ោងបញ្ចប់"
               name="endTime"
               rules={[{ required: true, message: 'សូមបញ្ចូលម៉ោងបញ្ចប់' }]}
             >
               <Input type="time" />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={8}>
+            <Form.Item
+              label="មុខវិជ្ជា"
+              name="subject"
+              rules={[{ required: true, message: 'សូមជ្រើសរើសមុខវិជ្ជា' }]}
+            >
+              <Select placeholder="ជ្រើសរើសមុខវិជ្ជា">
+                <Option value="khmer">ភាសាខ្មែរ</Option>
+                <Option value="math">គណិតវិទ្យា</Option>
+                <Option value="science">វិទ្យាសាស្ត្រ</Option>
+                <Option value="social">សិក្សាសង្គម</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={16}>
+            <Form.Item
+              label="ប្រធានបទមេរៀន"
+              name="topic"
+              rules={[{ required: true, message: 'សូមបញ្ចូលប្រធានបទមេរៀន' }]}
+            >
+              <Input placeholder="ប្រធានបទមេរៀន" />
             </Form.Item>
           </Col>
         </Row>
@@ -388,15 +482,80 @@ const ObservationEntryForm: React.FC<ObservationEntryFormProps> = ({
         </Row>
       </Card>
 
-      {/* Comments Section */}
-      <Card title="មតិយោបល់" className="mb-4">
+      {/* Attendance Section */}
+      <Card title="ការមកសិក្សា" className="mb-4">
+        <Row gutter={16}>
+          <Col span={8}>
+            <Form.Item
+              label="ចំនួនសិស្សសរុប"
+              name="totalStudents"
+              rules={[{ required: true, message: 'សូមបញ្ចូលចំនួនសិស្សសរុប' }]}
+            >
+              <InputNumber min={0} placeholder="0" style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              label="មកសិក្សា"
+              name="presentStudents"
+              rules={[{ required: true, message: 'សូមបញ្ចូលចំនួនសិស្សមកសិក្សា' }]}
+            >
+              <InputNumber min={0} placeholder="0" style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              label="អវត្តមាន"
+              name="absentStudents"
+              rules={[{ required: true, message: 'សូមបញ្ចូលចំនួនសិស្សអវត្តមាន' }]}
+            >
+              <InputNumber min={0} placeholder="0" style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Card>
+
+      {/* Comments and Improvement Plans Section */}
+      <Card title="III. ការសន្និដ្ឋាន" className="mb-4">
         <Form.Item
-          label="សេចក្តីសន្និដ្ឋានរបស់អ្នកសង្កេត"
+          label="១. សេចក្តីសន្និដ្ឋានរបស់អ្នកសង្កេត ពី កំណុចខ្លាំង និងកំណុចដែលត្រូវកែលម្អ"
           name="comments"
         >
           <TextArea
             rows={4}
-            placeholder="បញ្ចូលមតិយោបល់របស់អ្នក..."
+            placeholder="សរសេរសេចក្តីសន្និដ្ឋានរបស់អ្នក..."
+          />
+        </Form.Item>
+        
+        <Form.Item
+          label="២. សេចក្តីសន្និដ្ឋានរបស់គ្រូបង្រៀនអំពីមេរៀនដែលទើបធ្វើការ និងអ្វីដែលត្រូវកែលម្អ"
+          name="teachingImprovements"
+        >
+          <TextArea
+            rows={3}
+            placeholder="សរសេរការកែលម្អសម្រាប់គ្រូបង្រៀន..."
+          />
+        </Form.Item>
+
+        <Divider>III. យោបល់សំរាប់កិច្ចការ</Divider>
+        
+        <Form.Item
+          label="ក. លោកនាយក/នាយិកា"
+          name="principalSupport"
+        >
+          <TextArea
+            rows={3}
+            placeholder="យោបល់សម្រាប់នាយកសាលា..."
+          />
+        </Form.Item>
+        
+        <Form.Item
+          label="ខ. គ្រូបង្គោល"
+          name="clusterSupport"
+        >
+          <TextArea
+            rows={3}
+            placeholder="យោបល់សម្រាប់គ្រូបង្គោល..."
           />
         </Form.Item>
       </Card>

@@ -22,6 +22,10 @@ export class CreateTeacherObservation456Table1700000000005 implements MigrationI
             type: 'varchar',
           },
           {
+            name: 'village',
+            type: 'varchar',
+          },
+          {
             name: 'commune',
             type: 'varchar',
           },
@@ -34,6 +38,10 @@ export class CreateTeacherObservation456Table1700000000005 implements MigrationI
             type: 'varchar',
           },
           {
+            name: 'cluster',
+            type: 'varchar',
+          },
+          {
             name: 'observer_name',
             type: 'varchar',
           },
@@ -43,11 +51,24 @@ export class CreateTeacherObservation456Table1700000000005 implements MigrationI
             isNullable: true,
           },
           {
+            name: 'observer_position',
+            type: 'varchar',
+          },
+          {
             name: 'observation_date',
             type: 'date',
           },
           {
             name: 'grade',
+            type: 'varchar',
+          },
+          {
+            name: 'group',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'class_type',
             type: 'varchar',
           },
           {
@@ -64,12 +85,20 @@ export class CreateTeacherObservation456Table1700000000005 implements MigrationI
             isNullable: true,
           },
           {
+            name: 'teacher_gender',
+            type: 'varchar',
+          },
+          {
             name: 'start_time',
             type: 'time',
           },
           {
             name: 'end_time',
             type: 'time',
+          },
+          {
+            name: 'topic',
+            type: 'varchar',
           },
           {
             name: 'introduction_scores',
@@ -92,7 +121,37 @@ export class CreateTeacherObservation456Table1700000000005 implements MigrationI
             type: 'jsonb',
           },
           {
+            name: 'total_students',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'present_students',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'absent_students',
+            type: 'int',
+            default: 0,
+          },
+          {
             name: 'comments',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'teaching_improvements',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'principal_support',
+            type: 'text',
+            isNullable: true,
+          },
+          {
+            name: 'cluster_support',
             type: 'text',
             isNullable: true,
           },

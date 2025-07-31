@@ -22,6 +22,9 @@ export class TeacherObservation456 {
   schoolCode: string;
 
   @Column()
+  village: string;
+
+  @Column()
   commune: string;
 
   @Column()
@@ -30,17 +33,29 @@ export class TeacherObservation456 {
   @Column()
   province: string;
 
+  @Column()
+  cluster: string;
+
   @Column({ name: 'observer_name' })
   observerName: string;
 
   @Column({ name: 'observer_code', nullable: true })
   observerCode: string;
 
+  @Column({ name: 'observer_position' })
+  observerPosition: string;
+
   @Column({ name: 'observation_date', type: 'date' })
   observationDate: Date;
 
   @Column()
   grade: string;
+
+  @Column({ nullable: true })
+  group: string;
+
+  @Column({ name: 'class_type' })
+  classType: string;
 
   @Column()
   subject: string;
@@ -51,11 +66,17 @@ export class TeacherObservation456 {
   @Column({ name: 'teacher_code', nullable: true })
   teacherCode: string;
 
+  @Column({ name: 'teacher_gender' })
+  teacherGender: string;
+
   @Column({ name: 'start_time', type: 'time' })
   startTime: string;
 
   @Column({ name: 'end_time', type: 'time' })
   endTime: string;
+
+  @Column()
+  topic: string;
 
   // Section scores stored as JSON
   @Column({ name: 'introduction_scores', type: 'jsonb' })
@@ -81,10 +102,30 @@ export class TeacherObservation456 {
     grade6: { male: number; female: number };
   };
 
-  // Comments and signatures
+  // Attendance
+  @Column({ name: 'total_students', type: 'int', default: 0 })
+  totalStudents: number;
+
+  @Column({ name: 'present_students', type: 'int', default: 0 })
+  presentStudents: number;
+
+  @Column({ name: 'absent_students', type: 'int', default: 0 })
+  absentStudents: number;
+
+  // Comments and improvement plans
   @Column({ type: 'text', nullable: true })
   comments: string;
 
+  @Column({ name: 'teaching_improvements', type: 'text', nullable: true })
+  teachingImprovements: string;
+
+  @Column({ name: 'principal_support', type: 'text', nullable: true })
+  principalSupport: string;
+
+  @Column({ name: 'cluster_support', type: 'text', nullable: true })
+  clusterSupport: string;
+
+  // Signatures
   @Column({ name: 'observer_signature', nullable: true })
   observerSignature: string;
 
