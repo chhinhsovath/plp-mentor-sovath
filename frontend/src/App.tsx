@@ -52,6 +52,7 @@ import RoleHierarchyDemo from './pages/RoleHierarchyDemo'
 import AssessmentAccessDemo from './pages/AssessmentAccessDemo'
 import NotificationsPage from './pages/NotificationsPage'
 import ShowcasePage2 from './pages/ShowcasePage2'
+import ObservationEntry from './pages/observations/ObservationEntry'
 // import './utils/test-login' // Removed for production build
 
 // Define role groups for easier management
@@ -117,6 +118,17 @@ function App() {
                   fallback={<UnauthorizedPage />}
                 >
                   <ObservationEditPage />
+                </RoleBasedRoute>
+              } 
+            />
+            <Route 
+              path="observations/entry" 
+              element={
+                <RoleBasedRoute 
+                  allowedRoles={OBSERVER_ROLES}
+                  fallback={<UnauthorizedPage />}
+                >
+                  <ObservationEntry />
                 </RoleBasedRoute>
               } 
             />

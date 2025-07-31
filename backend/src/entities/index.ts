@@ -19,3 +19,4 @@ export { Survey } from './survey.entity';
 export { Question, QuestionType } from './question.entity';
 export { SurveyResponse } from './survey-response.entity';
 export { Answer } from './answer.entity';
+export { TeacherObservation456 } from './teacher-observation-456.entity';

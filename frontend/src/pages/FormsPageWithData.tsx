@@ -8,6 +8,9 @@ import { allFormsData } from '../data/allFormsData';
 import { FormTemplate } from '../types/form';
 import { formService } from '../services/form.service';
 import ObservationFormKhmer from '../components/ObservationFormKhmer';
+import ObservationEntryForm from '../components/observations/ObservationEntryForm';
+import teacherObservations456Service from '../services/teacherObservations456.service';
+import { message } from 'antd';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -221,6 +224,31 @@ const FormsPageWithData: React.FC = () => {
       children: (
         <div style={{ padding: '24px 0' }}>
           <ObservationFormKhmer />
+        </div>
+      ),
+    },
+    {
+      key: 'teacher-observation',
+      label: (
+        <span>
+          <EyeOutlined />
+          ឧបករណ៍សង្កេតគ្រូថ្នាក់ទី-៤-៥-៦
+        </span>
+      ),
+      children: (
+        <div style={{ padding: '24px 0' }}>
+          <ObservationEntryForm 
+            hideHeader={false}
+            onSubmit={async (values) => {
+              try {
+                await teacherObservations456Service.create(values);
+                message.success('ទម្រង់សង្កេតការបង្រៀនត្រូវបានរក្សាទុកដោយជោគជ័យ');
+              } catch (error) {
+                console.error('Error submitting observation form:', error);
+                message.error('មានបញ្ហាក្នុងការរក្សាទុកទម្រង់សង្កេតការបង្រៀន');
+              }
+            }}
+          />
         </div>
       ),
     },

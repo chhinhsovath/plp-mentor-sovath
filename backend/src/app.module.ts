@@ -19,6 +19,7 @@ import { MissionsModule } from './missions/missions.module';
 import { SurveysModule } from './surveys/surveys.module';
 import { ObservationKhmerModule } from './modules/observation-khmer/observation-khmer.module';
 import { ImpactAssessmentsModule } from './impact-assessments/impact-assessments.module';
+import { TeacherObservations456Module } from './teacher-observations-456/teacher-observations-456.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { ErrorLoggingInterceptor } from './common/interceptors/error-logging.interceptor';
@@ -51,6 +52,7 @@ import { SecurityMiddleware } from './common/middleware/security.middleware';
     SurveysModule,
     ObservationKhmerModule,
     ImpactAssessmentsModule,
+    TeacherObservations456Module,
   ],
   controllers: [AppController],
   providers: [
